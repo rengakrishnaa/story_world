@@ -3,15 +3,12 @@ __pycache__/
 *.pyo
 *.pyd
 
-
 .venv/
 venv/
-
 
 .env
 .env.*
 *.env
-
 
 models/
 checkpoints/
@@ -21,7 +18,6 @@ keyframes/
 videos/
 *.mp4
 *.png
-
 
 .DS_Store
 Thumbs.db
