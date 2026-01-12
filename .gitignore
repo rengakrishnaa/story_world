@@ -1,4 +1,6 @@
 __pycache__/
+uploads/
+redis.zip
 *.pyc
 *.pyo
 *.pyd
