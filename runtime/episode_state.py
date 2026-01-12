@@ -1,0 +1,11 @@
+from enum import Enum
+
+class EpisodeState(str, Enum):
+    CREATED = "CREATED"
+    PLANNED = "PLANNED"
+    SCHEDULED = "SCHEDULED"
+    EXECUTING = "EXECUTING"
+    PARTIALLY_COMPLETED = "PARTIALLY_COMPLETED"
+    COMPLETED = "COMPLETED"
+    DEGRADED = "DEGRADED"
+    FAILED = "FAILED"

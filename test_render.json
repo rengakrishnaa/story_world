@@ -1,0 +1,9 @@
+{
+  "beat": {
+    "id": "beat_saitama_test",
+    "description": "Saitama stands calmly in his yellow suit while a massive fiery monster emerges from molten lava in a volcanic ruin.",
+    "estimated_duration_sec": 5,
+    "characters": ["Bald Hero", "Eldritch Fire Entity"],
+    "location": "Volcanic Ruins"
+  }
+}
