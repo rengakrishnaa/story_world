@@ -1,16 +1,16 @@
 import asyncio
 import json
 import os
-import redis
+import importlib
+redis = importlib.import_module("redis")
 from dotenv import load_dotenv
 
 from agents.shot_renderer import ProductionShotRenderer
 from agents.beat_observer import BeatObserver
 
-from runtime.persistence.sql_store import SQLStore
 from runtime.persistence.redis_store import RedisStore
 
-from runtime.control.contracts import ExecutionObservation
+#from runtime.control.contracts import ExecutionObservation
 #from runtime.control.control_runtime import ControlRuntime
 
 load_dotenv()
@@ -21,12 +21,23 @@ GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 if not GEMINI_API_KEY:
     raise RuntimeError("GEMINI_API_KEY not set")
 
-r = redis.from_url(REDIS_URL)
+USE_REDIS = os.getenv("DISABLE_REDIS", "true") != "true"
+
+if USE_REDIS:
+    r = redis.from_url(REDIS_URL)
+else:
+    r = None
 
 renderer = ProductionShotRenderer(GEMINI_API_KEY)
 observer = BeatObserver(world_id=None)
 
-sql = SQLStore()
+if os.getenv("DISABLE_DB", "true") == "true":
+    from runtime.persistence.null_sql_store import NullSQLStore
+    sql = NullSQLStore()
+else:
+    from runtime.persistence.sql_store import SQLStore
+    sql = SQLStore()
+
 redis_store = RedisStore(r)
 
 '''control = ControlRuntime(
@@ -45,6 +56,11 @@ async def worker_loop():
     print("[worker] waiting for tasks")
 
     while True:
+        if r is None:
+            print("[worker] Redis disabled — idle mode")
+            await asyncio.sleep(60)
+            continue
+
         job = r.blpop(QUEUE, timeout=5)
         if not job:
             await asyncio.sleep(1)

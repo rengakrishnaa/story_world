@@ -1,4 +1,5 @@
-import redis
+import importlib
+redis = importlib.import_module("redis")
 import os
 from models.episode_plan import EpisodePlan
 

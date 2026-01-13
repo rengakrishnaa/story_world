@@ -2,7 +2,8 @@ import os
 import threading
 from fastapi import FastAPI
 from dotenv import load_dotenv
-import redis
+import importlib
+redis = importlib.import_module("redis")
 
 from runtime.episode_runtime import EpisodeRuntime
 from runtime.persistence.sql_store import SQLStore

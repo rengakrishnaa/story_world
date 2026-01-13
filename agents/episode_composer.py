@@ -1,5 +1,7 @@
 import json
-import redis
+import importlib
+redis = importlib.import_module("redis")
+
 import os
 from pathlib import Path
 from typing import List

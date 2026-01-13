@@ -1,6 +1,8 @@
 from moviepy.editor import VideoFileClip, concatenate_videoclips, vfx
 from pathlib import Path
-import redis
+import importlib
+redis = importlib.import_module("redis")
+
 import json
 import os
 from models.composed_shot import ComposedShot

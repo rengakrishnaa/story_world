@@ -1,5 +1,7 @@
 import json
-import redis
+import importlib
+redis = importlib.import_module("redis")
+
 
 r = redis.Redis(host="localhost", port=6379, db=0)
 

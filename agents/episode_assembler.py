@@ -1,5 +1,7 @@
 import os
-import redis
+import importlib
+redis = importlib.import_module("redis")
+
 from typing import Dict, List, Optional, Any
 from dataclasses import dataclass, field
 from pathlib import Path

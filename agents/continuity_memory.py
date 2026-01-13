@@ -1,5 +1,7 @@
 import numpy as np
-import redis
+import importlib
+redis = importlib.import_module("redis")
+
 import json
 from typing import Optional
 
