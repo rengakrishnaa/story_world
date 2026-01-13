@@ -9,7 +9,6 @@ venv/
 .env
 .env.*
 *.env
-models/
 checkpoints/
 .cache/
 outputs/
