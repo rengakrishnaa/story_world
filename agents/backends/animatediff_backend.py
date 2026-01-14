@@ -34,7 +34,9 @@ class AnimateDiffBackend:
             motion_adapter=motion_adapter,
         ).to(self.device)
 
-        self.pipe.enable_xformers_memory_efficient_attention()
+        if torch.cuda.is_available():
+            self.pipe.enable_xformers_memory_efficient_attention()
+
 
     def render(self, prompt: str, num_frames: int = 16):
         return self.pipe(
