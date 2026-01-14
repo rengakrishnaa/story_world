@@ -174,7 +174,9 @@ class ProductionShotRenderer:
             try:
                 # YOUR original pipeline
                 keyframe_data = self.render_beat_keyframe(None, beat)
+                
                 import torch, gc
+                del SDXL_PIPE
                 torch.cuda.empty_cache()
                 gc.collect()
 
@@ -230,11 +232,11 @@ class ProductionShotRenderer:
             return generate_fallback_image(prompt, path)
 
         except Exception as e:
-            logger.warning(f"SDXL failed → placeholder: {e}")
-        
-        # Detailed placeholder (YOUR original anime-style)
-        url = self.create_detailed_placeholder(beat["description"])
-        return {"keyframe_url": url, "keyframe_path": None}
+            raise RuntimeError(
+                f"SDXL keyframe generation FAILED on GPU. "
+                f"Cannot continue to motion stage. Reason: {e}"
+            )
+
     
     def generate_nanobanana_image(self, prompt: str) -> str:
         """YOUR exact NanoBanana API call."""
