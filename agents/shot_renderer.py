@@ -2,6 +2,10 @@ import os
 import json
 import time
 import base64
+import sys
+
+# Force site-packages to take priority over project folders
+sys.path.insert(0, "/usr/local/lib/python3.10/site-packages")
 import redis
 import requests
 import boto3
