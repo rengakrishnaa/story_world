@@ -173,7 +173,11 @@ class ProductionShotRenderer:
             
             try:
                 # YOUR original pipeline
-                keyframe_data = self.render_beat_keyframe(None, beat)  # world=None for now
+                keyframe_data = self.render_beat_keyframe(None, beat)
+                import torch, gc
+                torch.cuda.empty_cache()
+                gc.collect()
+
                 video_url = self.render_veo_video(None, beat, keyframe_data)
                 
                 result = RenderResult(
