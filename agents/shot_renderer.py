@@ -50,19 +50,20 @@ def load_sdxl():
         raise RuntimeError("Diffusion disabled in this environment")
 
     if SDXL_PIPE is None:
-        device = "cuda" 
-        logger.info(f"Loading SDXL on cuda")
+        device = "cpu"  # 🔒 FORCE CPU
+        logger.info("Loading SDXL on CPU")
 
         SDXL_PIPE = StableDiffusionXLPipeline.from_pretrained(
             "stabilityai/stable-diffusion-xl-base-1.0",
-            torch_dtype=torch.float16 if device == "cuda" else torch.float32,
+            torch_dtype=torch.float32,
         )
 
         SDXL_PIPE = SDXL_PIPE.to(device)
-
-        # 🔒 Stability / memory safety
         SDXL_PIPE.enable_attention_slicing()
         SDXL_PIPE.enable_vae_slicing()
+
+    return SDXL_PIPE
+
 
         
 
@@ -174,7 +175,7 @@ class ProductionShotRenderer:
             try:
                 # YOUR original pipeline
                 keyframe_data = self.render_beat_keyframe(None, beat)
-                
+
                 import torch, gc
                 del SDXL_PIPE
                 torch.cuda.empty_cache()
