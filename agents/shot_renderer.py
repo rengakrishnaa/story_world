@@ -64,9 +64,7 @@ def load_sdxl():
         SDXL_PIPE.enable_attention_slicing()
         SDXL_PIPE.enable_vae_slicing()
 
-        # ⚠️ Only valid when CUDA exists
-        if device == "cuda":
-            SDXL_PIPE.enable_model_cpu_offload()
+        
 
     return SDXL_PIPE
 
