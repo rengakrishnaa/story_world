@@ -34,8 +34,15 @@ class AnimateDiffBackend:
             motion_adapter=motion_adapter,
         ).to(self.device)
 
-        if torch.cuda.is_available():
-            self.pipe.enable_xformers_memory_efficient_attention()
+        self.pipe.to(self.device)
+        self.pipe.enable_attention_slicing()
+
+
+        if self.device == "cuda":
+            try:
+                self.pipe.enable_xformers_memory_efficient_attention()
+            except Exception as e:
+                print(f"[WARN] xformers disabled: {e}")
 
 
     def render(self, prompt: str, num_frames: int = 16):

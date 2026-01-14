@@ -50,8 +50,8 @@ def load_sdxl():
         raise RuntimeError("Diffusion disabled in this environment")
 
     if SDXL_PIPE is None:
-        device = "cuda" if torch.cuda.is_available() else "cpu"
-        logger.info(f"Loading SDXL on {device}")
+        device = "cuda" 
+        logger.info(f"Loading SDXL on cuda")
 
         SDXL_PIPE = StableDiffusionXLPipeline.from_pretrained(
             "stabilityai/stable-diffusion-xl-base-1.0",
