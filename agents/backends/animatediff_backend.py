@@ -45,10 +45,18 @@ class AnimateDiffBackend:
                 print(f"[WARN] xformers disabled: {e}")
 
 
-    def render(self, prompt: str, num_frames: int = 16):
+    def render(self, prompt: str, pose_frames=None):
+        """
+        pose_frames is accepted for future pose-conditioning.
+        Currently ignored by AnimateDiff (text-to-video only).
+        """
+
+        num_frames = len(pose_frames) if pose_frames is not None else 16
+
         return self.pipe(
             prompt=prompt,
             num_frames=num_frames,
             guidance_scale=7.5,
             num_inference_steps=25
         ).frames
+
