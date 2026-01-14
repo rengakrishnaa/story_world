@@ -1,8 +1,12 @@
 import cv2
 import numpy as np
-import mediapipe as mp
 from agents.pose.pose_types import HumanPose
+import os
 
+os.environ["MEDIAPIPE_DISABLE_GPU"] = "1"
+os.environ["CUDA_VISIBLE_DEVICES"] = ""
+
+import mediapipe as mp
 mp_pose = mp.solutions.pose
 
 class PoseExtractor:
