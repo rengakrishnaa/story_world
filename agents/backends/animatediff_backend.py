@@ -51,7 +51,14 @@ class AnimateDiffBackend:
         Currently ignored by AnimateDiff (text-to-video only).
         """
 
-        num_frames = len(pose_frames) if pose_frames is not None else 16
+        MAX_ANIMATEDIFF_FRAMES = 24  # hard limit in AnimateDiff
+
+        num_frames = (
+            min(len(pose_frames), MAX_ANIMATEDIFF_FRAMES)
+            if pose_frames is not None
+            else MAX_ANIMATEDIFF_FRAMES
+        )
+
 
         return self.pipe(
             prompt=prompt,
