@@ -60,10 +60,15 @@ class AnimateDiffBackend:
         )
 
 
-        return self.pipe(
+        output = self.pipe(
             prompt=prompt,
             num_frames=num_frames,
             guidance_scale=7.5,
             num_inference_steps=25
-        ).frames
+        )
+
+        # AnimateDiff returns List[List[PIL.Image]]
+        frames = output.frames[0]  # remove batch dimension
+
+        return frames
 
