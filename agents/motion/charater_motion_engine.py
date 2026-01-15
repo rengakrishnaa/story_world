@@ -30,41 +30,18 @@ class CharacterMotionEngine:
         Returns: list[PIL.Image]
         """
 
-        # 1️⃣ Extract base pose
-        base_pose = self.pose_extractor.extract(keyframe_path)
+        # 1️⃣ Pose validation ONLY (no conditioning)
+        self.pose_extractor.extract(keyframe_path)
 
-        # 2️⃣ Select key semantic poses
-        key_poses = self.pose_selector.select(
-            base_pose=base_pose,
-            motion_type=beat.get("motion_type", "idle")
-        )
-
-        # 3️⃣ Interpolate poses for full duration
-        total_frames = int(beat.get("estimated_duration_sec", 5) * self.FPS)
-
-        pose_frames = self.pose_interpolator.interpolate(
-            key_poses=key_poses,
-            num_frames=total_frames
-        )
-
+        # 2️⃣ AnimateDiff render (text → video)
         backend = self._get_backend()
 
-        # 4️⃣ Chunking (MANDATORY)
-        num_chunks = math.ceil(total_frames / self.MAX_FRAMES_PER_CHUNK)
+        MAX_FRAMES = 24  # AnimateDiff hard limit
 
-        all_frames = []
+        frames = backend.render(
+            prompt=beat["description"],
+            num_frames=MAX_FRAMES
+        )
 
-        for i in range(num_chunks):
-            start = i * self.MAX_FRAMES_PER_CHUNK
-            end = start + self.MAX_FRAMES_PER_CHUNK
+        return frames
 
-            pose_chunk = pose_frames[start:end]
-
-            frames = backend.render(
-                prompt=beat["description"],
-                pose_frames=pose_chunk  # REAL conditioning
-            )
-
-            all_frames.extend(frames)
-
-        return all_frames
