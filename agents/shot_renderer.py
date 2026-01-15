@@ -158,46 +158,45 @@ class ProductionShotRenderer:
             Path(d).mkdir(exist_ok=True)
     
     def process_redis_queue(self, world_id: str):
-        """Production Redis worker - pop → render → store."""
         queue_key = f"render_queue:{world_id}"
-        
-        while True:
-            job_json = r.brpop(queue_key, timeout=5)
-            if not job_json:
-                continue
-                
-            job = json.loads(job_json[1])
-            beat = job["beat"]
-            beat_id = beat["id"]
-            
-            logger.info(f"🎬 Rendering beat {beat_id}")
-            
-            try:
-                # YOUR original pipeline
-                keyframe_data = self.render_beat_keyframe(None, beat)
 
-                import torch, gc
-                del SDXL_PIPE
-                torch.cuda.empty_cache()
-                gc.collect()
+        job_json = r.brpop(queue_key, timeout=30)
+        if not job_json:
+            logger.info("No jobs found. Exiting worker.")
+            return
 
-                video_url = self.render_veo_video(None, beat, keyframe_data)
-                
-                result = RenderResult(
-                    beat_id=beat_id,
-                    keyframe_url=keyframe_data["keyframe_url"],
-                    video_url=video_url,
-                    status="completed",
-                    duration_sec=beat.get("estimated_duration_sec", 5.0),
-                    cost=beat.get("estimated_duration_sec", 5.0) * 0.008
-                )
-                
-                # Store result
-                r.hset(f"render_results:{world_id}", beat_id, json.dumps(result.__dict__))
-                logger.info(f"✅ {beat_id} completed")
-                
-            except Exception as e:
-                logger.error(f"❌ {beat_id} failed: {e}")
+        job = json.loads(job_json[1])
+        beat = job["beat"]
+        beat_id = beat["id"]
+
+        logger.info(f"🎬 Rendering beat {beat_id}")
+
+        try:
+            keyframe_data = self.render_beat_keyframe(None, beat)
+
+            # Free SDXL memory
+            global SDXL_PIPE
+            SDXL_PIPE = None
+            import gc
+            gc.collect()
+
+            video_url = self.render_veo_video(None, beat, keyframe_data)
+
+            result = RenderResult(
+                beat_id=beat_id,
+                keyframe_url=keyframe_data["keyframe_url"],
+                video_url=video_url,
+                status="completed",
+                duration_sec=beat.get("estimated_duration_sec", 5.0),
+                cost=beat.get("estimated_duration_sec", 5.0) * 0.008
+            )
+
+            r.hset(f"render_results:{world_id}", beat_id, json.dumps(result.__dict__))
+            logger.info(f"✅ {beat_id} completed")
+
+        except Exception as e:
+            logger.error(f"❌ {beat_id} failed: {e}")
+
     
     def render_beat_keyframe(self, world, beat: Dict) -> Dict[str, Optional[str]]:
         """YOUR original NanoBanana → Gemini → placeholder pipeline."""
@@ -350,9 +349,23 @@ class ProductionShotRenderer:
         return storage.store_video(video_path.read_bytes(), video_path.name)
 
     def _write_frames_to_video(self, frames, output_path: Path):
-        
 
-        clip = ImageSequenceClip(frames, fps=24)
+        if not isinstance(frames, list) or len(frames) == 0:
+            raise RuntimeError("No frames to write video")
+
+        processed = []
+
+        for i, frame in enumerate(frames):
+            if isinstance(frame, Image.Image):
+                processed.append(np.array(frame))
+            elif isinstance(frame, np.ndarray):
+                processed.append(frame)
+            else:
+                raise TypeError(
+                    f"Frame {i} has unsupported type: {type(frame)}"
+                )
+
+        clip = ImageSequenceClip(processed, fps=24)
         clip.write_videofile(
             str(output_path),
             codec="libx264",
