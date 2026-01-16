@@ -21,7 +21,7 @@ from moviepy.editor import ColorClip, ImageClip, CompositeVideoClip
 from dotenv import load_dotenv
 import google.genai as genai
 import torch
-
+from agents.motion.sparse_motion_engine import SparseMotionEngine
 from agents.cinematic_camera import CinematicCamera
 from agents.backends.cinematic_backend import CinematicBackend
 from agents.motion.charater_motion_engine import CharacterMotionEngine
@@ -47,25 +47,17 @@ def load_sdxl():
     global SDXL_PIPE
 
     if not USE_DIFFUSION:
-        raise RuntimeError("Diffusion disabled in this environment")
+        raise RuntimeError("Diffusion disabled")
 
     if SDXL_PIPE is None:
-        device = "cpu"  # 🔒 FORCE CPU
         logger.info("Loading SDXL on CPU")
-
         SDXL_PIPE = StableDiffusionXLPipeline.from_pretrained(
             "stabilityai/stable-diffusion-xl-base-1.0",
             torch_dtype=torch.float32,
-        )
+        ).to("cpu")
 
-        SDXL_PIPE = SDXL_PIPE.to(device)
         SDXL_PIPE.enable_attention_slicing()
         SDXL_PIPE.enable_vae_slicing()
-
-    return SDXL_PIPE
-
-
-        
 
     return SDXL_PIPE
 
@@ -151,7 +143,8 @@ class ProductionShotRenderer:
         self.client = genai.Client(api_key=api_key)
         self.model = "gemini-3-flash-preview"
         self.image_model = "gemini-2.5-flash-image"
-        self.motion_engine = CharacterMotionEngine()
+        self.motion_engine = SparseMotionEngine()
+
         
         # Create dirs
         for d in ["keyframes", "thumbnails", "videos"]:
@@ -179,6 +172,7 @@ class ProductionShotRenderer:
             SDXL_PIPE = None
             import gc
             gc.collect()
+
 
             video_url = self.render_veo_video(None, beat, keyframe_data)
 
@@ -320,33 +314,30 @@ class ProductionShotRenderer:
         return self.create_detailed_placeholder(prompt, shot_id)
     
     def render_veo_video(self, world, beat: Dict, keyframe_data: Dict) -> Optional[str]:
-        """
-        Motion-aware video rendering using pose + AnimateDiff/SVD pipeline
-        """
-        if beat.get("motion_type", "static") != "character":
-            logger.info("Static beat → skipping motion video generation")
+        if beat.get("motion_type") != "character":
             return None
 
-        duration = beat.get("estimated_duration_sec", 5.0)
-        keyframe_path = keyframe_data.get("keyframe_path")
+        keyframe_path = keyframe_data["keyframe_path"]
         if not keyframe_path:
-            raise RuntimeError("No keyframe available for motion rendering")
+            raise RuntimeError("Missing keyframe")
 
-        motion_engine = self.motion_engine
+        start_frame = Image.open(keyframe_path).convert("RGB")
+        end_frame = start_frame.copy()
 
-        # 🔒 Pose gate
-        self._validate_pose(keyframe_path)
-
-        frames = motion_engine.render_beat(
-            beat=beat,
-            keyframe_path=keyframe_path
+        frames = self.motion_engine.render_motion(
+            start_frame=start_frame,
+            end_frame=end_frame,
+            duration_sec=beat.get("estimated_duration_sec", 5.0)
         )
+        if torch.cuda.is_available():
+            torch.cuda.synchronize()
+            torch.cuda.empty_cache()
 
-            
-        video_path = Path("videos") / f"shot_{beat['id']}_{int(time.time())}.mp4"
+        video_path = Path("videos") / f"{beat['id']}.mp4"
         self._write_frames_to_video(frames, video_path)
 
         return storage.store_video(video_path.read_bytes(), video_path.name)
+
 
     def _write_frames_to_video(self, frames, output_path: Path):
 
