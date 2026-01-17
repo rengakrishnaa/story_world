@@ -1,27 +1,33 @@
-import torch
 from ccvfi import AutoModel, ConfigType
+import numpy as np
 
 class TemporalInterpolator:
     def __init__(self, device="cuda"):
         self.device = device
         self.model = AutoModel.from_pretrained(
-            pretrained_model_name=ConfigType.RIFE_IFNet_v426_heavy
+            "rife",
+            config=ConfigType.RIFE_HD
         )
-        self.model.to(device).eval()
 
-    @torch.no_grad()
     def interpolate(self, frames, target_len):
-        output = frames[:]
+        """
+        frames: list[np.ndarray] (H, W, 3) uint8
+        returns: list[np.ndarray]
+        """
+
+        output = frames
 
         while len(output) < target_len:
-            new = []
+            new_frames = []
             for i in range(len(output) - 1):
-                mid = self.model.inference_image_list(
-                    img_list=[output[i], output[i + 1]]
-                )[0]
-                new.append(output[i])
-                new.append(mid)
-            new.append(output[-1])
-            output = new
+                f0 = output[i]
+                f1 = output[i + 1]
+
+                mid = self.model.infer(f0, f1)
+                new_frames.append(f0)
+                new_frames.append(mid)
+
+            new_frames.append(output[-1])
+            output = new_frames
 
         return output[:target_len]
