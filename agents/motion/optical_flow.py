@@ -1,30 +1,29 @@
-import torch
+# agents/motion/flow_warp.py
+import cv2
 import numpy as np
-import torch.nn.functional as F
 
 class FlowWarp:
-    def __init__(self, device="cuda"):
-        self.device = device
+    def __init__(self):
+        if not cv2.cuda.getCudaEnabledDeviceCount():
+            raise RuntimeError("CUDA OpenCV not available")
 
-    def _to_tensor(self, img):
-        t = torch.from_numpy(img).permute(2, 0, 1).float()
-        return t.unsqueeze(0).to(self.device) / 255.0
+    def warp(self, frame0, frame1, alpha):
+        g0 = cv2.cuda_GpuMat()
+        g1 = cv2.cuda_GpuMat()
+        g0.upload(frame0)
+        g1.upload(frame1)
 
-    @torch.no_grad()
-    def compute_flow(self, frame0, frame1):
-        # VERY cheap dense approximation (no RAFT reloads)
-        # This avoids huge latency and GPU memory spikes
-        flow = frame1 - frame0
-        return flow
+        flow = cv2.cuda_FarnebackOpticalFlow.create().calc(
+            cv2.cuda.cvtColor(g0, cv2.COLOR_BGR2GRAY),
+            cv2.cuda.cvtColor(g1, cv2.COLOR_BGR2GRAY),
+            None
+        )
 
-    def warp(self, frame, flow, alpha):
-        return (frame + alpha * flow).clip(0, 255).astype(np.uint8)
+        flow = flow.download()
+        h, w = flow.shape[:2]
 
-    def warp_sequence(self, frame0, frame1, steps=4):
-        flow = self.compute_flow(frame0, frame1)
+        grid_x, grid_y = np.meshgrid(np.arange(w), np.arange(h))
+        map_x = (grid_x + flow[..., 0] * alpha).astype(np.float32)
+        map_y = (grid_y + flow[..., 1] * alpha).astype(np.float32)
 
-        frames = []
-        for i in range(steps):
-            alpha = i / (steps - 1)
-            frames.append(self.warp(frame0, flow, alpha))
-        return frames
+        return cv2.remap(frame0, map_x, map_y, cv2.INTER_LINEAR)
