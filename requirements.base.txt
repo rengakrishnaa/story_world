@@ -1,0 +1,25 @@
+# Core
+numpy==1.26.4
+pillow
+tqdm
+requests
+python-dotenv
+
+# Video / Image
+moviepy<2.0
+opencv-python
+mediapipe==0.10.9
+
+# Backend / API
+fastapi
+uvicorn
+pydantic
+sqlalchemy
+redis
+boto3
+
+# AI utilities
+google-genai
+
+# Git deps (CPU-safe)
+git+https://github.com/openai/CLIP.git

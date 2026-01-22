@@ -1,0 +1,8 @@
+__pycache__/
+venv/
+.env
+videos/
+keyframes/
+*.mp4
+*.png
+.git

@@ -1,0 +1,18 @@
+numpy==1.26.4
+pillow
+opencv-python
+mediapipe==0.10.9
+tqdm
+
+# PyTorch CUDA (RunPod compatible)
+torch==2.1.2+cu118
+torchvision==0.16.2+cu118
+torchaudio==2.1.2+cu118
+--extra-index-url https://download.pytorch.org/whl/cu118
+
+# Motion stack
+ccvfi
+raft
+
+# Optional (only if you use it)
+xformers==0.0.23.post1
