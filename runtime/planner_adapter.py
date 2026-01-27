@@ -6,25 +6,24 @@ class PlannerAdapter(PlannerInterface):
         self.redis = redis_client
 
     def generate_beats(self, intent: str):
-        self.planner.redis = self.redis
-        plan = self.planner.plan_episode(
-            world_json={},    # will expand later
-            script=intent,
-        )
-
-        beats = []
-        for act in plan.acts:
-            for scene in act.scenes:
-                for beat in scene.beats:
-                    beats.append({
-                        "id": beat.id,
-                        "description": beat.description,
-                        "characters": beat.characters,
-                        "location": beat.location,
-                        "estimated_duration_sec": beat.estimated_duration_sec,
-                        "motion_type": "character" if beat.estimated_duration_sec > 0 else "static",
-                        "backend": "stub",
-                    })
-
-
+        """
+        Generate beats from user intent.
+        
+        The narrative planner's generate_beats() method handles:
+        - Loading world data from world_id
+        - Generating episode plan with Gemini/mock
+        - Flattening to beat list
+        - Adding backend selection
+        
+        Returns list of beat dictionaries ready for episode runtime.
+        """
+        # Set redis client for caching
+        if self.redis:
+            self.planner.redis = self.redis
+        
+        # Call the planner's generate_beats method
+        # This handles world loading, planning, and beat generation
+        beats = self.planner.generate_beats(intent)
+        
         return beats
+

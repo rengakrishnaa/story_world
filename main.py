@@ -74,10 +74,13 @@ def plan_episode(episode_id: str):
         sql=sql,
     )
 
+    # Use environment variable to control mock vs real planner
+    use_mock = os.getenv("USE_MOCK_PLANNER", "false").lower() == "true"
+
     planner = ProductionNarrativePlanner(
         world_id=runtime.world_id,
         redis_client=redis_store.redis,   
-        use_mock=True,
+        use_mock=use_mock,  # ✅ FIXED: Now respects env variable
     )
 
     adapter = PlannerAdapter(planner)     
