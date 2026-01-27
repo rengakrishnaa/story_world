@@ -377,6 +377,131 @@ class SQLStore:
         finally:
             cur.close()
 
+    def record_artifact(
+        self,
+        beat_id: str,
+        artifact_type: str,
+        uri: str,
+        attempt_id: str = None
+    ):
+        """
+        Record an artifact (video, keyframe, etc.) for a beat.
+        
+        Args:
+            beat_id: ID of the beat this artifact belongs to
+            artifact_type: Type of artifact (e.g., 'video', 'keyframe', 'thumbnail')
+            uri: URI/URL where artifact is stored
+            attempt_id: Optional attempt ID that generated this artifact
+        """
+        cur = self._cursor()
+        try:
+            # Get current version for this beat + artifact type
+            cur.execute(
+                f"""
+                SELECT COALESCE(MAX(version), 0)
+                FROM artifacts
+                WHERE beat_id = {self._ph()} AND type = {self._ph()}
+                """,
+                (beat_id, artifact_type)
+            )
+            row = cur.fetchone()
+            version = (row[0] if row else 0) + 1
+            
+            # Insert new artifact
+            cur.execute(
+                f"""
+                INSERT INTO artifacts
+                (artifact_id, beat_id, type, uri, version, attempt_id)
+                VALUES ({self._ph()}, {self._ph()}, {self._ph()}, {self._ph()}, {self._ph()}, {self._ph()})
+                """,
+                (
+                    str(uuid.uuid4()),
+                    beat_id,
+                    artifact_type,
+                    uri,
+                    version,
+                    attempt_id
+                )
+            )
+            
+            if self.backend == "sqlite":
+                self.conn.commit()
+                
+        finally:
+            cur.close()
+
+    def all_beats_completed(self, episode_id: str) -> bool:
+        """
+        Check if all beats for an episode are in ACCEPTED state.
+        
+        Args:
+            episode_id: Episode ID to check
+            
+        Returns:
+            True if all beats are completed, False otherwise
+        """
+        cur = self._cursor()
+        try:
+            # Count total beats
+            cur.execute(
+                f"""
+                SELECT COUNT(*)
+                FROM beats
+                WHERE episode_id = {self._ph()}
+                """,
+                (episode_id,)
+            )
+            row = cur.fetchone()
+            total_beats = row[0] if row else 0
+            
+            if total_beats == 0:
+                return False
+            
+            # Count accepted beats
+            cur.execute(
+                f"""
+                SELECT COUNT(*)
+                FROM beats
+                WHERE episode_id = {self._ph()} AND state = 'ACCEPTED'
+                """,
+                (episode_id,)
+            )
+            row = cur.fetchone()
+            accepted_beats = row[0] if row else 0
+            
+            return accepted_beats == total_beats
+            
+        finally:
+            cur.close()
+
+    def any_beats_failed(self, episode_id: str) -> bool:
+        """
+        Check if any beats for an episode are in ABORTED state.
+        
+        Args:
+            episode_id: Episode ID to check
+            
+        Returns:
+            True if any beats failed, False otherwise
+        """
+        cur = self._cursor()
+        try:
+            cur.execute(
+                f"""
+                SELECT COUNT(*)
+                FROM beats
+                WHERE episode_id = {self._ph()} AND state = 'ABORTED'
+                """,
+                (episode_id,)
+            )
+            row = cur.fetchone()
+            failed_count = row[0] if row else 0
+            
+            return failed_count > 0
+            
+        finally:
+            cur.close()
+
     def _connect(self):
         if self._conn is not None:
             return

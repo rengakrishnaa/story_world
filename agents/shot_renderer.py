@@ -150,6 +150,31 @@ class ProductionShotRenderer:
         for d in ["keyframes", "thumbnails", "videos"]:
             Path(d).mkdir(exist_ok=True)
     
+    def _load_world(self, world_id: str) -> Dict[str, Any]:
+        """
+        Load world data for rendering.
+        
+        Args:
+            world_id: ID of the world to load
+            
+        Returns:
+            World data dictionary with characters and locations
+        """
+        from pathlib import Path
+        import json
+        
+        # Try loading cached world
+        world_file = Path(f"outputs/{world_id}/world.json")
+        if world_file.exists():
+            with open(world_file, 'r') as f:
+                return json.load(f)
+        
+        # Fallback to empty world
+        return {
+            "characters": [],
+            "locations": []
+        }
+    
     def process_redis_queue(self, world_id: str):
         queue_key = f"render_queue:{world_id}"
 
@@ -165,7 +190,10 @@ class ProductionShotRenderer:
         logger.info(f"🎬 Rendering beat {beat_id}")
 
         try:
-            keyframe_data = self.render_beat_keyframe(None, beat)
+            # Load world data
+            world = self._load_world(world_id)
+            
+            keyframe_data = self.render_beat_keyframe(world, beat)
 
             # Free SDXL memory
             global SDXL_PIPE

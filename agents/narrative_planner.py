@@ -14,6 +14,11 @@ from datetime import datetime
 import hashlib
 import pandas as pd
 
+try:
+    from models.world import WorldGraph
+except ImportError:
+    WorldGraph = None
+
 
 
 logger = logging.getLogger(__name__)
@@ -317,6 +322,120 @@ CRITICAL:
                 )]
             )]
         )
+
+    def generate_beats(self, intent: str) -> List[Dict[str, Any]]:
+        """
+        Generate beats from user intent. This is the main entry point
+        called by episode_runtime.plan().
+        
+        Args:
+            intent: User's story intent/description
+            
+        Returns:
+            List of beat dictionaries with id, description, duration, etc.
+        """
+        # Load world data
+        world_json = self._load_world_data()
+        
+        # Generate episode plan
+        episode_plan = self.plan_episode(world_json, intent)
+        
+        # Flatten plan into beats
+        beats = []
+        beat_counter = 1
+        
+        for act in episode_plan.acts:
+            for scene in act.scenes:
+                for beat in scene.beats:
+                    # Convert Beat dataclass to dict format expected by runtime
+                    beat_dict = {
+                        "id": f"beat-{beat_counter}",
+                        "description": beat.description,
+                        "duration_sec": beat.estimated_duration_sec,
+                        "characters": beat.characters,
+                        "location": beat.location,
+                        "spec": {
+                            "description": beat.description,
+                            "backend": self._select_backend(beat),
+                            "style": "cinematic",
+                            "motion_strength": 0.85
+                        }
+                    }
+                    beats.append(beat_dict)
+                    beat_counter += 1
+        
+        logger.info(f"Generated {len(beats)} beats from intent")
+        return beats
+    
+    def _load_world_data(self) -> Dict[str, Any]:
+        """
+        Load world data for the given world_id.
+        Tries multiple sources in order:
+        1. Cached world JSON file
+        2. World extractor from reference images
+        3. Empty world fallback
+        """
+        # Try loading cached world
+        world_file = Path(f"outputs/{self.world_id}/world.json")
+        if world_file.exists():
+            logger.info(f"Loading cached world from {world_file}")
+            with open(world_file, 'r') as f:
+                return json.load(f)
+        
+        # Try extracting from images
+        try:
+            from agents.world_extractor import WorldExtractor
+            
+            api_key = os.getenv("GEMINI_API_KEY")
+            if api_key:
+                extractor = WorldExtractor(api_key)
+                
+                # Look for reference images
+                uploads_dir = Path("uploads")
+                char_images = list(uploads_dir.glob("img_*.webp")) + list(uploads_dir.glob("img_*.png"))
+                loc_images = list(uploads_dir.glob("location*.jpg")) + list(uploads_dir.glob("location*.png"))
+                
+                if char_images or loc_images:
+                    logger.info(f"Extracting world from {len(char_images)} characters, {len(loc_images)} locations")
+                    world_graph = extractor.extract_from_images(
+                        [str(img) for img in char_images],
+                        [str(img) for img in loc_images]
+                    )
+                    
+                    # Cache the extracted world
+                    world_file.parent.mkdir(parents=True, exist_ok=True)
+                    with open(world_file, 'w') as f:
+                        f.write(world_graph.to_json())
+                    
+                    return world_graph.to_dict()
+        except Exception as e:
+            logger.warning(f"World extraction failed: {e}")
+        
+        # Fallback to empty world
+        logger.warning(f"No world data found for {self.world_id}, using empty world")
+        return {
+            "characters": [],
+            "locations": []
+        }
+    
+    def _select_backend(self, beat: Beat) -> str:
+        """
+        Select appropriate rendering backend based on beat characteristics.
+        
+        Args:
+            beat: Beat to analyze
+            
+        Returns:
+            Backend name (animatediff, veo, svd, stub)
+        """
+        # For production, use animatediff as default
+        # Can be overridden via environment variable
+        default_backend = os.getenv("DEFAULT_BACKEND", "animatediff")
+        
+        # Logic to select backend based on beat content
+        # For now, just use default
+        return default_backend
+
 
 
 def main():
