@@ -7,24 +7,30 @@ FROM python:3.10-slim
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
 
-RUN apt-get update && apt-get install -y \
-    git \
-    ffmpeg \
-    libgl1 \
-    libglib2.0-0 \
-    libsm6 \
-    libxext6 \
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends \
+        git \
+        ffmpeg \
+        libgl1 \
+        libglib2.0-0 \
+        libsm6 \
+        libxext6 \
+    && git --version \
     && rm -rf /var/lib/apt/lists/*
 
-WORKDIR /story_world
+WORKDIR /app
 
 COPY requirements.base.txt .
 
 RUN pip install --upgrade pip \
     && pip install --no-cache-dir -r requirements.base.txt
 
-COPY story_world ./story_world
-COPY main.py worker.py ./
+# ✅ copy EVERYTHING at repo root
+COPY agents ./agents
+COPY runtime ./runtime
+COPY models ./models
+COPY static ./static
+COPY main.py ./
 
 EXPOSE 8000
 

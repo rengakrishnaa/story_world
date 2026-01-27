@@ -1,7 +1,7 @@
 # runtime/control/control_runtime.py
 
 from datetime import datetime
-from story_world.decision_core import DecisionCore
+from runtime.control.decision_core import DecisionCore
 from runtime.control.event_log import RuntimeEvent
 from runtime.control.branching import EpisodeBrancher
 

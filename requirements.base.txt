@@ -22,4 +22,4 @@ boto3
 google-genai
 
 # Git deps (CPU-safe)
-git+https://github.com/openai/CLIP.git
+clip @ git+https://github.com/openai/CLIP.git

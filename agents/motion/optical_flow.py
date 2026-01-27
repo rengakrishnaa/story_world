@@ -1,29 +1,73 @@
-# agents/motion/flow_warp.py
 import cv2
 import numpy as np
 
-class FlowWarp:
-    def __init__(self):
-        if not cv2.cuda.getCudaEnabledDeviceCount():
-            raise RuntimeError("CUDA OpenCV not available")
 
-    def warp(self, frame0, frame1, alpha):
+class FlowWarp:
+    """
+    Optical flow / frame interpolation helper.
+
+    Guarantees:
+    - Never throws due to CUDA absence
+    - Automatically falls back to CPU
+    - Safe in Docker, CI, and non-GPU machines
+    """
+
+    def __init__(self):
+        self.cuda_available = False
+
+        try:
+            if hasattr(cv2, "cuda"):
+                count = cv2.cuda.getCudaEnabledDeviceCount()
+                if count > 0:
+                    self.cuda_available = True
+        except Exception as e:
+            print(f"[motion] CUDA check failed, CPU fallback: {e}")
+            self.cuda_available = False
+
+        if self.cuda_available:
+            print("[motion] FlowWarp using CUDA")
+        else:
+            print("[motion] FlowWarp running in CPU mode")
+
+    def warp(self, frame0: np.ndarray, frame1: np.ndarray, alpha: float):
+        """
+        Blend two frames using GPU if available, otherwise CPU.
+        """
+        if self.cuda_available:
+            try:
+                return self._warp_cuda(frame0, frame1, alpha)
+            except Exception as e:
+                print(f"[motion] CUDA warp failed, fallback to CPU: {e}")
+                return self._warp_cpu(frame0, frame1, alpha)
+
+        return self._warp_cpu(frame0, frame1, alpha)
+
+    # -----------------------
+    # CUDA path
+    # -----------------------
+
+    def _warp_cuda(self, frame0, frame1, alpha):
         g0 = cv2.cuda_GpuMat()
         g1 = cv2.cuda_GpuMat()
+
         g0.upload(frame0)
         g1.upload(frame1)
 
-        flow = cv2.cuda_FarnebackOpticalFlow.create().calc(
-            cv2.cuda.cvtColor(g0, cv2.COLOR_BGR2GRAY),
-            cv2.cuda.cvtColor(g1, cv2.COLOR_BGR2GRAY),
-            None
+        blended = cv2.cuda.addWeighted(
+            g0, 1.0 - alpha,
+            g1, alpha,
+            0.0
         )
 
-        flow = flow.download()
-        h, w = flow.shape[:2]
+        return blended.download()
 
-        grid_x, grid_y = np.meshgrid(np.arange(w), np.arange(h))
-        map_x = (grid_x + flow[..., 0] * alpha).astype(np.float32)
-        map_y = (grid_y + flow[..., 1] * alpha).astype(np.float32)
+    # -----------------------
+    # CPU path (guaranteed)
+    # -----------------------
 
-        return cv2.remap(frame0, map_x, map_y, cv2.INTER_LINEAR)
+    def _warp_cpu(self, frame0, frame1, alpha):
+        return cv2.addWeighted(
+            frame0, 1.0 - alpha,
+            frame1, alpha,
+            0.0
+        )

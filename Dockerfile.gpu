@@ -7,6 +7,8 @@ FROM nvidia/cuda:11.8.0-cudnn8-runtime-ubuntu22.04
 ENV DEBIAN_FRONTEND=noninteractive
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
+ENV NVIDIA_VISIBLE_DEVICES=all
+ENV NVIDIA_DRIVER_CAPABILITIES=compute,utility
 
 RUN apt-get update && apt-get install -y \
     python3 \
@@ -21,16 +23,12 @@ RUN apt-get update && apt-get install -y \
 WORKDIR /worker
 
 COPY requirements.gpu.txt .
-
 RUN pip3 install --upgrade pip \
     && pip3 install --no-cache-dir -r requirements.gpu.txt
 
-# Copy only what GPU needs
-COPY story_world/backends ./story_world/backends
-COPY story_world/motion ./story_world/motion
-COPY story_world/pose ./story_world/pose
-COPY story_world/video ./story_world/video
-COPY story_world/models ./story_world/models
+# ✅ ONLY executor code
+COPY agents ./agents
+COPY models ./models
 COPY worker.py ./
 
 CMD ["python3", "worker.py"]

@@ -1,10 +1,12 @@
 from runtime.planner_interface import PlannerInterface
 
 class PlannerAdapter(PlannerInterface):
-    def __init__(self, narrative_planner):
+    def __init__(self, narrative_planner, redis_client=None):
         self.planner = narrative_planner
+        self.redis = redis_client
 
     def generate_beats(self, intent: str):
+        self.planner.redis = self.redis
         plan = self.planner.plan_episode(
             world_json={},    # will expand later
             script=intent,
@@ -21,6 +23,7 @@ class PlannerAdapter(PlannerInterface):
                         "location": beat.location,
                         "estimated_duration_sec": beat.estimated_duration_sec,
                         "motion_type": "character" if beat.estimated_duration_sec > 0 else "static",
+                        "backend": "stub",
                     })
 
 

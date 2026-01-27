@@ -35,12 +35,36 @@ class PoseExtractor:
             min_detection_confidence=0.5
         )
 
-    def extract(self, image_path: str) -> HumanPose:
-        image = cv2.imread(image_path)
-        if image is None:
-            raise RuntimeError(f"Failed to load image: {image_path}")
+    def extract(self, image_input) -> HumanPose:
+        # --------------------------------------------------
+        # Normalize input to BGR numpy array
+        # --------------------------------------------------
 
-        image_rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+        if isinstance(image_input, str):
+            image_bgr = cv2.imread(image_input)
+            if image_bgr is None:
+                raise RuntimeError(f"Failed to load image: {image_input}")
+
+        else:
+            # PIL Image
+            if hasattr(image_input, "convert"):
+                image_rgb = np.array(image_input.convert("RGB"))
+                image_bgr = cv2.cvtColor(image_rgb, cv2.COLOR_RGB2BGR)
+
+            # NumPy array
+            elif isinstance(image_input, np.ndarray):
+                image_bgr = image_input
+
+            else:
+                raise TypeError(
+                    f"Unsupported image type: {type(image_input)}"
+                )
+
+        # --------------------------------------------------
+        # Pose extraction
+        # --------------------------------------------------
+
+        image_rgb = cv2.cvtColor(image_bgr, cv2.COLOR_BGR2RGB)
 
         pose_result = self.pose.process(image_rgb)
         hands_result = self.mp_hands.process(image_rgb)
@@ -65,7 +89,6 @@ class PoseExtractor:
                     [[lm.x, lm.y, lm.z] for lm in hand_landmarks.landmark],
                     dtype=np.float32
                 )
-
                 if label == "Left":
                     left_hand = data
                 else:
@@ -75,7 +98,7 @@ class PoseExtractor:
         if face_result.multi_face_landmarks:
             face = np.array(
                 [[lm.x, lm.y, lm.z]
-                 for lm in face_result.multi_face_landmarks[0].landmark],
+                for lm in face_result.multi_face_landmarks[0].landmark],
                 dtype=np.float32
             )
 

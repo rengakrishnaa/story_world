@@ -1,6 +1,6 @@
 # runtime/control/control_bridge.py
 
-from story_world.decision_core import ControlRuntime
+from runtime.control.control_runtime import ControlRuntime
 from runtime.control.dispatcher import BeatDispatcher
 from runtime.control.observation_adapter import ObservationAdapter
 

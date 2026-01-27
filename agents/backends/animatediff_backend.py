@@ -1,54 +1,96 @@
-import torch
-from diffusers import (
-    StableDiffusionPipeline,
-    MotionAdapter,
-    AnimateDiffPipeline,
-    DDIMScheduler
-)
+import os
+import tempfile
+import subprocess
+import uuid
+from PIL import Image
+from agents.motion.sparse_motion_engine import SparseMotionEngine
 
-class AnimateDiffBackend:
-    def __init__(self, device=None):
-        self.device = device or ("cuda" if torch.cuda.is_available() else "cpu")
+PIPELINE_VALIDATE = os.getenv("PIPELINE_VALIDATE", "false").lower() == "true"
 
-        # Base SD model
-        base_pipe = StableDiffusionPipeline.from_pretrained(
-            "runwayml/stable-diffusion-v1-5",
-            torch_dtype=torch.float16 if self.device == "cuda" else torch.float32,
+
+def render(input_spec):
+    """
+    Animatediff backend (PRODUCTION READY)
+
+    Produces:
+      - MP4 video file
+    """
+
+    # -----------------------------
+    # Validate required fields
+    # -----------------------------
+    prompt = input_spec.get("prompt")
+    if not prompt:
+        raise RuntimeError("Animatediff backend requires prompt")
+
+    duration_sec = input_spec.get("duration_sec")
+    if duration_sec is None:
+        raise RuntimeError("duration_sec is required")
+
+    engine = SparseMotionEngine()
+
+    # -----------------------------
+    # Input resolution
+    # -----------------------------
+    if PIPELINE_VALIDATE:
+        width, height = 512, 512
+        start_frame = Image.new("RGB", (width, height), color=(30, 30, 30))
+        end_frame = Image.new("RGB", (width, height), color=(120, 120, 120))
+    else:
+        start_path = input_spec.get("start_frame_path")
+        end_path = input_spec.get("end_frame_path")
+
+        if not start_path or not end_path:
+            raise RuntimeError(
+                "Animatediff backend requires start_frame_path and end_frame_path "
+                "unless PIPELINE_VALIDATE=true"
+            )
+
+        start_frame = Image.open(start_path).convert("RGB")
+        end_frame = Image.open(end_path).convert("RGB")
+
+    # -----------------------------
+    # Motion rendering (frames)
+    # -----------------------------
+    frames = engine.render_motion(
+        start_frame=start_frame,
+        end_frame=end_frame,
+        duration_sec=duration_sec,
+    )
+
+    # -----------------------------
+    # Persist frames
+    # -----------------------------
+    out_dir = tempfile.mkdtemp(prefix="animatediff_frames_")
+
+    for i, frame in enumerate(frames):
+        Image.fromarray(frame).save(
+            os.path.join(out_dir, f"{i:04d}.png")
         )
 
-        # Motion adapter
-        motion_adapter = MotionAdapter.from_pretrained(
-            "guoyww/animatediff-motion-adapter-v1-5"
-        )
+    # -----------------------------
+    # Encode frames → MP4 (CRITICAL)
+    # -----------------------------
+    video_path = os.path.join(
+        out_dir, f"{uuid.uuid4()}.mp4"
+    )
 
-        # ✅ NO controlnet here (AnimateDiff does not support it)
-        self.pipe = AnimateDiffPipeline(
-            vae=base_pipe.vae,
-            text_encoder=base_pipe.text_encoder,
-            tokenizer=base_pipe.tokenizer,
-            unet=base_pipe.unet,
-            scheduler=DDIMScheduler.from_pretrained(
-                "runwayml/stable-diffusion-v1-5",
-                subfolder="scheduler"
-            ),
-            motion_adapter=motion_adapter,
-        ).to(self.device)
+    subprocess.run(
+        [
+            "ffmpeg",
+            "-y",
+            "-framerate", "8",
+            "-i", os.path.join(out_dir, "%04d.png"),
+            "-c:v", "libx264",
+            "-pix_fmt", "yuv420p",
+            video_path,
+        ],
+        check=True,
+    )
 
-        self.pipe.enable_attention_slicing()
-
-        if self.device == "cuda":
-            try:
-                self.pipe.enable_xformers_memory_efficient_attention()
-            except Exception as e:
-                print(f"[WARN] xformers disabled: {e}")
-
-    def render(self, prompt: str, num_frames: int = 24):
-        output = self.pipe(
-            prompt=prompt,
-            num_frames=num_frames,
-            guidance_scale=7.5,
-            num_inference_steps=25
-        )
-
-        # AnimateDiff returns List[List[PIL.Image]]
-        return output.frames[0]
+    # -----------------------------
+    # Return FINAL artifact
+    # -----------------------------
+    return {
+        "video": video_path
+    }

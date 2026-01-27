@@ -1,18 +1,36 @@
+# -------- Core runtime --------
+redis>=5.0.1
+boto3
+python-dotenv
+requests
+
+# -------- Numeric / image --------
 numpy==1.26.4
 pillow
-opencv-python
-mediapipe==0.10.9
-tqdm
+opencv-python-headless
+imageio
+imageio-ffmpeg
 
-# PyTorch CUDA (RunPod compatible)
-torch==2.1.2+cu118
-torchvision==0.16.2+cu118
-torchaudio==2.1.2+cu118
+# -------- Pose / motion --------
+mediapipe==0.10.9
+
+# -------- Torch (CUDA 11.8) --------
+torch==2.1.2
+torchvision==0.16.2
+torchaudio==2.1.2
 --extra-index-url https://download.pytorch.org/whl/cu118
 
-# Motion stack
-ccvfi
-raft
+# -------- Diffusion stack --------
+diffusers==0.25.1
+transformers==4.36.2
+huggingface_hub==0.20.3
+accelerate==0.26.1
+safetensors>=0.4.0
 
-# Optional (only if you use it)
+# -------- Memory / speed --------
 xformers==0.0.23.post1
+
+# -------- Utils --------
+tqdm
+ftfy
+regex

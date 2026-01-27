@@ -11,11 +11,10 @@ from pathlib import Path
 import redis
 import logging
 from datetime import datetime
+import hashlib
 import pandas as pd
 
-# Redis for caching plans (shared with episode_assembler)
-REDIS_URL = os.getenv("REDIS_URL", "redis://localhost:6379")
-r = redis.Redis(host="localhost", port=6379, db=0)
+
 
 logger = logging.getLogger(__name__)
 
@@ -122,6 +121,10 @@ class MockGemini:
     
     def generate_content(self, model: str, contents: str) -> Dict[str, Any]:
         """Mock LLM response for localhost."""
+        if not self.use_real_api:
+            logger.warning("🧪 Narrative planner running in MOCK mode")
+
+
         if self.use_real_api:
             # Production: Real Gemini API call
             import google.genai as genai
@@ -180,22 +183,46 @@ class ProductionNarrativePlanner:
     Integrates with episode_assembler via world_id.
     """
     
-    def __init__(self, world_id: str, use_mock: bool = True):
+    def __init__(
+        self,
+        world_id: str,
+        redis_client=None,
+        use_mock: Optional[bool] = None
+    ):
+        self.redis = redis_client
+
+        if use_mock is None:
+            use_mock = os.getenv("USE_MOCK_PLANNER", "false").lower() == "true"
+
+        env = os.getenv("ENV", "local").lower()
+
+        if env == "production" and use_mock:
+            raise RuntimeError(
+                "USE_MOCK_PLANNER=true is forbidden in production"
+            )
+
+
         self.world_id = world_id
         self.gemini = MockGemini(use_real_api=not use_mock)
-        self.cache_key = f"narrative_plan:{world_id}"
+
         self.plan_file = Path(f"outputs/{world_id}/episode_plan.json")
+
+    def _cache_key(self, script: str) -> str:
+        normalized = script.strip().lower().encode("utf-8")
+        digest = hashlib.sha256(normalized).hexdigest()
+        return f"narrative_plan:{self.world_id}:{digest}"
+
+
     
     def plan_episode(self, world_json: Dict[str, Any], script: str) -> EpisodePlan:
         """Generate structured episode plan with caching."""
+        cache_key = self._cache_key(script)
         
-        # Check Redis cache first
-        cached = r.get(self.cache_key)
+        cached = self.redis.get(cache_key) if self.redis else None
         if cached:
-            logger.info(f"📦 Loaded cached plan from Redis: {self.cache_key}")
+            logger.info(f"📦 Loaded cached plan from Redis: {cache_key}")
             return EpisodePlan.from_dict(json.loads(cached))
         
-        # Generate new plan
         world_str = json.dumps(world_json, indent=2)
         prompt = self._build_prompt(world_str, script)
         
@@ -205,10 +232,9 @@ class ProductionNarrativePlanner:
         try:
             plan = EpisodePlan.from_dict(json.loads(raw_text))
             
-            # Cache for 24h
-            r.setex(self.cache_key, 86400, plan.model_dump_json())
+            if self.redis:
+                self.redis.setex(cache_key, 86400, plan.model_dump_json())
             
-            # Persist to disk
             self.plan_file.parent.mkdir(parents=True, exist_ok=True)
             with open(self.plan_file, "w") as f:
                 json.dump(asdict(plan), f, indent=2)
@@ -292,44 +318,30 @@ CRITICAL:
             )]
         )
 
-# Integration with episode_assembler
-def create_episode_from_plan(planner: ProductionNarrativePlanner, assembler):
-    """Bridge: Plan → Queue shots for rendering."""
-    # Demo world
-    world = {
-        "characters": ["Saitama", "Genos"],
-        "locations": ["rooftop", "city_street"]
-    }
-    script = "Saitama fights a massive monster in the city."
-    
-    plan = planner.plan_episode(world, script)
-    
-    # Queue all beats
-    for act in plan.acts:
-        for scene in act.scenes:
-            for beat in scene.beats:
-                beat_data = {
-                    "description": beat.description,
-                    "characters": beat.characters,
-                    "location": beat.location,
-                    "estimated_duration_sec": beat.estimated_duration_sec
-                }
-                assembler.queue_shot_render(planner.world_id, beat_data)
-    
-    return plan
 
-# CLI
 def main():
     import argparse
+
     parser = argparse.ArgumentParser()
-    parser.add_argument("--world-id", default="demo")
-    parser.add_argument("--mock", action="store_true", default=True)
+    parser.add_argument("--world-id", required=True)
+    parser.add_argument("--intent", required=True)
+    parser.add_argument("--mock", action="store_true")
     args = parser.parse_args()
-    
-    planner = ProductionNarrativePlanner(args.world_id, use_mock=args.mock)
-    world = {"characters": ["Saitama", "Genos"], "locations": ["rooftop"]}
-    plan = planner.plan_episode(world, "Saitama fights monster")
+
+    planner = ProductionNarrativePlanner(
+        args.world_id,
+        use_mock=args.mock,
+    )
+
+    # Minimal safe demo world
+    world = {
+        "characters": [],
+        "locations": []
+    }
+
+    plan = planner.plan_episode(world, args.intent)
     print(json.dumps(asdict(plan), indent=2))
+
 
 if __name__ == "__main__":
     main()

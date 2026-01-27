@@ -1,50 +1,60 @@
 import os
-import threading
 from fastapi import FastAPI
 from dotenv import load_dotenv
 import importlib
-redis = importlib.import_module("redis")
-
-from runtime.episode_runtime import EpisodeRuntime
-from runtime.persistence.sql_store import SQLStore
-from runtime.persistence.redis_store import RedisStore
 from runtime.decision_loop import RuntimeDecisionLoop
-from runtime.stub_planner import StubPlanner
-from runtime.policies.retry_policy import RetryPolicy
-from runtime.policies.quality_policy import QualityPolicy
-from runtime.policies.cost_policy import CostPolicy
-from agents.narrative_planner import ProductionNarrativePlanner
-from runtime.planner_adapter import PlannerAdapter
 
 load_dotenv()
 
+redis = importlib.import_module("redis")
+
+# ⚠️ DO NOT initialize heavy objects at import time
+sql = None
+redis_store = None
+
 app = FastAPI(title="StoryWorld Runtime")
 
-# ---------------- Policies ----------------
+# =====================================================
+# LIFESPAN (runs once, safely)
+# =====================================================
 
-DEFAULT_POLICIES = {
-    "retry": {"max_attempts": 2},
-    "quality": {"min_confidence": 0.7},
-    "cost": {"max_cost": 5.0},
-}
+@app.on_event("startup")
+def startup_event():
+    print(">>> startup reached")
 
+    global sql, redis_store
 
-# ---------------- Infrastructure ----------------
+    from runtime.persistence.sql_store import SQLStore
+    from runtime.persistence.redis_store import RedisStore
 
-sql = SQLStore()
-redis_client = redis.from_url(os.getenv("REDIS_URL", "redis://localhost:6379"))
-redis_store = RedisStore(redis_client)
+    # Lazy SQL
+    sql = SQLStore(lazy=True)
 
-# ---------------- API ----------------
+    # Lazy Redis
+    redis_store = RedisStore(
+        url=os.getenv("REDIS_URL"),
+        lazy=True,
+    )
+
+    print(">>> startup: infrastructure wired")
+
+# =====================================================
+# API
+# =====================================================
 
 @app.post("/episodes")
 def create_episode(world_id: str, intent: str):
+    from runtime.episode_runtime import EpisodeRuntime
+
     runtime = EpisodeRuntime.create(
         world_id=world_id,
         intent=intent,
-        policies=DEFAULT_POLICIES,
+        policies={
+            "retry": {"max_attempts": 2},
+            "quality": {"min_confidence": 0.7},
+            "cost": {"max_cost": 5.0},
+        },
         sql=sql,
-        redis=redis_store,
     )
 
     return {
@@ -55,49 +65,66 @@ def create_episode(world_id: str, intent: str):
 
 @app.post("/episodes/{episode_id}/plan")
 def plan_episode(episode_id: str):
+    from runtime.episode_runtime import EpisodeRuntime
+    from agents.narrative_planner import ProductionNarrativePlanner
+    from runtime.planner_adapter import PlannerAdapter
+
     runtime = EpisodeRuntime.load(
         episode_id=episode_id,
         sql=sql,
-        redis=redis_store,
-        policies=None,
     )
 
-    narrative_planner = ProductionNarrativePlanner(
+    planner = ProductionNarrativePlanner(
         world_id=runtime.world_id,
-        use_mock=True,   # keep mock until stable
+        redis_client=redis_store.redis,   
+        use_mock=True,
     )
 
-    planner = PlannerAdapter(narrative_planner)
-    runtime.plan(planner)
+    adapter = PlannerAdapter(planner)     
+
+    runtime.plan(adapter)
+
 
     return {"state": runtime.state}
 
 
+import subprocess
+import sys
+import os
 
 @app.post("/episodes/{episode_id}/execute")
 def execute_episode(episode_id: str):
+    from runtime.episode_runtime import EpisodeRuntime
+
     runtime = EpisodeRuntime.load(
         episode_id=episode_id,
         sql=sql,
-        redis=redis_store,
-        policies=None,
     )
 
     runtime.schedule()
 
-    loop = RuntimeDecisionLoop(runtime)
-    threading.Thread(target=loop.run, daemon=True).start()
+    subprocess.Popen(
+        [
+            sys.executable,
+            "-m",
+            "runtime.run_decision_loop",
+            episode_id,
+        ],
+        stdout=subprocess.DEVNULL,
+        stderr=subprocess.DEVNULL,
+    )
 
     return {"state": runtime.state}
 
 
+
 @app.get("/episodes/{episode_id}")
 def episode_status(episode_id: str):
+    from runtime.episode_runtime import EpisodeRuntime
+
     runtime = EpisodeRuntime.load(
         episode_id=episode_id,
         sql=sql,
-        redis=redis_store,
-        policies=None,
     )
 
     return runtime.snapshot()

@@ -1,178 +1,114 @@
 import json
-import psycopg2
-from datetime import datetime
-from typing import Dict, List
-from runtime.episode_state import EpisodeState
-from runtime.beat_state import BeatState
 import uuid
 import os
+from datetime import datetime
+from typing import Dict, List, Set
+import sqlite3
+import psycopg2
 from dotenv import load_dotenv
 
-load_dotenv()
-DATABASE_URL = os.getenv("DATABASE_URL")
 
 
 class SQLStore:
-    def __init__(self):
-        if not DATABASE_URL:
+    def __init__(self, lazy=False):
+        self._conn = None
+        self.lazy = lazy
+
+        self.database_url = os.getenv("DATABASE_URL")
+        if not self.database_url:
             raise RuntimeError("DATABASE_URL not set")
 
-        self.conn = psycopg2.connect(DATABASE_URL)
-        self.conn.autocommit = True
+        if not lazy:
+            self._connect()
 
-    # ---------- EPISODES ----------
+   # -------------------------------------------------
+
+    def _cursor(self):
+        return self.conn.cursor()
+
+    def _ph(self):
+        return "?" if self.backend == "sqlite" else "%s"
+
+
+    def _init_sqlite_schema(self):
+        cur = self.conn.cursor()
+        cur.executescript("""
+        CREATE TABLE IF NOT EXISTS episodes (
+            episode_id TEXT PRIMARY KEY,
+            world_id TEXT,
+            intent TEXT,
+            policies TEXT,
+            state TEXT,
+            updated_at TEXT
+        );
+
+        CREATE TABLE IF NOT EXISTS beats (
+            beat_id TEXT PRIMARY KEY,
+            episode_id TEXT,
+            spec TEXT,
+            state TEXT,
+            last_error TEXT,
+            cost_spent REAL DEFAULT 0
+        );
+
+        CREATE TABLE IF NOT EXISTS attempts (
+            attempt_id TEXT PRIMARY KEY,
+            episode_id TEXT,
+            beat_id TEXT,
+            model TEXT,
+            prompt TEXT,
+            success INTEGER,
+            metrics TEXT,
+            started_at TEXT,
+            completed_at TEXT
+        );
+
+        CREATE TABLE IF NOT EXISTS artifacts (
+            artifact_id TEXT PRIMARY KEY,
+            beat_id TEXT,
+            type TEXT,
+            uri TEXT,
+            version INTEGER,
+            attempt_id TEXT
+        );
+        """)
+        self.conn.commit()
+        cur.close()
+
+    # -------------------------------------------------
+    # Episodes
+    # -------------------------------------------------
 
     def create_episode(self, episode_id, world_id, intent, policies, state):
-        with self.conn.cursor() as cur:
+        cur = self._cursor()
+        try:
             cur.execute(
-                """
+                f"""
                 INSERT INTO episodes
                 (episode_id, world_id, intent, policies, state)
-                VALUES (%s, %s, %s, %s, %s)
-                """,
-                (episode_id, world_id, intent, json.dumps(policies), state),
-            )
-
-    def update_episode_state(self, episode_id, state, ts=None):
-        with self.conn.cursor() as cur:
-            cur.execute(
-                """
-                UPDATE episodes
-                SET state = %s, updated_at = %s
-                WHERE episode_id = %s
-                """,
-                (state, ts or datetime.utcnow(), episode_id),
-            )
-
-    def get_attempts(self, beat_id):
-        with self.conn.cursor() as cur:
-            cur.execute(
-                """
-                SELECT attempt_id, success
-                FROM attempts
-                WHERE beat_id = %s
-                """,
-                (beat_id,),
-            )
-            return cur.fetchall()
-
-    # ---------- BEATS ----------
-
-    def create_beat(self, episode_id, beat_spec: Dict):
-        beat_id = beat_spec["id"]
-
-        with self.conn.cursor() as cur:
-            cur.execute(
-                """
-                INSERT INTO beats
-                (beat_id, episode_id, spec, state)
-                VALUES (%s, %s, %s, %s)
+                VALUES ({self._ph()}, {self._ph()}, {self._ph()}, {self._ph()}, {self._ph()})
                 """,
                 (
-                    beat_id,
                     episode_id,
-                    json.dumps(beat_spec),
-                    BeatState.PENDING,
+                    world_id,
+                    intent,
+                    json.dumps(policies or {}),
+                    state,
                 ),
             )
-
-    def get_pending_beats(self, episode_id) -> List[Dict]:
-        with self.conn.cursor() as cur:
-            cur.execute(
-                """
-                SELECT beat_id, spec
-                FROM beats
-                WHERE episode_id = %s AND state = %s
-                """,
-                (episode_id, BeatState.PENDING),
-            )
-            return [{"id": r[0], **r[1]} for r in cur.fetchall()]
-
-    def mark_beat_state(self, beat_id, state, error=None):
-        with self.conn.cursor() as cur:
-            cur.execute(
-                """
-                UPDATE beats
-                SET state = %s, last_error = %s
-                WHERE beat_id = %s
-                """,
-                (state, error, beat_id),
-            )
-
-    def all_beats_completed(self, episode_id) -> bool:
-        with self.conn.cursor() as cur:
-            cur.execute(
-                """
-                SELECT COUNT(*)
-                FROM beats
-                WHERE episode_id = %s
-                AND state NOT IN (%s, %s)
-                """,
-                (episode_id, BeatState.ACCEPTED, BeatState.ABORTED),
-            )
-            return cur.fetchone()[0] == 0
-
-    def any_beats_failed(self, episode_id) -> bool:
-        with self.conn.cursor() as cur:
-            cur.execute(
-                """
-                SELECT COUNT(*)
-                FROM beats
-                WHERE episode_id = %s
-                AND state = %s
-                """,
-                (episode_id, BeatState.ABORTED),
-            )
-            return cur.fetchone()[0] > 0
-
-    # ---------- ATTEMPTS ----------
-
-    def record_attempt(self, episode_id, beat_id, model, prompt, success, metrics):
-        attempt_id = str(uuid.uuid4())
-
-        with self.conn.cursor() as cur:
-            cur.execute(
-                """
-                INSERT INTO attempts
-                (attempt_id,episode_id, beat_id, model, prompt, success, metrics, started_at, completed_at)
-                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
-                """,
-                (
-                    attempt_id,
-                    episode_id,
-                    beat_id,
-                    model,
-                    prompt,
-                    success,
-                    json.dumps(metrics),
-                    datetime.utcnow(),
-                    datetime.utcnow(),
-                ),
-            )
-        return attempt_id
-
-    # ---------- ARTIFACTS ----------
-
-    def record_artifact(self, beat_id, attempt_id, type_, uri, version=1):
-        artifact_id = str(uuid.uuid4())
-
-        with self.conn.cursor() as cur:
-            cur.execute(
-                """
-                INSERT INTO artifacts
-                (artifact_id, beat_id, type, uri, version, attempt_id)
-                VALUES (%s, %s, %s, %s, %s, %s)
-                """,
-                (artifact_id, beat_id, type_, uri, version, attempt_id),
-            )
+            if self.backend == "sqlite":
+                self.conn.commit()
+        finally:
+            cur.close()
 
     def get_episode(self, episode_id):
-        with self.conn.cursor() as cur:
+        cur = self._cursor()
+        try:
             cur.execute(
-                """
+                f"""
                 SELECT episode_id, world_id, intent, policies, state
                 FROM episodes
-                WHERE episode_id = %s
+                WHERE episode_id = {self._ph()}
                 """,
                 (episode_id,),
             )
@@ -184,49 +120,292 @@ class SQLStore:
                 "episode_id": row[0],
                 "world_id": row[1],
                 "intent": row[2],
-                "policies": row[3],
+                "policies": json.loads(row[3]) if isinstance(row[3], str) else row[3],
                 "state": row[4],
             }
+        finally:
+            cur.close()
 
-
-    def get_beats(self, episode_id):
-        with self.conn.cursor() as cur:
+    def update_episode_state(self, episode_id, state, ts=None):
+        cur = self._cursor()
+        try:
             cur.execute(
-                """
-                SELECT beat_id, state, cost_spent, last_error
+                f"""
+                UPDATE episodes
+                SET state = {self._ph()}, updated_at = {self._ph()}
+                WHERE episode_id = {self._ph()}
+                """,
+                (
+                    state,
+                    ts or datetime.utcnow().isoformat(),
+                    episode_id,
+                ),
+            )
+            if self.backend == "sqlite":
+                self.conn.commit()
+        finally:
+            cur.close()
+
+    # -------------------------------------------------
+    # Beats
+    # -------------------------------------------------
+
+    def create_beat(self, episode_id, beat_spec: Dict):
+        cur = self._cursor()
+        try:
+            cur.execute(
+                f"""
+                INSERT INTO beats
+                (beat_id, episode_id, spec, state)
+                VALUES ({self._ph()}, {self._ph()}, {self._ph()}, {self._ph()})
+                """,
+                (
+                    beat_spec["id"],
+                    episode_id,
+                    json.dumps(beat_spec),
+                    "PENDING",
+                ),
+            )
+            if self.backend == "sqlite":
+                self.conn.commit()
+        finally:
+            cur.close()
+
+    def get_beat(self, beat_id):
+        cur = self._cursor()
+        try:
+            cur.execute(
+                f"""
+                SELECT beat_id, episode_id, spec, state
                 FROM beats
-                WHERE episode_id = %s
+                WHERE beat_id = {self._ph()}
+                """,
+                (beat_id,),
+            )
+            row = cur.fetchone()
+            if not row:
+                return None
+            return {
+                "beat_id": row[0],
+                "episode_id": row[1],
+                "spec": json.loads(row[2]),
+                "state": row[3],
+            }
+        finally:
+            cur.close()
+
+    def get_beats(self, episode_id: str):
+        cur = self._cursor()
+        try:
+            cur.execute(
+                f"""
+                SELECT beat_id, spec, state, last_error
+                FROM beats
+                WHERE episode_id = {self._ph()}
+                ORDER BY beat_id
                 """,
                 (episode_id,),
             )
-            return [
-                {
-                    "beat_id": r[0],
-                    "state": r[1],
-                    "cost_spent": r[2],
-                    "last_error": r[3],
-                }
-                for r in cur.fetchall()
-            ]
 
-    def get_artifacts(self, episode_id):
-        with self.conn.cursor() as cur:
+            rows = cur.fetchall()
+            beats = []
+
+            for r in rows:
+                beats.append({
+                    "beat_id": r[0],
+                    **json.loads(r[1]),
+                    "state": r[2],
+                    "last_error": r[3],
+                })
+
+            return beats
+        finally:
+            cur.close()
+
+
+    def count_attempts(self, beat_id: str) -> int:
+        cur = self._cursor()
+        try:
             cur.execute(
-                """
-                SELECT a.artifact_id, a.beat_id, a.type, a.uri, a.version
+                f"""
+                SELECT COUNT(*)
+                FROM attempts
+                WHERE beat_id = {self._ph()}
+                """,
+                (beat_id,),
+            )
+            row = cur.fetchone()
+            return int(row[0]) if row else 0
+        finally:
+            cur.close()
+
+
+    def get_beats_by_state(self, episode_id, states: Set[str]):
+        cur = self._cursor()
+        try:
+            placeholders = ",".join([self._ph()] * len(states))
+            cur.execute(
+                f"""
+                SELECT beat_id, spec
+                FROM beats
+                WHERE episode_id = {self._ph()}
+                AND state IN ({placeholders})
+                """,
+                (episode_id, *states),
+            )
+            return [{"beat_id": r[0], **json.loads(r[1])} for r in cur.fetchall()]
+        finally:
+            cur.close()
+
+    def mark_beat_state(self, beat_id, state, error=None):
+        cur = self._cursor()
+        try:
+            cur.execute(
+                f"""
+                UPDATE beats
+                SET state = {self._ph()}, last_error = {self._ph()}
+                WHERE beat_id = {self._ph()}
+                """,
+                (state, error, beat_id),
+            )
+            if self.backend == "sqlite":
+                self.conn.commit()
+        finally:
+            cur.close()
+
+    # -------------------------------------------------
+    # Attempts
+    # -------------------------------------------------
+
+    def record_attempt(self, episode_id, beat_id, success, metrics):
+        cur = self._cursor()
+        try:
+            cur.execute(
+                f"""
+                INSERT INTO attempts
+                (attempt_id, episode_id, beat_id, success, metrics, started_at, completed_at)
+                VALUES ({self._ph()}, {self._ph()}, {self._ph()}, {self._ph()}, {self._ph()}, {self._ph()}, {self._ph()})
+                """,
+                (
+                    str(uuid.uuid4()),
+                    episode_id,
+                    beat_id,
+                    int(success),
+                    json.dumps(metrics or {}),
+                    datetime.utcnow().isoformat(),
+                    datetime.utcnow().isoformat(),
+                ),
+            )
+            if self.backend == "sqlite":
+                self.conn.commit()
+        finally:
+            cur.close()
+
+    def get_attempts(self, episode_id: str):
+        cur = self._cursor()
+        try:
+            cur.execute(
+                f"""
+                SELECT
+                    attempt_id,
+                    episode_id,
+                    beat_id,
+                    success,
+                    metrics,
+                    started_at,
+                    completed_at
+                FROM attempts
+                WHERE episode_id = {self._ph()}
+                ORDER BY started_at ASC
+                """,
+                (episode_id,),
+            )
+
+            rows = cur.fetchall()
+            attempts = []
+
+            for r in rows:
+                attempts.append({
+                    "attempt_id": r[0],
+                    "episode_id": r[1],
+                    "beat_id": r[2],
+                    "success": bool(r[3]),
+                    "metrics": json.loads(r[4]) if r[4] else {},
+                    "started_at": r[5],
+                    "completed_at": r[6],
+                })
+
+            return attempts
+        finally:
+            cur.close()
+
+
+    def get_artifacts(self, episode_id: str):
+        cur = self._cursor()
+        try:
+            cur.execute(
+                f"""
+                SELECT
+                    a.artifact_id,
+                    a.beat_id,
+                    a.type,
+                    a.uri,
+                    a.version,
+                    a.attempt_id
                 FROM artifacts a
                 JOIN beats b ON a.beat_id = b.beat_id
-                WHERE b.episode_id = %s
+                WHERE b.episode_id = {self._ph()}
+                ORDER BY a.version ASC
                 """,
                 (episode_id,),
             )
-            return [
-                {
+
+            rows = cur.fetchall()
+            artifacts = []
+
+            for r in rows:
+                artifacts.append({
                     "artifact_id": r[0],
                     "beat_id": r[1],
                     "type": r[2],
                     "uri": r[3],
                     "version": r[4],
-                }
-                for r in cur.fetchall()
-            ]
+                    "attempt_id": r[5],
+                })
+
+            return artifacts
+        finally:
+            cur.close()
+
+    def _connect(self):
+        if self._conn is not None:
+            return
+
+        if self.database_url.startswith("sqlite"):
+            path = self.database_url.replace("sqlite:///", "")
+            self._conn = sqlite3.connect(
+                path,
+                check_same_thread=False
+            )
+            self.backend = "sqlite"
+            print(f"[sql] using sqlite ({path})")
+
+            self._init_sqlite_schema()
+
+        elif self.database_url.startswith("postgres"):
+            self._conn = psycopg2.connect(self.database_url)
+            self.backend = "postgres"
+            print("[sql] using postgres")
+
+        else:
+            raise RuntimeError(
+                f"Unsupported DATABASE_URL: {self.database_url}"
+            )
+
+    @property
+    def conn(self):
+        if self._conn is None:
+            self._connect()
+        return self._conn
+
+

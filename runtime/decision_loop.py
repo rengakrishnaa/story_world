@@ -1,30 +1,111 @@
 import time
-from runtime.episode_runtime import EpisodeRuntime
+import json
+import uuid
+from typing import Dict
+
 
 class RuntimeDecisionLoop:
-    def __init__(self, runtime: EpisodeRuntime):
+    def __init__(
+        self,
+        runtime,
+        gpu_job_queue: str,
+        gpu_result_queue: str,
+        redis_client,
+        poll_interval: float = 0.5,
+    ):
         self.runtime = runtime
+        self.redis = redis_client              # ✅ FIX
+        self.gpu_job_queue = gpu_job_queue     # ✅ FIX
+        self.gpu_result_queue = gpu_result_queue
+        self.poll_interval = poll_interval
+
+        # job_id -> beat_id
+        self.active_jobs: Dict[str, str] = {}
+
+    # -------------------------------------------------
+    # Core Loop
+    # -------------------------------------------------
 
     def run(self):
-        print(f"[runtime] Decision loop started for {self.runtime.episode_id}")
+        print(f"[runtime] decision loop started for {self.runtime.episode_id}")
+
+        self._submit_ready_beats()
 
         while not self.runtime.is_terminal():
-            try:
-                observation = self.runtime.redis.pop_observation(
-                    self.runtime.episode_id
-                )
+            self._consume_gpu_results()
+            self._submit_ready_beats()
+            time.sleep(self.poll_interval)
 
-                if not observation:
-                    continue
+        print(f"[runtime] episode {self.runtime.episode_id} completed")
 
-                self.runtime.ingest_observation(
-                    beat_id=observation["beat_id"],
-                    attempt_id=observation.get("attempt_id"),
-                    observation=observation.get("observation"),
-                    error=observation.get("error")
-                )
+    # -------------------------------------------------
+    # Beat → GPU Job submission
+    # -------------------------------------------------
 
-            except Exception as e:
-                print(f"[runtime] decision loop error: {e}")
-                time.sleep(1)
+    def _submit_ready_beats(self):
+        ready_beats = self.runtime.get_executable_beats()
 
+        for beat in ready_beats:
+            beat_id = beat.get("beat_id") or beat.get("id")
+            if not beat_id:
+                continue
+
+            if beat_id in self.active_jobs.values():
+                continue
+
+            job_id = str(uuid.uuid4())
+
+            gpu_job = self.runtime.build_gpu_job(
+                beat_id=beat_id,
+                job_id=job_id,
+            )
+
+            self.redis.rpush(self.gpu_job_queue, json.dumps(gpu_job))
+            self.active_jobs[job_id] = beat_id
+
+            print(f"[runtime] submitted beat {beat_id} as job {job_id}")
+
+    # -------------------------------------------------
+    # GPU Result Consumption
+    # -------------------------------------------------
+
+    def _consume_gpu_results(self):
+        result = self.redis.blpop(self.gpu_result_queue, timeout=1)
+        if not result:
+            return
+
+        _, payload = result
+        result_data = json.loads(payload)
+
+        job_id = result_data.get("job_id")
+        if job_id not in self.active_jobs:
+            print(f"[runtime] unknown job_id {job_id}")
+            return
+
+        beat_id = self.active_jobs.pop(job_id)
+        self._handle_result(beat_id, result_data)
+
+    # -------------------------------------------------
+    # Result Handling
+    # -------------------------------------------------
+
+    def _handle_result(self, beat_id: str, result: dict):
+        status = result.get("status")
+        artifacts = result.get("artifacts", {})
+        error = result.get("error")
+        runtime_metrics = result.get("runtime", {})
+
+        if status == "success":
+            self.runtime.mark_beat_success(
+                beat_id=beat_id,
+                artifacts=artifacts,
+                metrics=runtime_metrics,
+            )
+            print(f"[runtime] beat {beat_id} succeeded")
+        else:
+            self.runtime.mark_beat_failure(
+                beat_id=beat_id,
+                error=error,
+                metrics=runtime_metrics,
+            )
+            print(f"[runtime] beat {beat_id} failed")
