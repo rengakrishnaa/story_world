@@ -131,15 +131,49 @@ class MockGemini:
 
 
         if self.use_real_api:
-            # Production: Real Gemini API call
-            import google.genai as genai
-            genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
-            client = genai.GenerativeModel(model)
-            response = client.generate_content(contents)
-            return {"text": response.text}
+            # Production: Real Gemini API call with retry and fallback logic
+            from google import genai
+            import time
+            import random
+            
+            api_key = os.getenv("GEMINI_API_KEY")
+            if not api_key:
+                logger.error("❌ GEMINI_API_KEY missing, using mock data")
+                return {"text": json.dumps(self._get_mock_payload())}
+
+            client = genai.Client(api_key=api_key)
+            
+            # Use a more available model by default
+            target_model = os.getenv("GEMINI_MODEL", "gemini-2.0-flash")
+            
+            max_retries = 3
+            for attempt in range(max_retries):
+                try:
+                    logger.info(f"🔮 Calling Gemini API ({target_model}) - attempt {attempt + 1}")
+                    response = client.models.generate_content(
+                        model=target_model,
+                        contents=contents
+                    )
+                    return {"text": response.text}
+                except Exception as e:
+                    if "503" in str(e) or "overloaded" in str(e).lower():
+                        if attempt < max_retries - 1:
+                            wait_time = (2 ** attempt) + random.random()
+                            logger.warning(f"⚠️ Gemini overloaded (503). Retrying in {wait_time:.2f}s...")
+                            time.sleep(wait_time)
+                            continue
+                        else:
+                            logger.error("❌ Gemini failed after retries. Falling back to mock data.")
+                    else:
+                        logger.error(f"❌ Gemini API error: {e}")
+                        break
         
-        # Localhost mock: Deterministic anime episode plan
-        mock_plan = {
+        # Fallback to mock data if real API failed or is disabled
+        return {"text": json.dumps(self._get_mock_payload())}
+
+    def _get_mock_payload(self) -> Dict[str, Any]:
+        """Provides a complete mock episode plan for fallback."""
+        return {
             "title": "One Punch Battle: Episode 1",
             "total_duration_min": 8,
             "acts": [
@@ -160,7 +194,7 @@ class MockGemini:
                                     "location": "rooftop"
                                 },
                                 {
-                                    "id": "beat-2", 
+                                    "id": "beat-2",
                                     "description": "Genos (yellow hero) warns Saitama: 'Master, this monster is S-class!'",
                                     "estimated_duration_sec": 8,
                                     "characters": ["Genos", "Saitama"],
@@ -348,18 +382,16 @@ CRITICAL:
             for scene in act.scenes:
                 for beat in scene.beats:
                     # Convert Beat dataclass to dict format expected by runtime
+                    # The entire dict below becomes the "spec" in the SQL database
                     beat_dict = {
                         "id": f"beat-{beat_counter}",
                         "description": beat.description,
                         "duration_sec": beat.estimated_duration_sec,
                         "characters": beat.characters,
                         "location": beat.location,
-                        "spec": {
-                            "description": beat.description,
-                            "backend": self._select_backend(beat),
-                            "style": "cinematic",
-                            "motion_strength": 0.85
-                        }
+                        "backend": self._select_backend(beat),
+                        "style": "cinematic",
+                        "motion_strength": 0.85
                     }
                     beats.append(beat_dict)
                     beat_counter += 1

@@ -11,6 +11,28 @@ import redis
 import boto3
 from dotenv import load_dotenv
 
+# #region agent log
+import json as _json
+from pathlib import Path as _Path
+def _dbg(hypothesisId: str, location: str, message: str, data: dict, runId: str = "run1"):
+    try:
+        _default = _Path(__file__).resolve().parent / ".cursor" / "debug.log"
+        _p = _Path(os.getenv("CURSOR_DEBUG_LOG_PATH", str(_default)))
+        _p.parent.mkdir(parents=True, exist_ok=True)
+        with _p.open("a", encoding="utf-8") as f:
+            f.write(_json.dumps({
+                "sessionId": "debug-session",
+                "runId": runId,
+                "hypothesisId": hypothesisId,
+                "location": location,
+                "message": message,
+                "data": data,
+                "timestamp": int(time.time() * 1000),
+            }) + "\n")
+    except Exception:
+        pass
+# #endregion
+
 # =========================================================
 # ENV
 # =========================================================
@@ -29,6 +51,15 @@ S3_REGION = os.getenv("S3_REGION", "us-east-1")
 
 if not all([S3_ENDPOINT, S3_BUCKET, S3_ACCESS_KEY, S3_SECRET_KEY]):
     raise RuntimeError("S3 configuration incomplete")
+
+_dbg("A", "worker.py:env", "worker env loaded", {
+    "REDIS_URL_set": bool(REDIS_URL),
+    "JOB_QUEUE": JOB_QUEUE,
+    "RESULT_QUEUE": RESULT_QUEUE,
+    "S3_ENDPOINT_set": bool(S3_ENDPOINT),
+    "S3_BUCKET": S3_BUCKET,
+    "S3_REGION": S3_REGION,
+})
 
 # =========================================================
 # CLIENTS
@@ -167,10 +198,15 @@ def execute_job(job: Dict[str, Any]) -> Dict[str, Any]:
 
 async def worker_loop():
     print("[gpu-worker] started")
+    _dbg("E", "worker.py:worker_loop", "worker loop started", {
+        "JOB_QUEUE": JOB_QUEUE,
+        "RESULT_QUEUE": RESULT_QUEUE,
+    })
 
     while True:
         job_data = redis_client.blpop(JOB_QUEUE, timeout=5)
         if not job_data:
+            _dbg("E", "worker.py:worker_loop", "no job (timeout)", {"JOB_QUEUE": JOB_QUEUE})
             await asyncio.sleep(1)
             continue
 
@@ -180,10 +216,24 @@ async def worker_loop():
             job = json.loads(payload)
         except Exception:
             print("[gpu-worker] invalid job payload")
+            _dbg("D", "worker.py:worker_loop", "invalid job payload", {"JOB_QUEUE": JOB_QUEUE})
             continue
 
+        _dbg("A", "worker.py:worker_loop", "job received", {
+            "JOB_QUEUE": JOB_QUEUE,
+            "job_id": job.get("job_id"),
+            "backend": job.get("backend"),
+            "output_path": (job.get("output") or {}).get("path"),
+        })
         result = execute_job(job)
         redis_client.rpush(RESULT_QUEUE, json.dumps(result))
+        _dbg("A", "worker.py:worker_loop", "result pushed", {
+            "RESULT_QUEUE": RESULT_QUEUE,
+            "job_id": result.get("job_id"),
+            "status": result.get("status"),
+            "artifact_keys": list((result.get("artifacts") or {}).keys()),
+            "has_error": bool(result.get("error")),
+        })
 
         print(
             f"[gpu-worker] job={result['job_id']} "

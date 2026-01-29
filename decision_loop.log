@@ -1,0 +1,24 @@
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "C:\Users\KRISH\Desktop\LEARN\Vidme\story_world\runtime\run_decision_loop.py", line 69, in <module>
+    main()
+  File "C:\Users\KRISH\Desktop\LEARN\Vidme\story_world\runtime\run_decision_loop.py", line 65, in main
+    loop.run()
+  File "C:\Users\KRISH\Desktop\LEARN\Vidme\story_world\runtime\decision_loop.py", line 32, in run
+    self._submit_ready_beats()
+  File "C:\Users\KRISH\Desktop\LEARN\Vidme\story_world\runtime\decision_loop.py", line 58, in _submit_ready_beats
+    gpu_job = self.runtime.build_gpu_job(
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\KRISH\Desktop\LEARN\Vidme\story_world\runtime\episode_runtime.py", line 119, in build_gpu_job
+    raise RuntimeError("Beat spec must define backend")
+RuntimeError: Beat spec must define backend
+
+[run_decision_loop] starting for episode ccf8bac5-b418-4d16-9ee5-5a9252bc62d4
+[sql] using sqlite (./local.db)
+[run_decision_loop] connected to SQL: sqlite:///./local.db
+[run_decision_loop] connecting to Redis: rediss://defaul...
+[run_decision_loop] Redis ping successful
+[run_decision_loop] job_queue: storyworld:gpu:jobs
+[run_decision_loop] result_queue: storyworld:gpu:results
+[runtime] decision loop started for ccf8bac5-b418-4d16-9ee5-5a9252bc62d4
