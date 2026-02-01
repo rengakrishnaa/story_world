@@ -125,10 +125,30 @@ class MockGemini:
         self.model = "gemini-3-flash-preview"
     
     def generate_content(self, model: str, contents: str) -> Dict[str, Any]:
-        """Mock LLM response for localhost."""
+        """Return episode plan text from real Gemini or a local mock.
+
+        In mock mode or when Gemini is unavailable, we generate a simple
+        plan that actually reflects the user's script instead of using
+        a hardcoded One Punch demo.
+        """
+        # Try to extract the SCRIPT: ... section from the prompt
+        script_text = ""
+        marker = "SCRIPT:"
+        idx = contents.find(marker)
+        if idx != -1:
+            script_part = contents[idx + len(marker) :]
+            sep = "\n\n"
+            end_idx = script_part.find(sep)
+            if end_idx != -1:
+                script_text = script_part[:end_idx].strip()
+            else:
+                script_text = script_part.strip()
+        else:
+            script_text = contents.strip()
+
         if not self.use_real_api:
             logger.warning("🧪 Narrative planner running in MOCK mode")
-
+            return {"text": json.dumps(self._get_mock_payload(script_text))}
 
         if self.use_real_api:
             # Production: Real Gemini API call with retry and fallback logic
@@ -139,7 +159,7 @@ class MockGemini:
             api_key = os.getenv("GEMINI_API_KEY")
             if not api_key:
                 logger.error("❌ GEMINI_API_KEY missing, using mock data")
-                return {"text": json.dumps(self._get_mock_payload())}
+                return {"text": json.dumps(self._get_mock_payload(script_text))}
 
             client = genai.Client(api_key=api_key)
             
@@ -169,52 +189,53 @@ class MockGemini:
                         break
         
         # Fallback to mock data if real API failed or is disabled
-        return {"text": json.dumps(self._get_mock_payload())}
+        return {"text": json.dumps(self._get_mock_payload(script_text))}
 
-    def _get_mock_payload(self) -> Dict[str, Any]:
-        """Provides a complete mock episode plan for fallback."""
+    def _get_mock_payload(self, script: str) -> Dict[str, Any]:
+        """Provides a simple, intent-driven mock episode plan for fallback."""
+        base_description = script or "Generic anime scene"
+        title = (base_description[:40] + "...") if len(base_description) > 40 else base_description
+
         return {
-            "title": "One Punch Battle: Episode 1",
-            "total_duration_min": 8,
+            "title": f"{title} - Episode 1",
+            "total_duration_min": 2,
             "acts": [
                 {
-                    "name": "Act 1: Monster Approaches",
-                    "summary": "Saitama faces Monster King Orochi on a ruined rooftop.",
+                    "name": "Act 1",
+                    "summary": f"Visualizes the prompt: {base_description}",
                     "scenes": [
                         {
                             "id": "scene-1",
-                            "title": "Rooftop Standoff",
-                            "summary": "Characters confront the monster in epic shounen style.",
+                            "title": "Main Sequence",
+                            "summary": base_description,
                             "beats": [
                                 {
                                     "id": "beat-1",
-                                    "description": "Wide shot: ruined city skyline, massive monster approaches from horizon",
-                                    "estimated_duration_sec": 12,
-                                    "characters": ["Saitama", "Genos"],
-                                    "location": "rooftop"
+                                    "description": f"Establishing shot: {base_description}",
+                                    "estimated_duration_sec": 8,
+                                    "characters": [],
+                                    "location": "unspecified",
                                 },
                                 {
                                     "id": "beat-2",
-                                    "description": "Genos (yellow hero) warns Saitama: 'Master, this monster is S-class!'",
-                                    "estimated_duration_sec": 8,
-                                    "characters": ["Genos", "Saitama"],
-                                    "location": "rooftop"
+                                    "description": f"Character/world reacts: {base_description}",
+                                    "estimated_duration_sec": 6,
+                                    "characters": [],
+                                    "location": "unspecified",
                                 },
                                 {
                                     "id": "beat-3",
-                                    "description": "Saitama yawns casually: 'Oh? Looks kinda strong.' Close-up on bored expression.",
+                                    "description": f"Climactic visual moment: {base_description}",
                                     "estimated_duration_sec": 6,
-                                    "characters": ["Saitama"],
-                                    "location": "rooftop"
-                                }
-                            ]
+                                    "characters": [],
+                                    "location": "unspecified",
+                                },
+                            ],
                         }
-                    ]
+                    ],
                 }
-            ]
+            ],
         }
-        logger.info("🔮 Using mock Gemini response (set GEMINI_USE_REAL=true for live API)")
-        return {"text": json.dumps(mock_plan, indent=2)}
 
 class ProductionNarrativePlanner:
     """
@@ -283,7 +304,7 @@ class ProductionNarrativePlanner:
             
         except Exception as e:
             logger.error(f"❌ Plan validation failed: {e}")
-            return self._fallback_plan()
+            return self._fallback_plan(script)
     
     def _build_prompt(self, world_json: str, script: str) -> str:
         """Production-grade prompt engineering."""
@@ -333,28 +354,36 @@ CRITICAL:
                 raw_text = raw_text.rsplit(marker, 1)[0].strip()
         return raw_text.strip()
     
-    def _fallback_plan(self) -> EpisodePlan:
-        """Graceful degradation."""
+    def _fallback_plan(self, script: str) -> EpisodePlan:
+        """Graceful degradation when JSON parsing fails."""
         logger.warning("🔄 Using fallback plan")
+        base_description = script or "Generic anime scene"
+
         return EpisodePlan(
-            title="Demo: One Punch Battle",
-            total_duration_min=8,
-            acts=[Act(
-                name="Act 1: Monster Fight",
-                summary="Saitama vs monster in epic battle.",
-                scenes=[Scene(
-                    id="scene-1",
-                    title="Rooftop Battle",
-                    summary="Hero confronts monster",
-                    beats=[Beat(
-                        id="beat-1",
-                        description="Saitama one-punches monster into orbit",
-                        estimated_duration_sec=5,
-                        characters=["Saitama"],
-                        location="rooftop"
-                    )]
-                )]
-            )]
+            title=f"Fallback: {base_description[:40]}",
+            total_duration_min=2,
+            acts=[
+                Act(
+                    name="Act 1",
+                    summary=f"Fallback visualization of: {base_description}",
+                    scenes=[
+                        Scene(
+                            id="scene-1",
+                            title="Fallback Scene",
+                            summary=base_description,
+                            beats=[
+                                Beat(
+                                    id="beat-1",
+                                    description=base_description,
+                                    estimated_duration_sec=6,
+                                    characters=[],
+                                    location="unspecified",
+                                )
+                            ],
+                        )
+                    ],
+                )
+            ],
         )
 
     def generate_beats(self, intent: str) -> List[Dict[str, Any]]:
@@ -368,8 +397,30 @@ CRITICAL:
         Returns:
             List of beat dictionaries with id, description, duration, etc.
         """
+        # Detect visual style from intent
+        try:
+            from agents.style_detector import detect_style
+            style_profile = detect_style(intent)
+            detected_style = style_profile.style.value
+            style_confidence = style_profile.confidence
+            logger.info(f"Auto-detected style: {detected_style} ({style_confidence:.2f})")
+        except Exception as e:
+            logger.warning(f"Style detection failed, defaulting to cinematic: {e}")
+            detected_style = "cinematic"
+            style_profile = None
+        
         # Load world data
         world_json = self._load_world_data()
+        
+        # Initialize character consistency engine
+        try:
+            from agents.character_consistency import get_consistency_engine
+            char_engine = get_consistency_engine(self.world_id)
+            char_engine.register_from_world(world_json)
+            logger.info(f"Character consistency engine initialized with {len(char_engine.characters)} characters")
+        except Exception as e:
+            logger.warning(f"Character consistency init failed: {e}")
+            char_engine = None
         
         # Generate episode plan
         episode_plan = self.plan_episode(world_json, intent)
@@ -381,22 +432,72 @@ CRITICAL:
         for act in episode_plan.acts:
             for scene in act.scenes:
                 for beat in scene.beats:
+                    # Select backend based on style profile
+                    backend = self._select_backend(beat)
+                    if style_profile and style_profile.recommended_model:
+                        backend = style_profile.recommended_model
+                    
                     # Convert Beat dataclass to dict format expected by runtime
-                    # The entire dict below becomes the "spec" in the SQL database
                     beat_dict = {
                         "id": f"beat-{beat_counter}",
                         "description": beat.description,
                         "duration_sec": beat.estimated_duration_sec,
                         "characters": beat.characters,
                         "location": beat.location,
-                        "backend": self._select_backend(beat),
-                        "style": "cinematic",
-                        "motion_strength": 0.85
+                        "backend": backend,
+                        "style": detected_style,
+                        "motion_strength": 0.85,
                     }
+                    
+                    # Add style profile data if available
+                    if style_profile:
+                        beat_dict["style_profile"] = {
+                            "style_prefix": style_profile.style_prefix,
+                            "style_suffix": style_profile.style_suffix,
+                            "negative_prompt": style_profile.negative_prompt,
+                            "lighting_style": style_profile.lighting_style,
+                            "color_temperature": style_profile.color_temperature,
+                        }
+                    
+                    # Add character consistency data
+                    if char_engine and beat.characters:
+                        char_conditioning = char_engine.build_character_conditioning(
+                            beat.characters,
+                            style=detected_style
+                        )
+                        beat_dict["character_conditioning"] = char_conditioning
+                        
+                        # Enhance description with character details
+                        beat_dict["enhanced_description"] = char_engine.enhance_prompt_with_characters(
+                            beat.description,
+                            beat.characters,
+                            style=detected_style
+                        )
+                    
+                    # Add motion config based on beat description
+                    try:
+                        from agents.motion.enhanced_motion_engine import get_motion_engine
+                        motion_engine = get_motion_engine()
+                        motion_config = motion_engine.detect_motion_type(beat.description)
+                        beat_dict["motion_config"] = motion_config.to_dict()
+                        logger.debug(f"Beat {beat_counter}: motion={motion_config.motion_type.value}")
+                    except Exception as e:
+                        logger.warning(f"Motion detection failed: {e}")
+                    
+                    # Add cinematic specification (camera, shot, lighting, color)
+                    try:
+                        from agents.cinematic import direct_beat
+                        cinematic_spec = direct_beat(beat.description, detected_style)
+                        beat_dict["cinematic_spec"] = cinematic_spec.to_dict()
+                        beat_dict["cinematic_prompt"] = cinematic_spec.get_full_prompt(beat.description)
+                        logger.debug(f"Beat {beat_counter}: {cinematic_spec.get_summary()}")
+                    except Exception as e:
+                        logger.warning(f"Cinematic direction failed: {e}")
+                    
                     beats.append(beat_dict)
                     beat_counter += 1
         
-        logger.info(f"Generated {len(beats)} beats from intent")
+        logger.info(f"Generated {len(beats)} beats from intent (style: {detected_style})")
         return beats
     
     def _load_world_data(self) -> Dict[str, Any]:

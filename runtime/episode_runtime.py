@@ -13,7 +13,6 @@ import os
 from datetime import datetime
 
 
-
 class EpisodeRuntime:
     def __init__(self, episode_id, world_id, intent, policies, sql: SQLStore):
         self.episode_id = episode_id
@@ -118,6 +117,16 @@ class EpisodeRuntime:
         if not backend:
             raise RuntimeError("Beat spec must define backend")
 
+        # If animatediff is selected but no frames were provided, fall back to svd.
+        # This matches the runtime evidence from Runpod:
+        # "Animatediff backend requires start_frame_path and end_frame_path unless PIPELINE_VALIDATE=true"
+        original_backend = backend
+        if backend == "animatediff":
+            has_start = "start_frame_path" in spec and bool(spec.get("start_frame_path"))
+            has_end = "end_frame_path" in spec and bool(spec.get("end_frame_path"))
+            if not (has_start and has_end):
+                backend = "svd"
+
         duration_sec = float(beat.get("duration_sec", 4.0))
 
         motion = {
@@ -163,6 +172,7 @@ class EpisodeRuntime:
                 "beat_id": beat_id,
                 "attempt": self.sql.count_attempts(beat_id),
                 "created_at": datetime.utcnow().isoformat(),
+                "original_backend": original_backend,
             },
         }
 

@@ -22,3 +22,1833 @@ RuntimeError: Beat spec must define backend
 [run_decision_loop] job_queue: storyworld:gpu:jobs
 [run_decision_loop] result_queue: storyworld:gpu:results
 [runtime] decision loop started for ccf8bac5-b418-4d16-9ee5-5a9252bc62d4
+
+[run_decision_loop] starting for episode 439e88c1-0e83-45ba-a53a-ee088bc8178c
+[sql] using sqlite (./local.db)
+[run_decision_loop] connected to SQL: sqlite:///./local.db
+[run_decision_loop] connecting to Redis: rediss://defaul...
+[run_decision_loop] Redis ping successful
+[run_decision_loop] job_queue: storyworld:gpu:jobs
+[run_decision_loop] result_queue: storyworld:gpu:results
+[runtime] decision loop started for 439e88c1-0e83-45ba-a53a-ee088bc8178c
+[runtime] submitted beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-1 as job 2c1be64c-dfea-4aab-b590-2ce9fa8db8c4
+[runtime] submitted beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-2 as job 303ce886-32c9-4c23-83d9-38b49daa2fc3
+[runtime] submitted beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-3 as job f7247837-cea9-497d-bfb8-2ebb96674bb4
+[runtime] beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-1 failed
+[runtime] submitted beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-1 as job f43c974b-e234-419d-b634-01c4cd1bd8b9
+[runtime] beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-2 failed
+[runtime] submitted beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-2 as job 8e4d005c-1f55-44c8-a5e3-f79b8cae8998
+[runtime] beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-3 failed
+[runtime] submitted beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-3 as job 7c3ffb25-f945-40ed-9ee7-9aaac84b1ebd
+[runtime] beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-1 failed
+[runtime] submitted beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-1 as job f2dd90d9-9bd6-45bc-9c75-c0f7b1fa0d18
+[runtime] beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-2 failed
+[runtime] submitted beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-2 as job 47f3cf6d-e2ca-4bd0-bc92-84a3a016bd82
+[runtime] beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-3 failed
+[runtime] submitted beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-3 as job de304ca6-b8ab-476b-8998-93cff550e72f
+[runtime] beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-1 failed
+[runtime] submitted beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-1 as job 5242c84c-1dc8-4a43-9d77-acb2a3cb3814
+[runtime] beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-2 failed
+[runtime] submitted beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-2 as job 72f2ce9d-a993-40c0-9cc6-1ac7bcd77a03
+[runtime] beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-3 failed
+[runtime] submitted beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-3 as job d98ccaba-72d6-4e4d-9d7a-470ba680867a
+[runtime] beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-1 failed
+[runtime] submitted beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-1 as job 4c952734-d666-4521-97df-d9ddbf4458ae
+[runtime] beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-2 failed
+[runtime] submitted beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-2 as job e1e6510e-0c93-40fd-8414-b332e871e6ca
+[runtime] beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-3 failed
+[runtime] submitted beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-3 as job 4f69f4c7-6dad-465c-a44b-b7f74cae931e
+[runtime] beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-1 failed
+[runtime] submitted beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-1 as job cea17c90-ef18-430d-9826-63af608c033f
+[runtime] beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-2 failed
+[runtime] submitted beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-2 as job c2c98746-959e-45f7-abcc-b5b25470d682
+[runtime] beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-3 failed
+[runtime] submitted beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-3 as job 1e6d8561-6269-42ad-9932-3a525c8f9be9
+[runtime] beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-1 failed
+[runtime] submitted beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-1 as job cf2a609b-6e38-4b0b-8b8c-94c2c4e78e2f
+[runtime] beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-2 failed
+[runtime] submitted beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-2 as job a3112510-bc42-4da0-8338-96d202e35c72
+[runtime] beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-3 failed
+[runtime] submitted beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-3 as job 901e0b38-6c05-4bc9-a06e-492e27e137f1
+[runtime] beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-1 failed
+[runtime] submitted beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-1 as job 153c1a49-8742-4b31-86c2-0c4ccf4b26a9
+[runtime] beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-2 failed
+[runtime] submitted beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-2 as job 15a590d5-c12d-4d88-82ae-162c93a645cc
+[runtime] beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-3 failed
+[runtime] submitted beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-3 as job d583c218-bc19-43cc-a72e-c7ecd619ed74
+[runtime] beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-1 failed
+[runtime] submitted beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-1 as job 4c340c42-1e2f-42ea-a47f-330e16d47676
+[runtime] beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-2 failed
+[runtime] submitted beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-2 as job eee0dce8-2d0e-4a23-ab00-7899dbbe0107
+[runtime] beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-3 failed
+[runtime] submitted beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-3 as job 49eab039-9834-4329-824b-fbacf21c2229
+[runtime] beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-1 failed
+[runtime] submitted beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-1 as job 72280f8f-ec95-44d9-b36d-89361eaa9a4b
+[runtime] beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-2 failed
+[runtime] submitted beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-2 as job ebcddecf-67c4-4507-8090-98c08a005369
+[runtime] beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-3 failed
+[runtime] submitted beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-3 as job 1ae0c381-4272-4a44-8a86-2a3799860702
+[runtime] beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-1 failed
+[runtime] submitted beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-1 as job 427aad47-c000-44a5-824f-00f59e84e924
+[runtime] beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-2 failed
+[runtime] submitted beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-2 as job 89bb621c-c512-40be-9cef-89acdb5df868
+[runtime] beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-3 failed
+[runtime] submitted beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-3 as job 0fc3ae46-6cdc-405b-9d51-24b9e462b6a1
+[runtime] beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-1 failed
+[runtime] submitted beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-1 as job 4720b7db-42b9-434b-8e95-6e95465562bb
+[runtime] beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-2 failed
+[runtime] submitted beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-2 as job 5c334d72-f937-450e-96db-36877834bbd0
+[runtime] beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-3 failed
+[runtime] submitted beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-3 as job 8f3de643-213d-4135-badf-fb851981fc4f
+[runtime] beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-1 failed
+[runtime] submitted beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-1 as job 1f497199-138c-46a2-bc45-67b77579c8ae
+[runtime] beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-3 failed
+[runtime] submitted beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-3 as job dc43043c-7aa0-46be-be5d-b7ae998571d7
+[runtime] beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-1 failed
+[runtime] submitted beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-1 as job 3cede2cd-d3f9-4600-9f58-2827102722c4
+[runtime] beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-3 failed
+[runtime] submitted beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-3 as job 476a3d80-2bf9-46ae-aadb-499e1339d610
+[runtime] beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-1 failed
+[runtime] submitted beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-1 as job 1d3e3e65-0706-4ad8-a4c3-36d94b71e1e3
+[runtime] beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-3 failed
+[runtime] submitted beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-3 as job b3a7c776-da13-4cce-841c-65072d6d33e4
+[runtime] beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-1 failed
+[runtime] submitted beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-1 as job 2f25eb47-681b-41b2-9ee8-5694fa39f409
+[runtime] beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-3 failed
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "C:\Users\KRISH\Desktop\LEARN\Vidme\story_world\runtime\run_decision_loop.py", line 104, in <module>
+    main()
+  File "C:\Users\KRISH\Desktop\LEARN\Vidme\story_world\runtime\run_decision_loop.py", line 100, in main
+    loop.run()
+  File "C:\Users\KRISH\Desktop\LEARN\Vidme\story_world\runtime\decision_loop.py", line 58, in run
+    self._consume_gpu_results()
+  File "C:\Users\KRISH\Desktop\LEARN\Vidme\story_world\runtime\decision_loop.py", line 108, in _consume_gpu_results
+    result = self.redis.blpop(self.gpu_result_queue, timeout=1)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\KRISH\Desktop\LEARN\Vidme\story_world\.venv\Lib\site-packages\redis\commands\core.py", line 2771, in blpop
+    return self.execute_command("BLPOP", *keys)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\KRISH\Desktop\LEARN\Vidme\story_world\.venv\Lib\site-packages\redis\client.py", line 657, in execute_command
+    return self._execute_command(*args, **options)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\KRISH\Desktop\LEARN\Vidme\story_world\.venv\Lib\site-packages\redis\client.py", line 668, in _execute_command
+    return conn.retry.call_with_retry(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\KRISH\Desktop\LEARN\Vidme\story_world\.venv\Lib\site-packages\redis\retry.py", line 116, in call_with_retry
+    return do()
+           ^^^^
+  File "C:\Users\KRISH\Desktop\LEARN\Vidme\story_world\.venv\Lib\site-packages\redis\client.py", line 669, in <lambda>
+    lambda: self._send_command_parse_response(
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\KRISH\Desktop\LEARN\Vidme\story_world\.venv\Lib\site-packages\redis\client.py", line 640, in _send_command_parse_response
+    return self.parse_response(conn, command_name, **options)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\KRISH\Desktop\LEARN\Vidme\story_world\.venv\Lib\site-packages\redis\client.py", line 691, in parse_response
+    response = connection.read_response()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\KRISH\Desktop\LEARN\Vidme\story_world\.venv\Lib\site-packages\redis\connection.py", line 1133, in read_response
+    response = self._parser.read_response(disable_decoding=disable_decoding)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\KRISH\Desktop\LEARN\Vidme\story_world\.venv\Lib\site-packages\redis\_parsers\resp2.py", line 15, in read_response
+    result = self._read_response(disable_decoding=disable_decoding)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\KRISH\Desktop\LEARN\Vidme\story_world\.venv\Lib\site-packages\redis\_parsers\resp2.py", line 25, in _read_response
+    raw = self._buffer.readline()
+          ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\KRISH\Desktop\LEARN\Vidme\story_world\.venv\Lib\site-packages\redis\_parsers\socket.py", line 115, in readline
+    self._read_from_socket()
+  File "C:\Users\KRISH\Desktop\LEARN\Vidme\story_world\.venv\Lib\site-packages\redis\_parsers\socket.py", line 65, in _read_from_socket
+    data = self._sock.recv(socket_read_size)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.11_3.11.2544.0_x64__qbz5n2kfra8p0\Lib\ssl.py", line 1295, in recv
+    return self.read(buflen)
+           ^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.11_3.11.2544.0_x64__qbz5n2kfra8p0\Lib\ssl.py", line 1168, in read
+    return self._sslobj.read(len)
+           ^^^^^^^^^^^^^^^^^^^^^^
+KeyboardInterrupt
+[runtime] submitted beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-3 as job b515554d-7df8-4edd-8d6f-681392cd41c4
+[runtime] beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-1 failed
+[runtime] submitted beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-1 as job e7afc4d0-376e-4562-9bf4-6ede92c7f21c
+[runtime] beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-3 failed
+[runtime] submitted beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-3 as job 78ead9b9-8ee7-4f61-bf13-8ed6804b5d8c
+[runtime] beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-1 failed
+[runtime] submitted beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-1 as job bc6fb72f-9017-49a8-b240-5555d9f6c7ed
+[runtime] beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-3 failed
+[runtime] submitted beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-3 as job ae150378-c2e5-440b-ad43-506f4319c9e6
+[runtime] beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-1 failed
+[runtime] submitted beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-1 as job a911ea34-b0bf-40d3-aa01-5648c3e26837
+[runtime] beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-3 failed
+[runtime] submitted beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-3 as job 0c908353-a654-4b64-ace0-ec4b74daea41
+[runtime] beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-1 failed
+[runtime] submitted beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-1 as job 6d9be240-bd9d-4a03-936a-cf10d7fd9d51
+[runtime] beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-3 failed
+[runtime] submitted beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-3 as job de0ec3e4-fc71-475f-8ed5-12b8d868dc45
+[runtime] beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-1 failed
+[runtime] submitted beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-1 as job 047665c4-aee6-4c63-8b8b-f4c89147cb21
+[runtime] beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-3 failed
+[runtime] submitted beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-3 as job 47d4ad59-ca15-4565-9812-8a55f36add90
+[runtime] beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-1 failed
+[runtime] submitted beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-1 as job 2657508c-56e5-4951-a262-4883faabd432
+[runtime] beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-3 failed
+[runtime] submitted beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-3 as job f3f707d8-0623-40f5-a7d4-6faee00797a8
+[runtime] beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-1 failed
+[runtime] submitted beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-1 as job 8c5939e8-eba8-4e2f-91ec-9e6bab1d6514
+[runtime] beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-3 failed
+[runtime] submitted beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-3 as job 7514af00-490b-49ec-b654-4c4cb2725dea
+[runtime] beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-1 failed
+[runtime] submitted beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-1 as job 46e7f770-29c6-4f5d-ba25-0e9bcad8d053
+[runtime] beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-3 failed
+[runtime] submitted beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-3 as job 8f39b61c-e3b9-4d23-83a4-8a0fdc4565d3
+[runtime] beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-1 failed
+[runtime] submitted beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-1 as job 8bc39195-5a6c-43e8-943d-1b0faa23a907
+[runtime] beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-3 failed
+[runtime] submitted beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-3 as job 7835cd84-2e7e-41c2-b948-2337fdc745a7
+[runtime] beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-1 failed
+[runtime] submitted beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-1 as job eb0dab2a-a787-42f0-9c99-316c8d2eb9b9
+[runtime] beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-3 failed
+[runtime] submitted beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-3 as job 88e71bb9-96f3-4aa9-b880-e60bbf38c583
+[runtime] beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-1 failed
+[runtime] submitted beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-1 as job 65307942-09dd-4dfe-9dd2-c4503839a1be
+[runtime] beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-3 failed
+[runtime] submitted beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-3 as job 5a6181c8-0996-40b5-a06f-3f4e8316d5ad
+[runtime] beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-1 failed
+[runtime] submitted beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-1 as job 1910b2df-65dd-4457-aa87-0b9f845dab3d
+[runtime] beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-3 failed
+[runtime] submitted beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-3 as job 5bf4c37a-3427-476b-9fdf-c1bf45226848
+[runtime] beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-1 failed
+[runtime] submitted beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-1 as job ea8b4191-a953-44f3-8e47-c290ad24b090
+[runtime] beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-3 failed
+[runtime] submitted beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-3 as job 3f025967-4e7c-4e30-b514-de0938f0b8ce
+[runtime] beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-1 failed
+[runtime] submitted beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-1 as job 79583de1-5851-445b-ba59-237ced3f735d
+[runtime] beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-1 failed
+[runtime] submitted beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-1 as job 881c83de-e67b-48c2-a677-0b61c3ab5b67
+[runtime] beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-1 failed
+[runtime] submitted beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-1 as job 5e06dba7-7b86-4fd7-9c64-90b47686d919
+[runtime] beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-1 failed
+[runtime] submitted beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-1 as job 56e053eb-6736-4c83-9cbc-a1a08f1ad29e
+[runtime] beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-1 failed
+[runtime] submitted beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-1 as job 39e65589-0463-4184-b964-35cc574a43b9
+[runtime] beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-1 failed
+[runtime] submitted beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-1 as job 1877d952-04c5-41aa-9c3e-5eaa18cb7399
+[runtime] beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-1 failed
+[runtime] submitted beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-1 as job 187cf496-5723-44c1-9bef-cf0f58f8733e
+[runtime] beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-1 failed
+[runtime] submitted beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-1 as job a8623ee2-0014-4d1b-82a7-f2c0450084e8
+[runtime] beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-1 failed
+[runtime] submitted beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-1 as job 78ac2699-2812-4db2-8b4c-7240ceb4781f
+[runtime] beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-1 failed
+[runtime] submitted beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-1 as job 4d26557e-6984-4e13-be01-0719b5e05c28
+[runtime] beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-1 failed
+[runtime] submitted beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-1 as job 25477665-daf0-478a-a314-23906867897f
+[runtime] beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-1 failed
+[runtime] submitted beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-1 as job b2652a41-6971-487a-a5eb-4ecf56983ae3
+[runtime] beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-1 failed
+[runtime] submitted beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-1 as job 6e7f5afa-58ea-4dff-a123-8777887560b2
+[runtime] beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-1 failed
+[runtime] submitted beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-1 as job 09d512d5-2c30-4c22-9fad-51ced3232103
+[runtime] beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-1 failed
+[runtime] submitted beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-1 as job 707c76c6-c9b3-491e-93bf-31cdefdce6f0
+[runtime] beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-1 failed
+[runtime] submitted beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-1 as job abcd3db6-104d-4226-a15d-aa023f8ee955
+[runtime] beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-1 failed
+[runtime] submitted beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-1 as job 9a25f74e-e16a-4425-a7e1-0fd5772f27b2
+[runtime] beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-1 failed
+[runtime] submitted beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-1 as job 1a1616ad-af8d-4a6d-834a-b03516e924ec
+[runtime] beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-1 failed
+[runtime] submitted beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-1 as job 2b4fd45a-e044-4835-a3cf-26b691e5d063
+[runtime] beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-1 failed
+[runtime] submitted beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-1 as job 99f6c408-bf0b-4daa-8d88-c5b846d276c8
+[runtime] beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-1 failed
+[runtime] submitted beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-1 as job 6b1b33e2-7d3a-4f8d-8838-05755c939827
+[runtime] beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-1 failed
+[runtime] submitted beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-1 as job 2c621f97-52c9-4710-91a7-c9360cd4db22
+[runtime] beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-1 failed
+[runtime] submitted beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-1 as job 4d736cb9-4d27-4908-9b1c-e02104e6c834
+[runtime] beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-1 failed
+[runtime] submitted beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-1 as job 903898f3-69da-487a-b271-00949f6eb1df
+[runtime] beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-1 failed
+[runtime] submitted beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-1 as job 8212e154-f933-46bf-91f0-de90bd60099e
+[runtime] beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-1 failed
+[runtime] submitted beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-1 as job 5d36a463-ed3b-42c7-8540-fb16dc30cddb
+[runtime] beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-1 failed
+[runtime] submitted beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-1 as job e3296d36-4ff2-4e4c-8a62-b4b429cef699
+[runtime] beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-1 failed
+[runtime] submitted beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-1 as job ead72741-7972-49f0-80d3-5ba9d2592528
+[runtime] beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-1 failed
+[runtime] submitted beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-1 as job 85574d10-62ff-4e86-800e-62559603cbfd
+[runtime] beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-1 failed
+[runtime] submitted beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-1 as job f1b45dd0-a652-485b-9a95-c6e8f7a6a9ed
+[runtime] beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-1 failed
+[runtime] submitted beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-1 as job f1cd491c-c72f-4c21-b26b-ec91583aba41
+[runtime] beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-1 failed
+[runtime] submitted beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-1 as job 124f6504-05d0-4724-9105-1ba388940d48
+[runtime] beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-1 failed
+[runtime] submitted beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-1 as job 467fdc3c-fb7d-4297-97da-25d6fbc4cc9e
+[runtime] beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-1 failed
+[runtime] submitted beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-1 as job 79b2b0b3-329b-4777-a065-9b35d7a006f4
+[runtime] beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-1 failed
+[runtime] submitted beat 439e88c1-0e83-45ba-a53a-ee088bc8178c:beat-1 as job be82cdbc-4969-4e2c-96af-07af1a6c9f3b
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "C:\Users\KRISH\Desktop\LEARN\Vidme\story_world\runtime\run_decision_loop.py", line 104, in <module>
+    main()
+  File "C:\Users\KRISH\Desktop\LEARN\Vidme\story_world\runtime\run_decision_loop.py", line 100, in main
+    loop.run()
+  File "C:\Users\KRISH\Desktop\LEARN\Vidme\story_world\runtime\decision_loop.py", line 58, in run
+    self._consume_gpu_results()
+  File "C:\Users\KRISH\Desktop\LEARN\Vidme\story_world\runtime\decision_loop.py", line 108, in _consume_gpu_results
+    result = self.redis.blpop(self.gpu_result_queue, timeout=1)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\KRISH\Desktop\LEARN\Vidme\story_world\.venv\Lib\site-packages\redis\commands\core.py", line 2771, in blpop
+    return self.execute_command("BLPOP", *keys)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\KRISH\Desktop\LEARN\Vidme\story_world\.venv\Lib\site-packages\redis\client.py", line 657, in execute_command
+    return self._execute_command(*args, **options)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\KRISH\Desktop\LEARN\Vidme\story_world\.venv\Lib\site-packages\redis\client.py", line 668, in _execute_command
+    return conn.retry.call_with_retry(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\KRISH\Desktop\LEARN\Vidme\story_world\.venv\Lib\site-packages\redis\retry.py", line 116, in call_with_retry
+    return do()
+           ^^^^
+  File "C:\Users\KRISH\Desktop\LEARN\Vidme\story_world\.venv\Lib\site-packages\redis\client.py", line 669, in <lambda>
+    lambda: self._send_command_parse_response(
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\KRISH\Desktop\LEARN\Vidme\story_world\.venv\Lib\site-packages\redis\client.py", line 640, in _send_command_parse_response
+    return self.parse_response(conn, command_name, **options)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\KRISH\Desktop\LEARN\Vidme\story_world\.venv\Lib\site-packages\redis\client.py", line 691, in parse_response
+    response = connection.read_response()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\KRISH\Desktop\LEARN\Vidme\story_world\.venv\Lib\site-packages\redis\connection.py", line 1133, in read_response
+    response = self._parser.read_response(disable_decoding=disable_decoding)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\KRISH\Desktop\LEARN\Vidme\story_world\.venv\Lib\site-packages\redis\_parsers\resp2.py", line 15, in read_response
+    result = self._read_response(disable_decoding=disable_decoding)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\KRISH\Desktop\LEARN\Vidme\story_world\.venv\Lib\site-packages\redis\_parsers\resp2.py", line 25, in _read_response
+    raw = self._buffer.readline()
+          ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\KRISH\Desktop\LEARN\Vidme\story_world\.venv\Lib\site-packages\redis\_parsers\socket.py", line 115, in readline
+    self._read_from_socket()
+  File "C:\Users\KRISH\Desktop\LEARN\Vidme\story_world\.venv\Lib\site-packages\redis\_parsers\socket.py", line 65, in _read_from_socket
+    data = self._sock.recv(socket_read_size)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.11_3.11.2544.0_x64__qbz5n2kfra8p0\Lib\ssl.py", line 1295, in recv
+    return self.read(buflen)
+           ^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.11_3.11.2544.0_x64__qbz5n2kfra8p0\Lib\ssl.py", line 1168, in read
+    return self._sslobj.read(len)
+           ^^^^^^^^^^^^^^^^^^^^^^
+KeyboardInterrupt
+
+[run_decision_loop] starting for episode 944e126a-1a46-474e-b497-b79d7cb5a998
+[sql] using sqlite (./local.db)
+[run_decision_loop] connected to SQL: sqlite:///./local.db
+[run_decision_loop] connecting to Redis: rediss://defaul...
+[run_decision_loop] Redis ping successful
+[run_decision_loop] job_queue: storyworld:gpu:jobs
+[run_decision_loop] result_queue: storyworld:gpu:results
+[runtime] decision loop started for 944e126a-1a46-474e-b497-b79d7cb5a998
+[runtime] submitted beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-1 as job 03830fb8-f4bc-4aea-bd2c-78c9e994f7d4
+[runtime] submitted beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-2 as job ba2fccce-7fcd-46cc-b382-3beeb430b9a6
+[runtime] submitted beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-3 as job 0fda157e-32ae-43a0-a7e8-9dfe1754e0f4
+[runtime] beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-1 failed
+[runtime] submitted beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-1 as job 8987500a-a500-409c-ad1a-c35986259c32
+[runtime] beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-2 failed
+[runtime] submitted beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-2 as job 1753c04c-130f-4e4c-8322-9c0fcbae36f1
+[runtime] beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-3 failed
+[runtime] submitted beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-3 as job 1a373d52-30b3-49f3-bb21-ef0163ade10d
+[runtime] beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-1 failed
+[runtime] submitted beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-1 as job 88bf1325-1201-4222-a656-40eee2742c6e
+[runtime] beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-2 failed
+[runtime] submitted beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-2 as job 0694d6ac-e0c8-4266-9fdc-6eef150c361b
+[runtime] beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-3 failed
+[runtime] submitted beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-3 as job 162a66f3-f9a6-4e22-83dc-74b70754b370
+[runtime] beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-1 failed
+[runtime] submitted beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-1 as job cf868ef2-b316-4d75-b16a-4ee060081eab
+[runtime] beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-2 failed
+[runtime] submitted beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-2 as job 3eb1adde-f116-4444-ae77-7281c4f811d8
+[runtime] beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-3 failed
+[runtime] submitted beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-3 as job ecd53638-977f-434c-99a4-1b881016c681
+[runtime] beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-1 failed
+[runtime] submitted beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-1 as job 46b5a1d9-e1be-4c2c-9b06-9d4a4d1a53c7
+[runtime] beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-2 failed
+[runtime] submitted beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-2 as job 55f741b9-13a6-4812-b7af-a5e937dd8938
+[runtime] beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-3 failed
+[runtime] submitted beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-3 as job e854751a-1dd8-4769-8f44-c28756470d22
+[runtime] beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-1 failed
+[runtime] submitted beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-1 as job 9825b043-c334-4e7d-92b7-d37a1fb0a6f9
+[runtime] beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-2 failed
+[runtime] submitted beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-2 as job 05523ccd-63ee-4527-abf4-9f4d9d5d4112
+[runtime] beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-3 failed
+[runtime] submitted beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-3 as job 7b3ede7e-8816-4cd3-9c12-7a1201cdbb1e
+[runtime] beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-1 failed
+[runtime] submitted beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-1 as job bb8f7181-e3a1-496a-9b41-2ad95b94a761
+[runtime] beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-2 failed
+[runtime] submitted beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-2 as job 28e9a719-58d2-465a-a7d4-42a2a32a0e6b
+[runtime] beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-3 failed
+[runtime] submitted beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-3 as job 5a416a71-4deb-43f0-994d-cb7ff1f6b0ab
+[runtime] beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-1 failed
+[runtime] submitted beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-1 as job be7bfe88-5c1e-47cb-bb40-b8a951ab2bc2
+[runtime] beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-2 failed
+[runtime] submitted beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-2 as job ceb1aab8-1307-4bcf-b55b-15c6316ca586
+[runtime] beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-3 failed
+[runtime] submitted beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-3 as job e699ebb5-c7e6-49eb-bb71-3ab3ef0d3b06
+[runtime] beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-1 failed
+[runtime] submitted beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-1 as job a0291a52-5abe-448f-92bd-b1726fa71060
+[runtime] beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-2 failed
+[runtime] submitted beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-2 as job f3eb454d-f2dc-4f61-ac72-09ef49573daa
+[runtime] beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-3 failed
+[runtime] submitted beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-3 as job 4c812345-2296-4a04-b3ea-30dcbd4d8319
+[runtime] beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-1 failed
+[runtime] submitted beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-1 as job 3b06886b-2a5e-46df-95d6-a6cd13e851c6
+[runtime] beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-2 failed
+[runtime] submitted beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-2 as job 0fb0af9a-4f24-4384-83a8-dfbea2e369cc
+[runtime] beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-3 failed
+[runtime] submitted beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-3 as job 78a90dba-a7aa-4122-a108-71d576bac155
+[runtime] beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-1 failed
+[runtime] submitted beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-1 as job 1a2ac5be-02d7-45a9-b9d1-03f04a7afa75
+[runtime] beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-2 failed
+[runtime] submitted beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-2 as job c82b4bee-e144-4d59-ac19-331b30e0a0d4
+[runtime] beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-3 failed
+[runtime] submitted beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-3 as job 9d2ae594-c0a4-4cdc-8888-30ee49bae3b7
+[runtime] beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-1 failed
+[runtime] submitted beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-1 as job 6c5b2592-70d6-41fa-924a-de55aef206a6
+[runtime] beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-2 failed
+[runtime] submitted beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-2 as job eddec60e-cd90-4911-89cf-5f9f3a8b9409
+[runtime] beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-3 failed
+[runtime] submitted beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-3 as job 1ce6b6d6-0ef1-4662-b678-818fb8b3de5e
+[runtime] beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-1 failed
+[runtime] submitted beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-1 as job 387b42f9-f02e-4a1d-ac0c-0df83d7f58df
+[runtime] beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-2 failed
+[runtime] submitted beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-2 as job 5a113086-07bf-451a-9fa2-8c4220849b76
+[runtime] beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-3 failed
+[runtime] submitted beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-3 as job 5f1d039c-65d1-4d4f-a1d0-0439e3984071
+[runtime] beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-1 failed
+[runtime] submitted beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-1 as job 9b6b0688-2c45-4cf8-8d78-9995f6244d77
+[runtime] beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-2 failed
+[runtime] submitted beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-2 as job 95ff85a9-8478-40ee-b4e0-80faf2cf2fad
+[runtime] beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-3 failed
+[runtime] submitted beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-3 as job 28efb862-f46c-4c3a-a08d-bedaea75c672
+[runtime] beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-1 failed
+[runtime] submitted beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-1 as job 223ee257-95e3-4a14-8fb3-1f1f5a128860
+[runtime] beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-2 failed
+[runtime] submitted beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-2 as job c97ea421-feaa-4856-9794-4869ebb5c4b0
+[runtime] beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-3 failed
+[runtime] submitted beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-3 as job 8c7d884c-96d3-4750-98fc-e1c493e09a28
+[runtime] beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-1 failed
+[runtime] submitted beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-1 as job 05f967da-2985-4fbd-a51f-d0f8a9fc75bb
+[runtime] beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-2 failed
+[runtime] submitted beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-2 as job 58d46efb-23de-4952-8b43-f8418a86bbec
+[runtime] beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-3 failed
+[runtime] submitted beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-3 as job 46d5fcaf-a260-4910-b409-e2f7c245b799
+[runtime] beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-1 failed
+[runtime] submitted beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-1 as job 87db49b9-9f1f-4f81-a268-0a0470e94395
+[runtime] beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-2 failed
+[runtime] submitted beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-2 as job c9e7bdcb-1d4a-423c-ac47-28f812f0ca73
+[runtime] beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-3 failed
+[runtime] submitted beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-3 as job e35d7b2b-ad8b-417e-9015-301103d39035
+[runtime] beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-1 failed
+[runtime] submitted beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-1 as job b13b7cec-d169-419d-ad82-01b4df58ab5f
+[runtime] beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-2 failed
+[runtime] submitted beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-2 as job f4d6a51c-a03d-4dc7-9a2b-ee4830ab3807
+[runtime] beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-3 failed
+[runtime] submitted beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-3 as job ed1ecf6a-55a4-47e9-a03f-44266f358284
+[runtime] beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-1 failed
+[runtime] submitted beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-1 as job ace6bd88-a4fc-43d2-92e4-f20176819c3b
+[runtime] beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-2 failed
+[runtime] submitted beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-2 as job 8e92f34b-b6aa-427a-8639-035bfc868ed2
+[runtime] beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-3 failed
+[runtime] submitted beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-3 as job 9ba28d8c-54ec-4e48-aeab-e606f801db5a
+[runtime] beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-1 failed
+[runtime] submitted beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-1 as job 9b4a3611-de77-4351-b39e-fec0d3556d5c
+[runtime] beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-2 failed
+[runtime] submitted beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-2 as job def446ef-ab6b-4cd0-9615-f53c0183066b
+[runtime] beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-3 failed
+[runtime] submitted beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-3 as job d891316e-d397-41b5-98c8-a93dcdf9fb1a
+[runtime] beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-1 failed
+[runtime] submitted beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-1 as job 3c4f8060-8db4-4e5b-8555-702e2ea05263
+[runtime] beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-2 failed
+[runtime] submitted beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-2 as job 1d91f510-6eb6-4ed0-9ff1-5940ab783d09
+[runtime] beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-3 failed
+[runtime] submitted beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-3 as job 85896619-1177-4550-b994-d2c9b551a3e5
+[runtime] beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-1 failed
+[runtime] submitted beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-1 as job dee23ecb-39d9-4e43-a4e2-2cb821aa8f68
+[runtime] beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-2 failed
+[runtime] submitted beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-2 as job 64b67260-3ddf-43c0-863f-c5a2841613b0
+[runtime] beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-3 failed
+[runtime] submitted beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-3 as job e72fb957-65b5-40c7-ac47-e6474fa00579
+[runtime] beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-1 failed
+[runtime] submitted beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-1 as job 37a957ac-5539-4013-8fe6-775348b98be8
+[runtime] beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-2 failed
+[runtime] submitted beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-2 as job b41cf999-e4eb-4506-b4b6-1edb20b19290
+[runtime] beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-3 failed
+[runtime] submitted beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-3 as job b098bc7d-194a-4b6e-9cf6-71e275fe3b59
+[runtime] beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-1 failed
+[runtime] submitted beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-1 as job d671de38-122a-46e5-9720-10aff89e25f7
+[runtime] beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-2 failed
+[runtime] submitted beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-2 as job ee3357cb-3178-4b33-b950-4ebdea406519
+[runtime] beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-3 failed
+[runtime] submitted beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-3 as job f60989bb-b8d7-4a20-a567-bf67598008bc
+[runtime] beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-1 failed
+[runtime] submitted beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-1 as job e29f94a8-ae28-42b0-b156-e9a17df99b3d
+
+[run_decision_loop] starting for episode 944e126a-1a46-474e-b497-b79d7cb5a998
+[sql] using sqlite (./local.db)
+[run_decision_loop] connected to SQL: sqlite:///./local.db
+[run_decision_loop] connecting to Redis: rediss://defaul...
+[run_decision_loop] Redis ping successful
+[run_decision_loop] job_queue: storyworld:gpu:jobs
+[run_decision_loop] result_queue: storyworld:gpu:results
+[runtime] decision loop started for 944e126a-1a46-474e-b497-b79d7cb5a998
+[runtime] submitted beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-1 as job c8036979-e3e8-4f84-ad2f-272b58728ba1
+[runtime] submitted beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-2 as job ec69f285-1cb5-4773-906f-531a87ddc231
+[runtime] submitted beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-3 as job 3495704e-0dd1-4260-a61e-4e1e463e0ba6
+[runtime] unknown job_id f60989bb-b8d7-4a20-a567-bf67598008bc
+[runtime] unknown job_id e29f94a8-ae28-42b0-b156-e9a17df99b3d
+[runtime] beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-1 failed
+[runtime] submitted beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-1 as job bec6d937-5fe6-47dc-bfd4-47ad3c726f59
+[runtime] beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-2 failed
+[runtime] submitted beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-2 as job 6b339cda-70f4-4e75-8698-a54ce8b5fa1b
+[runtime] beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-3 failed
+[runtime] submitted beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-3 as job 15b63001-51ee-4e54-9972-8ff80650f201
+[runtime] beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-1 failed
+[runtime] submitted beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-1 as job 0bf10986-3582-4a36-892e-a05c541c0f68
+[runtime] beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-2 failed
+[runtime] submitted beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-2 as job 92ae1c4f-109f-46b7-acb7-60c65188da5b
+[runtime] beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-3 failed
+[runtime] submitted beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-3 as job ebd3b3e5-62d4-4a29-b4fb-f7b54f9d93d2
+[runtime] beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-1 failed
+[runtime] submitted beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-1 as job ca4d5d0f-5c7b-412b-aee3-8b16c28773a6
+[runtime] beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-2 failed
+[runtime] submitted beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-2 as job c1777ec1-d33a-41ed-8c68-7e9ed7e8fd06
+[runtime] beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-3 failed
+[runtime] submitted beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-3 as job 21cda6be-fd89-4852-a0cf-8038d34e1a35
+[runtime] beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-1 failed
+[runtime] submitted beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-1 as job 911a8ad1-3a78-4106-a2e6-12c88a768815
+[runtime] beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-2 failed
+[runtime] submitted beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-2 as job 673b4f0f-764c-492b-9699-35a6979fc308
+[runtime] beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-3 failed
+[runtime] submitted beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-3 as job 7587e85b-611f-4531-be76-0cbd355a6b80
+[runtime] beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-1 failed
+[runtime] submitted beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-1 as job 253bdd81-c727-4cfd-919b-44b01c40996c
+[runtime] beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-2 failed
+[runtime] submitted beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-2 as job bf09a56b-15bf-43a7-b065-94f44e830f1b
+[runtime] beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-3 failed
+[runtime] submitted beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-3 as job f280bc74-4fc6-4085-9c92-c33f91498984
+[runtime] beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-1 failed
+[runtime] submitted beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-1 as job 6dce0e9c-31d2-447c-b30d-1bbc1714ae6b
+[runtime] beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-2 failed
+[runtime] submitted beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-2 as job 782d08a8-0f27-40c2-8425-b36b1118c53d
+[runtime] beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-3 failed
+[runtime] submitted beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-3 as job 03a98c11-abd2-43d7-9725-d5055e234271
+[runtime] beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-1 failed
+[runtime] submitted beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-1 as job 62140710-121c-4a12-b212-b3049a130daa
+[runtime] beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-2 failed
+[runtime] submitted beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-2 as job 46c8b727-bb8a-41c8-bde2-05d10ebdc05d
+[runtime] beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-3 failed
+[runtime] submitted beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-3 as job cb813c8d-58e9-4435-ba19-2864f31651be
+[runtime] beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-1 failed
+[runtime] submitted beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-1 as job f45b884b-7de2-4ba1-a777-4e3b082cde49
+[runtime] beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-2 failed
+[runtime] submitted beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-2 as job 3de204d3-4f8e-4614-9463-c33623922d6d
+[runtime] beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-3 failed
+[runtime] submitted beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-3 as job 442aa017-da96-49e5-ab2e-a6495a91d1d6
+[runtime] beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-1 failed
+[runtime] submitted beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-1 as job 3b7b3f1e-d90b-4075-86e6-df48135fef54
+[runtime] beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-2 failed
+[runtime] submitted beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-2 as job 4b6d8cfe-519f-4fe8-b492-4f218ea5cd05
+[runtime] beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-3 failed
+[runtime] submitted beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-3 as job 4715a607-094e-43f5-8754-d1842fe24146
+[runtime] beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-1 failed
+[runtime] submitted beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-1 as job 70b2c0a8-8296-475e-98b4-7b0c8628077e
+[runtime] beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-2 failed
+[runtime] submitted beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-2 as job e1796e69-3c34-4e29-9646-91ac362aefde
+[runtime] beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-3 failed
+[runtime] submitted beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-3 as job 29015026-277d-42a2-990d-d29756e32c09
+[runtime] beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-1 failed
+[runtime] submitted beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-1 as job bab94cd2-df62-48e7-8944-56494569b02b
+[runtime] beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-2 failed
+[runtime] submitted beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-2 as job 2dbd192d-f47f-4956-9a00-fe03c43cfd02
+[runtime] beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-3 failed
+[runtime] submitted beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-3 as job 280a01f5-1397-452c-bf8a-293388a941cc
+[runtime] beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-1 failed
+[runtime] submitted beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-1 as job b6081102-afcc-4684-8774-d05fb77d6580
+[runtime] beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-2 failed
+[runtime] submitted beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-2 as job 938d3cb0-b42b-4695-8d7f-620c0bd0e6a4
+[runtime] beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-3 failed
+[runtime] submitted beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-3 as job 2d4fed0a-0a02-4a4e-8d35-423074dfb594
+[runtime] beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-1 failed
+[runtime] submitted beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-1 as job a6847e79-2078-4695-978c-4c6f21757491
+[runtime] beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-2 failed
+[runtime] submitted beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-2 as job 4a7966b0-5704-4570-b77a-7652c14b068f
+[runtime] beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-3 failed
+[runtime] submitted beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-3 as job 2f7b4a8b-7dc4-4c97-b5c1-f1d62cf2482b
+[runtime] beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-1 failed
+[runtime] submitted beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-1 as job 8fac7a69-e346-4fd0-9e65-fa12d58f1e77
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "C:\Users\KRISH\Desktop\LEARN\Vidme\story_world\runtime\run_decision_loop.py", line 104, in <module>
+    main()
+  File "C:\Users\KRISH\Desktop\LEARN\Vidme\story_world\runtime\run_decision_loop.py", line 100, in main
+    loop.run()
+  File "C:\Users\KRISH\Desktop\LEARN\Vidme\story_world\runtime\decision_loop.py", line 59, in run
+    self._submit_ready_beats()
+  File "C:\Users\KRISH\Desktop\LEARN\Vidme\story_world\runtime\decision_loop.py", line 91, in _submit_ready_beats
+    # Route results to a per-episode queue to avoid consuming stale results
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\KRISH\Desktop\LEARN\Vidme\story_world\.venv\Lib\site-packages\redis\commands\core.py", line 3001, in rpush
+    return self.execute_command("RPUSH", name, *values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\KRISH\Desktop\LEARN\Vidme\story_world\.venv\Lib\site-packages\redis\client.py", line 657, in execute_command
+    return self._execute_command(*args, **options)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\KRISH\Desktop\LEARN\Vidme\story_world\.venv\Lib\site-packages\redis\client.py", line 668, in _execute_command
+    return conn.retry.call_with_retry(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\KRISH\Desktop\LEARN\Vidme\story_world\.venv\Lib\site-packages\redis\retry.py", line 116, in call_with_retry
+    return do()
+           ^^^^
+  File "C:\Users\KRISH\Desktop\LEARN\Vidme\story_world\.venv\Lib\site-packages\redis\client.py", line 669, in <lambda>
+    lambda: self._send_command_parse_response(
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\KRISH\Desktop\LEARN\Vidme\story_world\.venv\Lib\site-packages\redis\client.py", line 640, in _send_command_parse_response
+    return self.parse_response(conn, command_name, **options)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\KRISH\Desktop\LEARN\Vidme\story_world\.venv\Lib\site-packages\redis\client.py", line 691, in parse_response
+    response = connection.read_response()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\KRISH\Desktop\LEARN\Vidme\story_world\.venv\Lib\site-packages\redis\connection.py", line 1133, in read_response
+    response = self._parser.read_response(disable_decoding=disable_decoding)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\KRISH\Desktop\LEARN\Vidme\story_world\.venv\Lib\site-packages\redis\_parsers\resp2.py", line 15, in read_response
+    result = self._read_response(disable_decoding=disable_decoding)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\KRISH\Desktop\LEARN\Vidme\story_world\.venv\Lib\site-packages\redis\_parsers\resp2.py", line 25, in _read_response
+    raw = self._buffer.readline()
+          ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\KRISH\Desktop\LEARN\Vidme\story_world\.venv\Lib\site-packages\redis\_parsers\socket.py", line 115, in readline
+    self._read_from_socket()
+  File "C:\Users\KRISH\Desktop\LEARN\Vidme\story_world\.venv\Lib\site-packages\redis\_parsers\socket.py", line 65, in _read_from_socket
+    data = self._sock.recv(socket_read_size)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.11_3.11.2544.0_x64__qbz5n2kfra8p0\Lib\ssl.py", line 1295, in recv
+    return self.read(buflen)
+           ^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.11_3.11.2544.0_x64__qbz5n2kfra8p0\Lib\ssl.py", line 1168, in read
+    return self._sslobj.read(len)
+           ^^^^^^^^^^^^^^^^^^^^^^
+KeyboardInterrupt
+[runtime] beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-2 failed
+[runtime] submitted beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-2 as job 5e31dddb-0f48-4fda-be44-6a4fdc364bfe
+[runtime] beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-3 failed
+[runtime] submitted beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-3 as job b9b09303-ba52-4a78-8940-2d3b36c8af9c
+[runtime] beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-1 failed
+[runtime] submitted beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-1 as job 8c6ee70c-ecdf-45a0-8a10-c8d02ca9122f
+[runtime] beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-2 failed
+[runtime] submitted beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-2 as job 943973d7-ebee-4ed2-b4ac-4bf13b5cf1c9
+[runtime] beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-3 failed
+[runtime] submitted beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-3 as job 1deec480-29f6-475f-af80-0c1d3be9a3da
+[runtime] beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-1 failed
+[runtime] submitted beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-1 as job d6ed0cdb-e572-448e-a9c6-95f3318d1393
+[runtime] beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-2 failed
+[runtime] submitted beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-2 as job ff668f07-a965-4475-b617-9468dd32d8e4
+[runtime] beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-3 failed
+[runtime] submitted beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-3 as job 09a970e3-df2b-4fe3-82ea-323e57cda803
+[runtime] beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-1 failed
+[runtime] submitted beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-1 as job c1696175-56ac-4873-b3b9-ab5ebd23ffa0
+[runtime] beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-2 failed
+[runtime] submitted beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-2 as job 91259fe2-3feb-464a-9730-1008a3e0633e
+[runtime] beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-3 failed
+[runtime] submitted beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-3 as job f0690f2e-1d6c-40dc-a324-466f1e5a74b9
+[runtime] beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-1 failed
+[runtime] submitted beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-1 as job c9e062a4-7a9e-49ea-87a4-0a875e17ad99
+[runtime] beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-2 failed
+[runtime] submitted beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-2 as job 6113c48f-3fcb-4004-bf1c-f85b8f5cf1e5
+[runtime] beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-3 failed
+[runtime] submitted beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-3 as job 08317d02-1a5c-4230-a2f6-01f91264041d
+[runtime] beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-1 failed
+[runtime] submitted beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-1 as job ca017c72-8173-4fdb-8ed5-020a32d00ac2
+[runtime] beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-2 failed
+[runtime] submitted beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-2 as job 9790d3a1-aac9-46b9-87af-db4a0b5a8f0a
+[runtime] beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-3 failed
+[runtime] submitted beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-3 as job 198f40f0-57f6-45ae-acc8-bdeb94ff2416
+[runtime] beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-1 failed
+[runtime] submitted beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-1 as job e675be1f-d261-4c64-a023-c9c985322e24
+[runtime] beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-2 failed
+[runtime] submitted beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-2 as job f9c7c778-a002-4129-831f-71cddf048021
+[runtime] beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-3 failed
+[runtime] submitted beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-3 as job 014befd9-ca36-4e5f-a1e0-98489e6bf7e3
+[runtime] beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-1 failed
+[runtime] submitted beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-1 as job a0ca0743-7a44-4ade-8b07-d261dde91f0c
+[runtime] beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-2 failed
+[runtime] submitted beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-2 as job c7d8d167-0427-4664-93f5-2c8fcff0a251
+[runtime] beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-3 failed
+[runtime] submitted beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-3 as job 27882f9c-87f7-463c-88e2-01920590d6f2
+[runtime] beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-1 failed
+[runtime] submitted beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-1 as job 62485cb4-3fa2-4f10-b323-da73f1560a85
+[runtime] beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-2 failed
+[runtime] submitted beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-2 as job ec74e720-f3da-4dc2-ba96-5ee2b1604caa
+[runtime] beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-3 failed
+[runtime] submitted beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-3 as job 153d6f86-b5e1-4ff1-9124-6dff3474464d
+[runtime] beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-1 failed
+[runtime] submitted beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-1 as job 0dc90a5b-5923-40fa-a320-ceaf52e0d6cf
+[runtime] beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-2 failed
+[runtime] submitted beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-2 as job 07b6c025-7a72-429a-a3d1-d9b2b3624cec
+[runtime] beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-3 failed
+[runtime] submitted beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-3 as job ef019554-8fce-4b53-85df-1881a15e4030
+[runtime] beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-1 failed
+[runtime] submitted beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-1 as job cfe9568d-7a67-4233-8e7f-617b738e1614
+[runtime] beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-2 failed
+[runtime] submitted beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-2 as job 9274dd10-7e69-48f9-a85d-d75649942b5c
+[runtime] beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-3 failed
+[runtime] submitted beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-3 as job 4b64f9a5-2a06-4d85-b0f3-482b7ca4c97e
+[runtime] beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-1 failed
+[runtime] submitted beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-1 as job bef108e2-ab39-46ba-85ac-1d5972a4cdf3
+[runtime] beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-2 failed
+[runtime] submitted beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-2 as job 7a757461-a374-4277-af06-0a9ee81bb3d1
+[runtime] beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-3 failed
+[runtime] submitted beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-3 as job 3be64937-a92c-4c90-8100-586f2b96c631
+[runtime] beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-1 failed
+[runtime] submitted beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-1 as job 2cdeb777-c4c2-4f6e-97f8-0ebba33eda6c
+[runtime] beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-2 failed
+[runtime] submitted beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-2 as job 8685d07a-ad7b-4e8e-ab31-029e55478c11
+[runtime] beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-3 failed
+[runtime] submitted beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-3 as job 225cbc1b-a9e2-4355-b9b3-dbb995e37a29
+[runtime] beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-1 failed
+[runtime] submitted beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-1 as job d5dfcf01-94e5-431a-9447-a147d90ed199
+[runtime] beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-2 failed
+[runtime] submitted beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-2 as job 0744d93c-df50-447e-96b3-0ffbc69b68b5
+[runtime] beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-3 failed
+[runtime] submitted beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-3 as job ce921ee4-473d-47cb-b23a-6e8e5dcb405c
+[runtime] beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-1 failed
+[runtime] submitted beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-1 as job 2581a1ad-369d-4283-97ff-402265cfb629
+[runtime] beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-2 failed
+[runtime] submitted beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-2 as job 934d4345-8e5b-4506-ba38-1a91c7864393
+[runtime] beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-3 failed
+[runtime] submitted beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-3 as job 590ec9cd-365c-466d-9e3d-3a53b2cc96ee
+[runtime] beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-1 failed
+[runtime] submitted beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-1 as job 59d9d5bf-c1ff-4010-b54e-18804dd956e6
+[runtime] beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-2 failed
+[runtime] submitted beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-2 as job ca6a6a55-d1d3-4e41-b940-dcfa2b4e93ec
+[runtime] beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-3 failed
+[runtime] submitted beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-3 as job 72d65905-f30c-42ab-8d16-72340bee5884
+[runtime] beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-1 failed
+[runtime] submitted beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-1 as job d8b6d195-3bf2-4a65-a1ea-beb41a4b878c
+[runtime] beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-2 failed
+[runtime] submitted beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-2 as job 35c511b8-5e12-49d1-9c91-1cf767fe6a2b
+[runtime] beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-3 failed
+[runtime] submitted beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-3 as job f276536e-ebfd-4e85-bbe3-eaf664edf5ac
+[runtime] beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-1 failed
+[runtime] submitted beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-1 as job 35752415-8265-4a23-9074-9765c4910305
+[runtime] beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-2 failed
+[runtime] submitted beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-2 as job 7ceeda5d-cbc6-46c4-b146-398e53433640
+[runtime] beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-3 failed
+[runtime] submitted beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-3 as job 9dc25a07-5060-4820-ab9c-35ce6402a427
+[runtime] beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-1 failed
+[runtime] submitted beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-1 as job e8b80a4a-6323-4b82-97b2-9f13f64bbf36
+[runtime] beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-2 failed
+[runtime] submitted beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-2 as job b8b1ce8f-b3bf-4212-bd63-81c8e6e195e2
+[runtime] beat 944e126a-1a46-474e-b497-b79d7cb5a998:beat-3 failed
+
+[run_decision_loop] starting for episode a70bc72e-d1f8-4269-a972-551fb9ea575f
+[sql] using sqlite (./local.db)
+[run_decision_loop] connected to SQL: sqlite:///./local.db
+[run_decision_loop] connecting to Redis: rediss://defaul...
+[run_decision_loop] Redis ping successful
+[run_decision_loop] job_queue: storyworld:gpu:jobs
+[run_decision_loop] result_queue: storyworld:gpu:results
+[runtime] decision loop started for a70bc72e-d1f8-4269-a972-551fb9ea575f
+[runtime] submitted beat a70bc72e-d1f8-4269-a972-551fb9ea575f:beat-1 as job 318f5335-20d4-4436-8832-6c0453ae048c
+[runtime] submitted beat a70bc72e-d1f8-4269-a972-551fb9ea575f:beat-2 as job db79f28b-c48b-4092-add8-6fedcdb5c09b
+[runtime] submitted beat a70bc72e-d1f8-4269-a972-551fb9ea575f:beat-3 as job 87e4d00b-e011-4368-859f-050174c5a1cb
+[runtime] unknown job_id e8b80a4a-6323-4b82-97b2-9f13f64bbf36
+[runtime] unknown job_id b8b1ce8f-b3bf-4212-bd63-81c8e6e195e2
+[runtime] unknown job_id 4fff0e70-938c-452c-a177-b7c96366839c
+[runtime] beat a70bc72e-d1f8-4269-a972-551fb9ea575f:beat-1 succeeded
+[runtime] beat a70bc72e-d1f8-4269-a972-551fb9ea575f:beat-2 succeeded
+[runtime] beat a70bc72e-d1f8-4269-a972-551fb9ea575f:beat-3 succeeded
+[runtime] episode a70bc72e-d1f8-4269-a972-551fb9ea575f completed
+
+[run_decision_loop] starting for episode 07163f4b-08e7-4978-91a5-e572c27a0614
+[sql] using sqlite (./local.db)
+[run_decision_loop] connected to SQL: sqlite:///./local.db
+[run_decision_loop] connecting to Redis: rediss://defaul...
+[run_decision_loop] Redis ping successful
+[run_decision_loop] job_queue: storyworld:gpu:jobs
+[run_decision_loop] result_queue: storyworld:gpu:results:07163f4b-08e7-4978-91a5-e572c27a0614
+[runtime] decision loop started for 07163f4b-08e7-4978-91a5-e572c27a0614
+[runtime] submitted beat 07163f4b-08e7-4978-91a5-e572c27a0614:beat-1 as job 7ba81046-2971-4216-9b97-2e02c1898de3
+[runtime] submitted beat 07163f4b-08e7-4978-91a5-e572c27a0614:beat-2 as job 06f23021-8a7f-426b-956d-9df26db6d3f1
+[runtime] submitted beat 07163f4b-08e7-4978-91a5-e572c27a0614:beat-3 as job 84073e9a-25bb-4c52-b293-092cdc0fb4d6
+[runtime] beat 07163f4b-08e7-4978-91a5-e572c27a0614:beat-1 succeeded
+[runtime] beat 07163f4b-08e7-4978-91a5-e572c27a0614:beat-2 succeeded
+[runtime] beat 07163f4b-08e7-4978-91a5-e572c27a0614:beat-3 succeeded
+[runtime] episode 07163f4b-08e7-4978-91a5-e572c27a0614 completed
+
+[run_decision_loop] starting for episode 745b5ee9-8372-4e72-819a-465c9fe62fa8
+[sql] using sqlite (./local.db)
+[run_decision_loop] connected to SQL: sqlite:///./local.db
+[run_decision_loop] connecting to Redis: rediss://defaul...
+[run_decision_loop] Redis ping successful
+[run_decision_loop] job_queue: storyworld:gpu:jobs
+[run_decision_loop] result_queue: storyworld:gpu:results:745b5ee9-8372-4e72-819a-465c9fe62fa8
+[runtime] decision loop started for 745b5ee9-8372-4e72-819a-465c9fe62fa8
+[runtime] submitted beat 745b5ee9-8372-4e72-819a-465c9fe62fa8:beat-1 as job 4adfa3ae-7ed5-4f6a-9d18-8509a407f623
+[runtime] submitted beat 745b5ee9-8372-4e72-819a-465c9fe62fa8:beat-2 as job ea0b5b4e-949c-4359-a9dd-58c9c976dc5b
+[runtime] submitted beat 745b5ee9-8372-4e72-819a-465c9fe62fa8:beat-3 as job 0c473401-89a7-47c8-b497-94028c0ee8f1
+[runtime] beat 745b5ee9-8372-4e72-819a-465c9fe62fa8:beat-1 succeeded
+[runtime] beat 745b5ee9-8372-4e72-819a-465c9fe62fa8:beat-2 succeeded
+[runtime] beat 745b5ee9-8372-4e72-819a-465c9fe62fa8:beat-3 succeeded
+[runtime] episode 745b5ee9-8372-4e72-819a-465c9fe62fa8 completed
+
+[run_decision_loop] starting for episode bab3694b-87e4-4c16-93be-8ae7bfa6dfb6
+[sql] using sqlite (./local.db)
+[run_decision_loop] connected to SQL: sqlite:///./local.db
+[run_decision_loop] connecting to Redis: rediss://defaul...
+[run_decision_loop] Redis ping successful
+[run_decision_loop] job_queue: storyworld:gpu:jobs
+[run_decision_loop] result_queue: storyworld:gpu:results:bab3694b-87e4-4c16-93be-8ae7bfa6dfb6
+[runtime] decision loop started for bab3694b-87e4-4c16-93be-8ae7bfa6dfb6
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-1 as job bec65361-93f7-4411-a4ae-300548708a18
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-2 as job ad9899c9-bc0a-4598-9088-ded14e32a38c
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-3 as job c489b7cb-7260-434a-9909-696584d7d4e7
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-1 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-1 as job ebf455cd-7a16-47d0-b143-e1e0e46fee24
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-2 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-2 as job bc4ab94b-e6f3-4cf5-ad16-3a3ffcc9783f
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-3 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-3 as job e1c19d7e-3bdd-4f54-adb9-7d4cac15c486
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-1 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-1 as job 16d14761-837b-4d47-a6ca-cb7f0cde1603
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-2 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-2 as job 26842b71-88af-44cc-a69e-69c9bc00ea43
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-3 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-3 as job 5a46d560-b2c7-4586-81ba-e32200e5878a
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-1 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-1 as job ec276643-26a7-44ac-8cb9-31c206e2f1ec
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-2 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-2 as job ace8928b-a406-4181-b72c-c6236ee539d0
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-3 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-3 as job 108dee21-b766-415d-94ac-c75540a12d39
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-1 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-1 as job a4b45f70-fa75-4391-a0f5-47935e09a3f5
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-2 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-2 as job b1ff1c95-e903-4018-ac41-4a2e3c69eec1
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-3 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-3 as job 0f3cc10d-c4f5-4c08-b4ef-aa1c79daee04
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-1 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-1 as job b721f4f0-d39c-4ab7-8dc5-9326c920959f
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-2 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-2 as job 7aa42cdd-599e-470a-96f7-3109c9565057
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-3 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-3 as job bcb6e658-aaf7-45fe-a224-dda28b4258d4
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-1 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-1 as job 45c8fc97-80da-4647-83b1-2712e53f699f
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-2 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-2 as job 88746e01-274a-4c04-bb43-0aea3c8bc244
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-3 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-3 as job d9f447f2-46a5-4435-8922-30f8ba76d770
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-1 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-1 as job 7a2d2355-3c25-474d-810a-cd4203199084
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-2 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-2 as job a6827ea7-0905-42ed-b1e9-87f235b76516
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-3 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-3 as job 7de991a2-db9e-4224-be29-dfe1862325a3
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-1 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-1 as job e2457877-6e6e-47e2-90a9-d79087e0fcb8
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-2 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-2 as job 60dc9b5d-cc6b-4452-9b4f-5ab92b2f3379
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-3 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-3 as job ad6d82a6-4ec8-4a99-af7d-453372de872e
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-1 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-1 as job 7b5c4bb0-8a9b-4705-8ff4-313d4a4a149e
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-2 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-2 as job 20ab31bd-a2c7-499b-beb4-8487c8f2f6b1
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-3 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-3 as job 29f92d63-c694-4e8f-ab20-63837486d743
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-1 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-1 as job 73aa3ba9-ae1c-4567-8b75-8fe2280f34b8
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-2 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-2 as job 4c17d6fe-6713-4409-b76c-7b5a4f3789ac
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-3 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-3 as job 15096cb3-0531-429f-8d89-8984e6cfc4f5
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-1 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-1 as job 9e671513-fc83-4a7e-b858-c3720ff7491f
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-2 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-2 as job f80ea74e-d65c-4b9d-b58d-32e3c13bb8f9
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-3 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-3 as job c153ccd0-ef9f-40ab-beb9-153a3d5bdaec
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-1 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-1 as job c5883d86-ade9-414c-bc5c-c50dc63700d3
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-2 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-2 as job 2ab0ead1-f4ea-453b-a0fb-abd0dc4838ea
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-3 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-3 as job 8ba3f7b9-5a34-4ae1-b341-868ed6956d0e
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-1 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-1 as job 5ea8c06b-53ed-42ed-a281-283b7b8f7f6e
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-2 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-2 as job 173045f2-a22e-4d41-bace-c9f6f2d89e31
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-3 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-3 as job a0c965d0-a770-4a81-b9e4-daf0c6f87373
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-1 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-1 as job 89872431-1fb4-4eb4-8497-7de4fb3ceb6f
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-2 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-2 as job ff8a4e20-c1a6-4dc0-bcf9-79ddd8999768
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-3 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-3 as job b7a270e0-1d09-4835-b6f1-27d8f0683c4f
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-1 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-1 as job 56ae52b6-40ef-4415-9bfb-e617dc9c9fc3
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-2 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-2 as job 66ef93eb-544a-4595-8e41-7681ac39bfe6
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-3 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-3 as job 789e7152-f774-4742-b6ed-29f37d641c57
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-1 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-1 as job 17dbbbb3-4276-49c7-93dd-c1dc711ed808
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-2 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-2 as job 99a877db-6677-4e7a-95fa-394723855759
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-3 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-3 as job 9522eed1-e60c-4714-a14e-c9193d9b1170
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-1 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-1 as job 30a9e3fa-d527-4fdf-8285-696e28c27e52
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-2 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-2 as job b232f646-f75f-421c-a9eb-438fa00a1a13
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-3 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-3 as job 1f8fbb8a-1497-4749-86ab-ce15eadcd18e
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-1 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-1 as job 0a3e649c-b026-451d-ab03-9dcaa9e2c47d
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-2 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-2 as job 047d5c23-2af5-4aa2-85a7-d6981dd93525
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-3 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-3 as job 1b758017-120a-4e9f-aa44-9150c0a40db2
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-1 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-1 as job 9e904910-4df3-4419-9c05-8f467afbc108
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-2 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-2 as job e85a6450-7665-4644-892c-4acfc02021e2
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-3 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-3 as job 7d926ab3-1a53-481e-81d8-311e5c415c30
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-1 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-1 as job 21749b03-362b-46c3-9779-a952333eb0ab
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-2 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-2 as job a53c24e4-2fec-431d-adc9-e70d4735163b
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-3 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-3 as job 63e481d5-fda0-4b09-b75a-4c229b27f749
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-1 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-1 as job 61a0476c-792c-46a1-ac1f-d069e984c34b
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-2 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-2 as job 770453db-32af-40ba-ba1b-3cdbe1d0a964
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-3 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-3 as job 8b762fd7-ffee-490b-b7bb-d33113d79b49
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-1 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-1 as job 838705e5-2626-4ef7-aac6-5cc6d50c4c94
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-2 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-2 as job 8e901cee-ff84-45ec-bc81-7e78741488b2
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-3 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-3 as job bd96af69-6a25-4b6e-9d55-7bc0a01d6f02
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-1 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-1 as job 9c11a167-ae8d-4190-97c7-015af94c5f9f
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-2 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-2 as job 403d286e-da60-4df1-a943-e6a3766d665f
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-3 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-3 as job 6c7c6bfd-3283-4d26-9f0b-695f37da9e48
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-1 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-1 as job 42fb3bf1-3bd3-4a60-b805-b88608ca3d32
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-2 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-2 as job 8e054546-97dc-46a9-b050-520d946dc10e
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-3 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-3 as job de2499c5-6f09-410a-b0b3-08cf7c60e8b1
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-1 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-1 as job 601e8cdc-f12d-4e14-b14d-97d3010ea264
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-2 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-2 as job bd7b0a9d-603a-4ee9-a2c4-fd2270b3d888
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-3 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-3 as job 54653ce1-73b4-4c38-ae48-e26417a2042b
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-1 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-1 as job 159b8ed6-93dc-4433-b622-761e8fe3ad0e
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-2 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-2 as job 0603fa4f-c6b5-4da5-8fcb-474204bc12fe
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-3 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-3 as job 67989d64-694d-490e-89bb-9f02a69b6a15
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-1 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-1 as job 695c339a-0b34-4be0-91ae-001ffd204c66
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-2 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-2 as job 85070831-95a8-4190-9cdb-b249fe5e27bb
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-3 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-3 as job 8d5184d1-04c2-4f47-abb8-e4342d76d116
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-1 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-1 as job 4fa0db99-ffd6-402f-be74-d2541af286f8
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-2 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-2 as job 34c97de9-f6ff-4694-b3d4-9bd77fb5c634
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-3 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-3 as job 19325f98-9c7f-4979-b1b7-020e2e642c9f
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-1 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-1 as job 8b2d4ed8-4df0-47c9-8671-9ff301818e46
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-2 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-2 as job ee9d359e-ed01-4cb8-80a1-31f41108c9a7
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-3 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-3 as job 62aa05fa-8a7a-42b4-a74f-3636b09bd31d
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-1 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-1 as job 84427f9b-bc58-42e3-958d-e3410f1f734c
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-2 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-2 as job 68166dbe-b270-483e-9577-e19e4861ed9f
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-3 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-3 as job fcc3222d-471a-4df5-b968-6b2c9aa1fe86
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-1 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-1 as job f86385ed-2c66-4fab-9ed8-e995a43f8fca
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-2 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-2 as job 4a7fb2ca-4ef4-4656-b2df-0d0eeda1998d
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-3 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-3 as job 451ecbf0-73af-4989-941e-bcf4a4cc48b3
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-1 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-1 as job 64aeaa7c-9ad0-4c3a-a929-1158782cc814
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-2 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-2 as job 3913a9a9-73db-4bec-9d59-466fad4ad9ef
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-3 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-3 as job ab9531fd-c6ad-40a1-8151-21aa31a96676
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-1 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-1 as job 69ef30ce-993f-4e3a-b036-1a2b7742d176
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-2 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-2 as job 251d9644-487a-477b-8a5e-a5c91b261881
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-3 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-3 as job 83dd2451-5322-42df-8bb9-990015b35e57
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-1 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-1 as job 3259c896-974f-40aa-8837-72a08bb5cf96
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-2 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-2 as job 413adeed-f1a0-472b-9ecb-3acd5c16bd77
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-3 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-3 as job c3e1cd33-9d4d-4874-aeba-ae168c298874
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-1 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-1 as job d66ef4a8-bc83-4eb0-800d-f52e248f79ce
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-2 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-2 as job 4c7f2b40-d11f-4560-9b8b-d26ab095f30a
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-3 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-3 as job fa46e2e5-a509-4374-8d3b-a790ba7f4f99
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-1 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-1 as job eecacf73-ba8f-42b4-b477-e1e8c0a26395
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-2 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-2 as job 8eee1d51-0ae4-49d2-a1cf-59821d11d25e
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-3 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-3 as job 45f90b9b-4fe2-40a6-b9bd-fc4cf4e5eb71
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-1 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-1 as job de13c71d-5be1-41d5-a4b8-cdfa2f8a0172
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-2 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-2 as job 2f79a696-b2d6-475b-bc6f-1100214462a5
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-3 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-3 as job e1b07699-792c-4cbd-9fdb-1b4812456bd4
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-1 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-1 as job 58baab3c-af71-430b-ab23-f37a1bb4af39
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-2 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-2 as job 77312925-5cac-42a0-8f26-08393f2079db
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-3 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-3 as job 4a705a47-44ff-413a-9d6e-01b6204b4f68
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-1 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-1 as job 9bfe74a7-5ffc-48ba-bade-1b0247096e22
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-2 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-2 as job 3944087f-4037-4d2a-9519-14be8fb01c9e
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-3 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-3 as job cbbda0ff-9875-4887-9519-d081c86a3d92
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-1 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-1 as job 10f20681-04d6-4c7b-be51-37309177811b
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-2 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-2 as job b4aa8d6f-5613-4487-84ad-1322581da64c
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-3 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-3 as job 3654fdcf-bdf6-4e73-8928-08aa183ec5e3
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-1 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-1 as job 3313c464-ba70-45ec-97fe-214a479c94de
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-2 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-2 as job b33ee613-38dd-4947-9d70-4fab95c74292
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-3 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-3 as job e68ffd5c-3476-49fb-8ac7-cb733f17efba
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-1 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-1 as job b7a24515-dafc-4bf0-9315-c5550005a854
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-2 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-2 as job 88701345-bfe1-46dc-aa84-b31751e9eec5
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-3 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-3 as job 453e17d6-196b-4196-be43-b7e9b1930c86
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-1 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-1 as job 2662c06c-735f-4862-ab03-25134318b4ce
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-2 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-2 as job d8a46987-3b7a-4f5f-83cc-af787b68c4c1
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-3 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-3 as job 0c38c0b4-9f97-4f83-ad98-7a1592457ee0
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-1 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-1 as job 0f17f063-1c9d-42c3-af6e-74f32b42a575
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-2 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-2 as job 5dd27402-d0fc-4cc3-8158-c934d6cb17f8
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-3 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-3 as job 0110575d-16df-415a-86a1-c4203f703e1e
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-1 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-1 as job c6c0139d-ced5-47cd-bb98-5664d04e009e
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-2 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-2 as job f4f102ea-3b22-4d53-b25f-05f07d58fd1b
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-3 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-3 as job 0a1c31f3-7d6d-4fdb-83ac-9bac809d3c8b
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-1 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-1 as job 909d920c-5d19-49f0-bc70-671406e3c140
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-2 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-2 as job 5985199a-cdb4-49eb-9a17-bfc5f123275b
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-3 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-3 as job 35cbaace-e63c-4c53-bbef-f98937bdd505
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-1 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-1 as job 369ca9b6-9ce1-490f-9d09-12d377f4eb1d
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-2 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-2 as job f5e14273-7631-4756-9c99-178f8d2005b3
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-3 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-3 as job 86780afd-5269-4ef3-9c94-599645569b91
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-1 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-1 as job 9fdd8c91-d283-4d84-86fb-032cff20bcb1
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-2 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-2 as job 1ede3332-9e76-4e24-a144-cd3372bb09a3
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-3 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-3 as job 361edddc-3164-481a-ab11-b32aa892d250
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-1 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-1 as job b7671e6c-e6fc-4283-aaa2-3957bb39f3eb
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-2 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-2 as job e99b720c-bea3-4617-a07e-820e5db88cce
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-3 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-3 as job 134b6c5e-cd7b-4bbf-abe7-7d40ee1937e9
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-1 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-1 as job a5ca80fa-0295-48cf-9e42-8e7d253d5481
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-2 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-2 as job ff31c329-e947-4814-a7ad-e5cfbb39f413
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-3 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-3 as job 03e765a4-03b1-447c-93dc-1206fcfabcea
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-1 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-1 as job e9bb2476-dc79-49b5-98e0-69d14c3ec0c3
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-2 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-2 as job bb245fda-a549-45a0-b2e0-4bf50d001113
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-3 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-3 as job 0d82e78b-60b3-425c-b8a4-443eac45eef6
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-1 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-1 as job 40126312-1f0b-4298-afcd-7d2052b09f32
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-2 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-2 as job df6db1c1-96ec-4da5-b6d1-5a306be460e4
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-3 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-3 as job 04783eba-afd2-4f80-836a-ea09a94ab8a4
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-1 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-1 as job 55169b10-1877-4c5d-836e-2f5d6fe0dd04
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-2 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-2 as job d9ae74a6-f15e-4896-ba70-a72b82b2ae5c
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-3 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-3 as job 282f7dbd-55a8-4650-84cf-5cdf5de18c67
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-1 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-1 as job 80d22445-eb1e-41c7-a63d-542fdd31f3d9
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-2 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-2 as job b8dfde7b-afae-4182-9855-4374fda2dd95
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-3 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-3 as job 25b7d0a9-6fcf-45a8-a339-637323360456
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-1 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-1 as job cc11a06a-5dd7-4a51-9d01-6f2e0bd94c0f
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-2 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-2 as job 6148e98d-87aa-4c9e-8c3a-637202d64ef2
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-3 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-3 as job 6fe17b18-5377-4a44-ba25-bf41fd8dbcb1
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-1 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-1 as job b45a9bcf-f01b-4c17-beff-4d39bf0cf89b
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-2 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-2 as job 67ae050a-0f56-48d6-ae46-e41b7afe4971
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-3 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-3 as job d50b17c5-e986-4732-a817-146daeaaa317
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-1 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-1 as job d3958492-1bf2-41f5-9de3-b9689f626589
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-2 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-2 as job 9699ad55-2698-40ee-9694-5afb24526177
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-3 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-3 as job 59976f7b-f708-4922-9be8-cb6fb777858b
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-1 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-1 as job d6bce7ac-be83-4a5b-b017-87bb3b86c002
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-2 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-2 as job d8f9390d-a3ba-46d9-a99a-4c8ac77e89dd
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-3 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-3 as job 1da36aeb-c24a-474d-b047-b43f043e62b1
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-1 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-1 as job 093f56fc-5254-4b87-9878-e577603ac99d
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-2 failed
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "C:\Users\KRISH\Desktop\LEARN\Vidme\story_world\runtime\run_decision_loop.py", line 75, in <module>
+    main()
+  File "C:\Users\KRISH\Desktop\LEARN\Vidme\story_world\runtime\run_decision_loop.py", line 71, in main
+    loop.run()
+  File "C:\Users\KRISH\Desktop\LEARN\Vidme\story_world\runtime\decision_loop.py", line 36, in run
+    self._submit_ready_beats()
+  File "C:\Users\KRISH\Desktop\LEARN\Vidme\story_world\runtime\decision_loop.py", line 76, in _submit_ready_beats
+    self.redis.rpush(self.gpu_job_queue, json.dumps(gpu_job))
+  File "C:\Users\KRISH\Desktop\LEARN\Vidme\story_world\.venv\Lib\site-packages\redis\commands\core.py", line 3001, in rpush
+    return self.execute_command("RPUSH", name, *values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\KRISH\Desktop\LEARN\Vidme\story_world\.venv\Lib\site-packages\redis\client.py", line 657, in execute_command
+    return self._execute_command(*args, **options)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\KRISH\Desktop\LEARN\Vidme\story_world\.venv\Lib\site-packages\redis\client.py", line 668, in _execute_command
+    return conn.retry.call_with_retry(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\KRISH\Desktop\LEARN\Vidme\story_world\.venv\Lib\site-packages\redis\retry.py", line 116, in call_with_retry
+    return do()
+           ^^^^
+  File "C:\Users\KRISH\Desktop\LEARN\Vidme\story_world\.venv\Lib\site-packages\redis\client.py", line 669, in <lambda>
+    lambda: self._send_command_parse_response(
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\KRISH\Desktop\LEARN\Vidme\story_world\.venv\Lib\site-packages\redis\client.py", line 640, in _send_command_parse_response
+    return self.parse_response(conn, command_name, **options)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\KRISH\Desktop\LEARN\Vidme\story_world\.venv\Lib\site-packages\redis\client.py", line 691, in parse_response
+    response = connection.read_response()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\KRISH\Desktop\LEARN\Vidme\story_world\.venv\Lib\site-packages\redis\connection.py", line 1133, in read_response
+    response = self._parser.read_response(disable_decoding=disable_decoding)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\KRISH\Desktop\LEARN\Vidme\story_world\.venv\Lib\site-packages\redis\_parsers\resp2.py", line 15, in read_response
+    result = self._read_response(disable_decoding=disable_decoding)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\KRISH\Desktop\LEARN\Vidme\story_world\.venv\Lib\site-packages\redis\_parsers\resp2.py", line 25, in _read_response
+    raw = self._buffer.readline()
+          ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\KRISH\Desktop\LEARN\Vidme\story_world\.venv\Lib\site-packages\redis\_parsers\socket.py", line 115, in readline
+    self._read_from_socket()
+  File "C:\Users\KRISH\Desktop\LEARN\Vidme\story_world\.venv\Lib\site-packages\redis\_parsers\socket.py", line 65, in _read_from_socket
+    data = self._sock.recv(socket_read_size)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.11_3.11.2544.0_x64__qbz5n2kfra8p0\Lib\ssl.py", line 1295, in recv
+    return self.read(buflen)
+           ^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.11_3.11.2544.0_x64__qbz5n2kfra8p0\Lib\ssl.py", line 1168, in read
+    return self._sslobj.read(len)
+           ^^^^^^^^^^^^^^^^^^^^^^
+KeyboardInterrupt
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-2 as job d1162faa-a4c2-4100-bcb1-06b9af46d1ab
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-3 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-3 as job 660c9c13-0b89-4376-8729-9e71a2988045
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-1 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-1 as job d14beb9c-609a-4bf0-a248-90a5762142cb
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-2 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-2 as job 6bc5f160-3e94-46a0-a25e-4e954cd2f2be
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-3 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-3 as job 44fda227-01ac-47a7-89a5-4765e01eb3e2
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-1 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-1 as job 5c9e5362-1ad3-473b-a26c-778a1cbed23f
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-2 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-2 as job b30c1671-9ae9-49bb-9e62-10b81b724cf3
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-3 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-3 as job 8af2038e-78a5-451f-8a44-804383c80366
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-1 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-1 as job e8481ff6-0160-4cf8-b178-d32ac92a6ee3
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-2 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-2 as job 87ddcd5a-7f5e-4c52-8033-a0d127f7355f
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-3 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-3 as job 935aeee2-a83a-4da0-bf30-75e0f39184f3
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-1 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-1 as job b188bb98-3dc9-4aea-bc6e-60a578cc4468
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-2 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-2 as job 3c97fc76-1608-46cb-a811-6aaa76fb4d13
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-3 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-3 as job bc6517f8-6d33-4534-b0fe-b7c7431de56c
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-1 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-1 as job 63834f22-368f-47c4-b972-2cb5ff9d1073
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-2 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-2 as job f69b6a19-576f-418d-be58-40241fc9642f
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-3 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-3 as job 140d89da-1d70-4e0c-861c-16f62dd696eb
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-1 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-1 as job 05add211-a958-4371-8503-935ac3d7598c
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-2 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-2 as job 0c13f771-8662-418f-9346-17f37345296e
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-3 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-3 as job b5822e05-69fd-4671-aae8-264308e09be4
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-1 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-1 as job 31b84f0d-1bdc-43ec-b8db-71bb93d8e8b8
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-2 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-2 as job d77b9412-bc58-470f-af5e-2f4ca84e4e64
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-3 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-3 as job 977596d6-dbad-46be-9369-173bb74fdb38
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-1 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-1 as job fba0cd5f-1420-4dc6-85a2-9f093c164ad4
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-2 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-2 as job ef98a70c-2a49-4ee0-9fe8-698109bc26f0
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-3 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-3 as job 605e5f83-519c-44f3-81ec-615f95ea59cd
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-1 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-1 as job 8ac5f8c6-dd02-43bc-9ef9-a63641d14e11
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-2 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-2 as job 45382256-3650-479f-96fc-28b46bbc92b0
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-3 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-3 as job 904498c0-1647-4190-908f-33ecf556e5c1
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-1 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-1 as job 51443f74-de88-4d6b-9f18-3f296276adb6
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-2 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-2 as job 70e832c4-3aaf-4053-b24f-9aaf5ec1bd3e
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-3 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-3 as job 130f7ee8-c8c8-4c63-8d89-c5a76bd889e1
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-1 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-1 as job 9a174f78-d9d1-49bd-bf49-a9e3e944f7dc
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-2 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-2 as job 38b35b78-a32d-49b0-af11-b667e9cc92de
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-3 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-3 as job 826bfe28-34d0-4494-831c-1a90f593f8fa
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-1 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-1 as job 3f37a173-1888-4cab-ae1e-757a9f1e9a51
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-2 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-2 as job fabbaac1-e4c9-49ea-a641-d7770688a337
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-3 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-3 as job f3cb9b9d-6d4f-4ead-9773-5a7458e01e1c
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-1 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-1 as job 73edd8ec-cda9-420a-9d13-3de86226360b
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-2 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-2 as job d28cbad0-3712-4163-8392-d36783c8bcb3
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-3 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-3 as job def2232c-a31c-45b9-823e-9c63f9bb48ff
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-1 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-1 as job 69b59410-d0f2-4151-8fbb-d2ee60c81a75
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-2 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-2 as job 186382db-a398-4abb-a3d9-f0a67f4e8d93
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-3 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-3 as job ee39309e-e67c-4f20-af7c-9b8cb714ce11
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-1 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-1 as job 72ee2129-0f12-45ff-977f-93158f9fbef5
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-2 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-2 as job 1cbbf45c-1aef-4c9f-8e6e-8fa01ae68100
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-3 failed
+[runtime] submitted beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-3 as job 43db6eab-9aa6-4fcf-a2df-68ed4b9b08d8
+[runtime] beat bab3694b-87e4-4c16-93be-8ae7bfa6dfb6:beat-1 failed
+
+[run_decision_loop] starting for episode e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa
+[sql] using sqlite (./local.db)
+[run_decision_loop] connected to SQL: sqlite:///./local.db
+[run_decision_loop] connecting to Redis: rediss://defaul...
+[run_decision_loop] Redis ping successful
+[run_decision_loop] job_queue: storyworld:gpu:jobs
+[run_decision_loop] result_queue: storyworld:gpu:results:e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa
+[runtime] decision loop started for e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-1 as job 6700334b-2e11-4163-b4f6-fafc25e9f4c3
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-2 as job fcae1db4-f14c-42d8-9851-c01363a04f9d
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-3 as job 050e0332-f63f-4915-8c2c-04cbeb7e289f
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-1 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-1 as job e35eea8a-71c0-4d73-a51d-3933cf374f5e
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-2 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-2 as job 88a6b8ae-f497-438f-8de4-65d3f291cfa1
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-3 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-3 as job a033c75d-760c-4cd8-bdeb-a3253911b282
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-1 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-1 as job 8915322f-3350-4bf6-af1f-6229151f0d24
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-2 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-2 as job 6ea92265-a54d-4950-9913-a907c9979a55
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-3 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-3 as job e42e6b69-9614-4145-b355-3bb2bd94d1e3
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-1 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-1 as job a23b2de9-6a2a-40c8-be98-c2cc829cac41
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-2 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-2 as job 7f7c7e88-907f-41fe-9b6f-29d4797b4790
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-3 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-3 as job 96f36cfb-ebc4-432a-a0c3-17d9a222f9ad
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-1 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-1 as job ca00c6fa-3522-452c-831f-cd81c32adf6f
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-2 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-2 as job 482ec54d-daec-49e2-8c60-675a7f4fdf53
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-3 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-3 as job 2c9f1e5a-4acb-49d7-a3de-1fdb508475df
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-1 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-1 as job 2bb45604-4a42-4b33-8114-a1b166f0b387
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-2 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-2 as job 77664721-43ad-4e42-9440-d892d7946137
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-3 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-3 as job 64a2033f-737b-4545-95bb-5951facc54c0
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-1 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-1 as job 5420a3da-ee3d-4f7f-aa43-f7aca2856e4a
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-2 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-2 as job 09a2d55d-d3fb-4f20-8866-ec57af7daaa6
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-3 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-3 as job b09ad76e-45b4-4c35-9903-fcbf67e2ccfa
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-1 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-1 as job c8f13657-a524-4e6d-a5fb-295252fb73a3
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-2 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-2 as job 89fcf16c-4e79-4b97-927c-21feef1d1e25
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-3 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-3 as job 77e721cc-00ff-425b-837a-ac4043b6b16c
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-1 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-1 as job 159f8343-941b-4646-9971-fde2d45656ce
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-2 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-2 as job faecd9ec-8f8b-4fd5-a3fc-bccda0e7e9ca
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-3 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-3 as job 0a8ae408-76d0-4561-9b47-51a8f828b626
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-1 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-1 as job 0e034b1c-2405-4dee-b25e-4cd25f5da0bd
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-2 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-2 as job 10ee948b-a38b-49f1-9e6a-9f6d254f8aea
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-3 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-3 as job de3c9a59-766f-428f-9f7d-05343096244c
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-1 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-1 as job 2928c19f-71d1-4b6a-91fb-5af7605070d1
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-2 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-2 as job 5f88fd33-54d4-4485-96ca-fd9169954df9
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-3 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-3 as job 38f00a23-a7fa-47a7-9274-849048037916
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-1 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-1 as job 1b89c857-b21e-48ed-bf86-4be5bdbfc7d2
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-2 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-2 as job 5f79da93-868f-42a3-b676-d876a88ae260
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-3 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-3 as job 067d0e45-76d9-4325-bbc3-594f1c291bf5
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-1 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-1 as job 1440c086-e5ca-4f0b-abc8-46aa31efd606
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-2 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-2 as job 97a0bfa5-f1b0-4b42-9e8c-09834cd862d3
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-3 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-3 as job 00f349b7-e5ec-4ebb-bce2-c8c9a5ca26ef
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-1 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-1 as job ddcfc50f-5ace-485f-b471-07c28bee8aba
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-2 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-2 as job 0edef5eb-b4db-4c98-b158-c2125f206dbf
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-3 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-3 as job cee9403a-868e-4052-b7ff-b7031c33f77a
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-1 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-1 as job f660e82b-91c6-4594-8461-667ae94ef9e5
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-2 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-2 as job 9fd565cd-e99a-42c3-9f49-dc3b914d463d
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-3 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-3 as job 1bdf22da-dc41-420c-b67e-b3e9c6d6c081
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-1 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-1 as job 783cb2f2-5bdd-4bf6-9d2a-15553eb86a7c
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-2 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-2 as job 1ffc2628-e48f-4bcd-adb5-36bd62ed1961
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-3 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-3 as job a90ada2a-d78d-41d2-ae44-6291a459a436
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-1 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-1 as job b7716d34-fb52-4c57-aab5-a1908ed00106
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-2 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-2 as job 5a0012b4-9db0-4ff6-a124-19b88e21bd2c
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-3 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-3 as job 0d4d5654-8131-44af-a402-31c755cfe6b8
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-1 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-1 as job d89449e2-c395-4f5c-a7d0-e77c46b1619c
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-2 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-2 as job 1c174b0a-1ac9-4edf-b0cc-921a3f2db8c4
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-3 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-3 as job d1695d8c-59db-4dbb-8124-ce8b56d04790
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-1 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-1 as job d059ecfc-2e6f-4131-bdae-f8bb431da8e7
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-2 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-2 as job 1540e5c8-e2d7-4121-b4d8-6883c62604db
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-3 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-3 as job bb7f5527-8d75-4c43-9bfe-02aa45818eca
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-1 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-1 as job 633e78b1-afba-4866-ae5e-3becbfe8a492
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-2 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-2 as job d4894f3c-7721-49f9-a149-dd0436a0ca04
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-3 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-3 as job 8f685f2a-d70a-4ce2-b539-f1adfd1e2213
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-1 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-1 as job c10b62b2-7582-4a86-b856-49995c78f860
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-2 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-2 as job a9cfbaff-1acc-4d8a-8ef1-4de4c98d621a
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-3 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-3 as job aac60238-06f4-4c84-9b65-b79c52eb2892
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-1 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-1 as job b63d9391-0940-4525-aa7f-24eeab9ac8d3
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-2 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-2 as job fd6e67d8-0deb-47ab-b12f-51dd2c1bf5dd
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-3 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-3 as job b33d077b-f00c-443a-ac0a-4d8a6b31fb46
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-1 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-1 as job 1ecabf58-371f-48de-b4f9-7dbbb1434e13
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-2 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-2 as job 649ebd02-b727-4db6-a900-e6f61a35f0e3
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-3 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-3 as job 76d12a0f-ecab-4482-ba10-048de97ecd75
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-1 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-1 as job e6a2ba1b-9709-4a78-8010-906276b116fc
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-2 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-2 as job c040e61a-35c3-445c-a40f-dded567b1637
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-3 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-3 as job 1f3ec10e-6fa5-4e26-817f-7df8b07b02d0
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-1 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-1 as job c040b2d4-a357-44fa-abf1-481c2d601ac8
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-2 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-2 as job 931358df-8109-46cb-a32f-1223681df95a
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-3 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-3 as job ccc9ad33-41d8-4e1b-b330-e8f65f592c47
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-1 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-1 as job 9ce9f47d-51a2-4388-a439-a83073c57314
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-2 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-2 as job 33801dcb-b223-467c-a88f-c733429fe4fb
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-3 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-3 as job 14558de1-38b0-4957-b83e-d2afee853263
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-1 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-1 as job e8f43628-1331-4532-ae3c-ed351e552eca
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-2 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-2 as job 50951f6f-71e8-4ef4-a089-6214f19eff00
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-3 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-3 as job 40a0f05f-cda6-4fa1-a2dd-27832ec550c5
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-1 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-1 as job 4e09164d-2afb-420a-8516-c5e8381212ce
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-2 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-2 as job ab76565b-4757-49b2-b2d3-be9df3f9016c
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-3 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-3 as job 6131346d-b0b1-4254-a73e-ce36fc597922
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-1 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-1 as job 648ae303-75d6-40c5-a90c-2e9d46579148
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-2 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-2 as job 53b0aeb4-3f29-422d-bb4a-8c7e6e698eea
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-3 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-3 as job 3408e2da-c954-4e0c-a3a8-52614ab807ca
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-1 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-1 as job 2b0586c3-86e7-4763-9fbf-a6da0aeb9628
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-2 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-2 as job 696aa93a-2afe-4a16-b44c-6caf2791980a
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-3 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-3 as job 0bb8194a-295a-470b-9479-75dfe9791372
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-1 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-1 as job 6bec8e85-ea0e-415a-b6a5-8905366245b2
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-2 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-2 as job 637f9931-d783-419a-a661-3ef7674cfabd
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-3 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-3 as job 54930f87-49e6-4e33-85c0-993a1b19b802
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-1 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-1 as job 4faef4ce-425a-46eb-a624-0ab82000b103
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-2 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-2 as job 667865d5-2a39-4616-95aa-0806eaf9601a
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-3 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-3 as job 7058c529-dfa7-4239-bf9f-f4c99dea6c7e
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-1 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-1 as job 12c2801d-8f0d-428d-a84b-4d8bf714de91
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-2 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-2 as job 5b5f12b2-4ad5-4e80-a54e-d670b25f7a19
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-3 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-3 as job 8bb1de7d-9733-4409-b2ff-2aeaa419e528
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-1 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-1 as job 37198d8c-859e-4f09-9e6d-f16c3746c455
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-2 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-2 as job 448c0344-fe57-40e8-a1c8-6698ed1facee
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-3 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-3 as job 7e73bbe1-553b-40db-bdae-f0a841ab41f9
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-1 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-1 as job 40117cfa-56f3-459f-8bba-d1d2970bbefa
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-2 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-2 as job 591a2529-d604-48ca-90fb-637e59a8a4f5
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-3 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-3 as job b0f29adf-a071-48d6-8f69-c37071aedf63
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-1 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-1 as job 48f35f8e-0b6e-4c1a-83cf-2ad1fadac044
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-2 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-2 as job 1846da82-7702-4efd-ae9c-28627529d13e
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-3 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-3 as job c501186a-b394-4b43-99a0-64ea95bf18bc
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-1 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-1 as job 108f57e0-c4f1-4c91-9267-525533fa2b4a
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-2 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-2 as job f1d1a869-e887-498e-9c4a-9fcbe3d17542
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-3 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-3 as job d0ead602-8636-4746-8c4c-0159b06f39b7
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-1 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-1 as job 8ea4e89e-4749-4cea-b126-a2cdef590280
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-2 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-2 as job 476f3adf-89af-4a02-9a6f-8b41864d8d68
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-3 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-3 as job bf6ec8c0-238d-4aef-b7fd-c0cd132c5f9a
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-1 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-1 as job 1d26a709-7f39-41e1-9280-d50aefebda91
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-2 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-2 as job 7414a5b6-7325-497e-b3c0-16970de01789
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-3 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-3 as job cb52b0df-a5fb-46af-9101-c98b90bdf618
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-1 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-1 as job dc7c1093-fd28-4f15-9b85-b81da64e378c
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-2 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-2 as job 422bb435-2b46-4812-ac1f-e8f630d91c46
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-3 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-3 as job d51e957f-746f-44cc-877b-de14cc5b57a9
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-1 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-1 as job 6142f3af-b70e-443c-abf0-91eed1fdd7b2
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-2 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-2 as job 0fa1d13a-eff1-4408-bd31-7938b441c0da
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-3 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-3 as job 1ed6e58f-0907-4308-a081-9c9946706114
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-1 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-1 as job bb741f92-b4bc-433a-a48d-ce775ea2b4e8
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-2 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-2 as job 4be04f7f-ec4d-4525-805b-02726269bec2
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-3 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-3 as job 6f379ff1-ffba-4d49-a10e-7a4b5ca520e6
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-1 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-1 as job 86fcc4a5-f8f8-482c-b622-c2aff0850a06
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-2 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-2 as job 4f1ff27f-8da3-464c-a8a5-d8903a434864
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-3 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-3 as job 98e7a25f-e62c-4095-9635-7d78efd8e817
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-1 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-1 as job 6f439289-b36e-4267-806a-2dc842eef39a
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-2 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-2 as job d5680a87-86cd-4e95-be34-b660879eb7e9
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-3 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-3 as job 05bee677-a421-44e4-acb7-dc4990ad0fbc
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-1 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-1 as job 0945c916-47a1-41d0-ad77-84677291e11a
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-2 failed
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "C:\Users\KRISH\Desktop\LEARN\Vidme\story_world\runtime\run_decision_loop.py", line 75, in <module>
+    main()
+  File "C:\Users\KRISH\Desktop\LEARN\Vidme\story_world\runtime\run_decision_loop.py", line 71, in main
+    loop.run()
+  File "C:\Users\KRISH\Desktop\LEARN\Vidme\story_world\runtime\decision_loop.py", line 37, in run
+    time.sleep(self.poll_interval)
+KeyboardInterrupt
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-2 as job 45e8ae35-7963-42fa-af19-0efd32519a80
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-3 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-3 as job a81988c5-8691-44a5-8ca4-4ace03ade296
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-1 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-1 as job 1566fd31-c774-44fb-8ec3-c6b812b05b6c
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-2 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-2 as job f50b74b7-13f4-496b-ae19-92db1bd93502
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-3 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-3 as job b25cb5d0-7be9-4be5-9166-9e855f8a906a
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-1 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-1 as job 396a6e46-7107-4d6a-abbd-39cd8b766f39
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-2 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-2 as job c3959802-6b41-45f5-b862-75294738d34f
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-3 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-3 as job 771be4c6-80fe-4ddc-b520-4a59bfa7d0e6
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-1 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-1 as job 584ee1b8-566f-437a-9b1f-759b72e1c6de
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-2 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-2 as job 3640563e-d8ec-43f0-8756-ec35c63857a9
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-3 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-3 as job 2485fce0-bd92-45c4-a78c-177fe3049ffa
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-1 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-1 as job 300b87bf-7f9a-4af5-a406-5d1fe6276891
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-2 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-2 as job b86e1f14-ba1f-43da-876e-f910e4457c1a
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-3 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-3 as job 79088667-0fb1-436c-9569-1d498dccd082
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-1 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-1 as job fc7a9c86-21ca-483a-a971-25e6a1b5d473
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-2 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-2 as job c3362700-b3e3-4773-82a3-2d64a1719c2e
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-3 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-3 as job 881d7fe6-2e59-4e42-9885-e6e5a5435e46
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-1 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-1 as job 1686f1de-03b9-47f2-ac27-ffefde897539
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-2 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-2 as job 72c9ca60-fb06-498a-8cb7-1e6d666daa1d
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-3 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-3 as job 57c89d6c-4390-46c2-abe7-a385d71cb5b4
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-1 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-1 as job ec93a9ff-0619-427e-9e49-3a1996242b5e
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-2 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-2 as job 25e89b65-9d7b-41b2-baf2-a725c42d2b57
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-3 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-3 as job 4ce069f5-6bb6-45f7-809d-fe4038701c71
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-1 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-1 as job bd60db3e-f507-461a-9915-c80115ccc00d
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-2 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-2 as job 1811473e-fff6-4622-ba18-3df3987ba8af
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-3 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-3 as job 973fce0a-ebb1-4d1d-a9a4-a8a4983df74a
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-1 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-1 as job c98e1c7a-0764-4d91-94bd-99c357152c49
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-2 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-2 as job 7f703bed-57d7-4eba-a0fc-26ae13fab82f
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-3 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-3 as job f0efbef3-60ed-477a-a976-7dc119be6055
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-1 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-1 as job 39654605-eee6-47aa-9360-ea25aa0df7a7
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-2 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-2 as job 566f5ba5-772a-49c5-9a7c-4b8a7d0645d4
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-3 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-3 as job 11c16232-bb81-4195-9fcf-023cb31c81cd
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-1 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-1 as job 52d9d983-de8f-42ed-ace7-7c8cb4f1eb27
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-2 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-2 as job a4deb82c-6f68-4718-a9b9-f0d2b6b39190
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-3 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-3 as job 059992f7-fde8-44bb-93bb-e6e257bb5171
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-1 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-1 as job 13cabf70-13e0-47de-b9a0-d142b7d816f3
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-2 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-2 as job 440d28c9-2c82-4a68-800f-eaf9989b92da
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-3 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-3 as job 9275fa66-e892-43dd-b718-b21643a2b961
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-1 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-1 as job 5254a1e6-d944-42b8-884b-a19455c4d97c
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-2 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-2 as job 89d9e0ca-dcb8-482d-a268-7dde1927ae04
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-3 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-3 as job 63ad66e3-52a8-4647-82ad-621219ab6e2e
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-1 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-1 as job df0ea2f0-8b06-4209-936a-36d846fa30b6
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-2 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-2 as job 569fdbb0-be13-4145-bdfa-6c83cffabea1
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-3 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-3 as job 449d7a99-fd13-4340-9b8d-ef0be013e4a1
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-1 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-1 as job 3786ba04-b4e7-4faa-8108-6248269fa2dc
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-2 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-2 as job 92bbcd97-4542-4b65-8611-18fa30bad5b8
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-3 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-3 as job 92bdf1b8-ee6b-4086-a194-c72ce0928b27
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-1 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-1 as job 9cb3b1fb-b64c-401b-b0e0-051e55b46d47
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-2 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-2 as job 847eab46-5845-43ba-86a3-1f14224e7dc2
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-3 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-3 as job 4c95d835-adb7-44d1-afb9-8cc91f010eb0
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-1 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-1 as job f8fe35b1-8637-4074-a26a-a597c0826bd0
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-2 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-2 as job c08cf4e8-4368-4f19-a73e-dc51d9acb0f9
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-3 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-3 as job 0c6c8e13-bf89-4660-a4a8-12df4eefc533
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-1 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-1 as job 089f1527-9813-4959-99a8-fc26461cf985
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-2 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-2 as job b5998885-868c-4868-87dd-b257e84b30ed
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-3 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-3 as job 708c7158-4240-4939-af74-61ba77e22507
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-1 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-1 as job 2a24837a-005d-45f7-870f-213b0345fd67
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-2 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-2 as job ffe5996e-b36a-40ec-a5f4-c737df84955c
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-3 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-3 as job 172ed048-0d9f-4465-9682-3efe59fb0cd2
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-1 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-1 as job ba655fcb-1559-4cc2-a3d7-cec0b2a85f68
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-2 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-2 as job 5795aa19-ec09-486e-83c0-d2f547e8bfaf
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-3 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-3 as job ec8d6e43-ac91-44d2-a005-045462e84e15
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-1 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-1 as job 9106b096-1814-44af-ba17-a438824dd8a3
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-2 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-2 as job c34fa67d-c86e-4a25-9eb2-b17f7f753016
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-3 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-3 as job 04aa17e0-0db0-49e9-a2df-9ea2712627d6
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-1 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-1 as job d1027912-771f-4aa4-be3d-8524ef0181b5
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-2 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-2 as job ddfbc4f1-8275-408c-85f9-489c7acf0ed5
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-3 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-3 as job 18005316-8d7b-4624-a52a-58b640ad857f
+[runtime] beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-1 failed
+[runtime] submitted beat e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa:beat-1 as job 99b1a1f8-17cb-428f-ac47-224644b38557
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "C:\Users\KRISH\Desktop\LEARN\Vidme\story_world\runtime\run_decision_loop.py", line 75, in <module>
+    main()
+  File "C:\Users\KRISH\Desktop\LEARN\Vidme\story_world\runtime\run_decision_loop.py", line 71, in main
+    loop.run()
+  File "C:\Users\KRISH\Desktop\LEARN\Vidme\story_world\runtime\decision_loop.py", line 35, in run
+    self._consume_gpu_results()
+  File "C:\Users\KRISH\Desktop\LEARN\Vidme\story_world\runtime\decision_loop.py", line 86, in _consume_gpu_results
+    result = self.redis.blpop(self.gpu_result_queue, timeout=1)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\KRISH\Desktop\LEARN\Vidme\story_world\.venv\Lib\site-packages\redis\commands\core.py", line 2771, in blpop
+    return self.execute_command("BLPOP", *keys)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\KRISH\Desktop\LEARN\Vidme\story_world\.venv\Lib\site-packages\redis\client.py", line 657, in execute_command
+    return self._execute_command(*args, **options)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\KRISH\Desktop\LEARN\Vidme\story_world\.venv\Lib\site-packages\redis\client.py", line 668, in _execute_command
+    return conn.retry.call_with_retry(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\KRISH\Desktop\LEARN\Vidme\story_world\.venv\Lib\site-packages\redis\retry.py", line 116, in call_with_retry
+    return do()
+           ^^^^
+  File "C:\Users\KRISH\Desktop\LEARN\Vidme\story_world\.venv\Lib\site-packages\redis\client.py", line 669, in <lambda>
+    lambda: self._send_command_parse_response(
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\KRISH\Desktop\LEARN\Vidme\story_world\.venv\Lib\site-packages\redis\client.py", line 640, in _send_command_parse_response
+    return self.parse_response(conn, command_name, **options)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\KRISH\Desktop\LEARN\Vidme\story_world\.venv\Lib\site-packages\redis\client.py", line 691, in parse_response
+    response = connection.read_response()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\KRISH\Desktop\LEARN\Vidme\story_world\.venv\Lib\site-packages\redis\connection.py", line 1133, in read_response
+    response = self._parser.read_response(disable_decoding=disable_decoding)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\KRISH\Desktop\LEARN\Vidme\story_world\.venv\Lib\site-packages\redis\_parsers\resp2.py", line 15, in read_response
+    result = self._read_response(disable_decoding=disable_decoding)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\KRISH\Desktop\LEARN\Vidme\story_world\.venv\Lib\site-packages\redis\_parsers\resp2.py", line 25, in _read_response
+    raw = self._buffer.readline()
+          ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\KRISH\Desktop\LEARN\Vidme\story_world\.venv\Lib\site-packages\redis\_parsers\socket.py", line 115, in readline
+    self._read_from_socket()
+  File "C:\Users\KRISH\Desktop\LEARN\Vidme\story_world\.venv\Lib\site-packages\redis\_parsers\socket.py", line 65, in _read_from_socket
+    data = self._sock.recv(socket_read_size)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.11_3.11.2544.0_x64__qbz5n2kfra8p0\Lib\ssl.py", line 1295, in recv
+    return self.read(buflen)
+           ^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.11_3.11.2544.0_x64__qbz5n2kfra8p0\Lib\ssl.py", line 1168, in read
+    return self._sslobj.read(len)
+           ^^^^^^^^^^^^^^^^^^^^^^
+KeyboardInterrupt
+
+[run_decision_loop] starting for episode e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa
+[sql] using sqlite (./local.db)
+[run_decision_loop] connected to SQL: sqlite:///./local.db
+[run_decision_loop] connecting to Redis: rediss://defaul...
+[run_decision_loop] Redis ping successful
+[run_decision_loop] job_queue: storyworld:gpu:jobs
+[run_decision_loop] result_queue: storyworld:gpu:results:e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa
+[runtime] decision loop started for e5ca65d0-e07e-4ebd-8aa5-630bd2bac3aa
+[runtime] unknown job_id ddfbc4f1-8275-408c-85f9-489c7acf0ed5
+[runtime] unknown job_id 18005316-8d7b-4624-a52a-58b640ad857f
+[runtime] unknown job_id 99b1a1f8-17cb-428f-ac47-224644b38557
+
+[run_decision_loop] starting for episode 408b60c1-f59d-41a2-b838-ba7ce06c4228
+[sql] using sqlite (./local.db)
+[run_decision_loop] connected to SQL: sqlite:///./local.db
+[run_decision_loop] connecting to Redis: rediss://defaul...
+[run_decision_loop] Redis ping successful
+[run_decision_loop] job_queue: storyworld:gpu:jobs
+[run_decision_loop] result_queue: storyworld:gpu:results:408b60c1-f59d-41a2-b838-ba7ce06c4228
+[runtime] decision loop started for 408b60c1-f59d-41a2-b838-ba7ce06c4228
+[runtime] submitted beat 408b60c1-f59d-41a2-b838-ba7ce06c4228:beat-1 as job 09f93560-d5e5-4c9f-8f16-a2e64db61b59
+[runtime] submitted beat 408b60c1-f59d-41a2-b838-ba7ce06c4228:beat-2 as job 1a484b56-0f2e-4ec4-b8fa-7c841a39a50f
+[runtime] submitted beat 408b60c1-f59d-41a2-b838-ba7ce06c4228:beat-3 as job 4c20edaa-7ab8-4f04-a330-997dfc7fd160
+[runtime] beat 408b60c1-f59d-41a2-b838-ba7ce06c4228:beat-1 succeeded
+[runtime] beat 408b60c1-f59d-41a2-b838-ba7ce06c4228:beat-2 succeeded
+[runtime] beat 408b60c1-f59d-41a2-b838-ba7ce06c4228:beat-3 succeeded
+[runtime] episode 408b60c1-f59d-41a2-b838-ba7ce06c4228 completed
+
+[run_decision_loop] starting for episode a486088d-e7ec-422b-b47a-8a8df85cd40a
+[sql] using sqlite (./local.db)
+[run_decision_loop] connected to SQL: sqlite:///./local.db
+[run_decision_loop] connecting to Redis: rediss://defaul...
+[run_decision_loop] Redis ping successful
+[run_decision_loop] job_queue: storyworld:gpu:jobs
+[run_decision_loop] result_queue: storyworld:gpu:results:a486088d-e7ec-422b-b47a-8a8df85cd40a
+[runtime] decision loop started for a486088d-e7ec-422b-b47a-8a8df85cd40a
+[runtime] submitted beat a486088d-e7ec-422b-b47a-8a8df85cd40a:beat-1 as job 5a421337-a0ea-4f0b-9da4-ddbb89f89094
+[runtime] submitted beat a486088d-e7ec-422b-b47a-8a8df85cd40a:beat-2 as job 7860f7e1-ddad-49b7-a176-fa635c5eb495
+[runtime] submitted beat a486088d-e7ec-422b-b47a-8a8df85cd40a:beat-3 as job 7892cb92-9159-47ef-a0ec-3c32184c20ee
+[runtime] beat a486088d-e7ec-422b-b47a-8a8df85cd40a:beat-1 succeeded
+[runtime] beat a486088d-e7ec-422b-b47a-8a8df85cd40a:beat-2 succeeded
+[runtime] beat a486088d-e7ec-422b-b47a-8a8df85cd40a:beat-3 succeeded
+[runtime] episode a486088d-e7ec-422b-b47a-8a8df85cd40a completed
+
+[run_decision_loop] starting for episode e4effeee-2a2f-44e6-b140-a6980cabbafc
+[sql] using sqlite (./local.db)
+[run_decision_loop] connected to SQL: sqlite:///./local.db
+[run_decision_loop] connecting to Redis: rediss://defaul...
+[run_decision_loop] Redis ping successful
+[run_decision_loop] job_queue: storyworld:gpu:jobs
+[run_decision_loop] result_queue: storyworld:gpu:results:e4effeee-2a2f-44e6-b140-a6980cabbafc
+[runtime] decision loop started for e4effeee-2a2f-44e6-b140-a6980cabbafc
+[runtime] submitted beat e4effeee-2a2f-44e6-b140-a6980cabbafc:beat-1 as job 473bdbda-5f07-4a0f-805e-b8cb6017fb63
+[runtime] submitted beat e4effeee-2a2f-44e6-b140-a6980cabbafc:beat-2 as job c9a89b6a-483a-4a69-ba48-0e513d8434ea
+[runtime] submitted beat e4effeee-2a2f-44e6-b140-a6980cabbafc:beat-3 as job d763ecca-1f34-4a16-9686-4837391cb5e2
+[runtime] beat e4effeee-2a2f-44e6-b140-a6980cabbafc:beat-1 succeeded
+[runtime] beat e4effeee-2a2f-44e6-b140-a6980cabbafc:beat-2 succeeded
+[runtime] beat e4effeee-2a2f-44e6-b140-a6980cabbafc:beat-3 succeeded
+[runtime] episode e4effeee-2a2f-44e6-b140-a6980cabbafc completed
