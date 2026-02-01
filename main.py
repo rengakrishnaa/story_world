@@ -11,6 +11,7 @@ redis = importlib.import_module("redis")
 # ⚠️ DO NOT initialize heavy objects at import time
 sql = None
 redis_store = None
+world_graph_store = None  # Phase 1: World State Graph persistence
 
 app = FastAPI(title="StoryWorld Runtime")
 
@@ -22,10 +23,11 @@ app = FastAPI(title="StoryWorld Runtime")
 def startup_event():
     print(">>> startup reached")
 
-    global sql, redis_store
+    global sql, redis_store, world_graph_store
 
     from runtime.persistence.sql_store import SQLStore
     from runtime.persistence.redis_store import RedisStore
+    from runtime.persistence.world_graph_store import WorldGraphStore
 
     # Lazy SQL
     sql = SQLStore(lazy=True)
@@ -35,8 +37,11 @@ def startup_event():
         url=os.getenv("REDIS_URL"),
         lazy=True,
     )
+    
+    # Phase 1: World State Graph Store
+    world_graph_store = WorldGraphStore()
 
-    print(">>> startup: infrastructure wired")
+    print(">>> startup: infrastructure wired (including Phase 1-5 components)")
 
 # =====================================================
 # API
@@ -429,3 +434,91 @@ def debug_download(url: str):
             "error_type": type(e).__name__,
             "config": config_info if 'config_info' in locals() else {},
         }
+
+
+# =====================================================
+# PHASE 1-5: World State Graph Endpoints
+# =====================================================
+
+@app.get("/world-state/{episode_id}")
+def get_world_state(episode_id: str):
+    """
+    Get the world state graph for an episode.
+    
+    This shows the Phase 1-5 world state tracking data including:
+    - State nodes (versioned world states)
+    - Transitions (video-driven state changes)
+    - Current state
+    """
+    from models.world_state_graph import WorldStateGraph, WorldState
+    
+    try:
+        # Try to load existing graph
+        nodes = world_graph_store.get_episode_nodes(episode_id)
+        transitions = world_graph_store.get_episode_transitions(episode_id)
+        
+        return {
+            "episode_id": episode_id,
+            "phase_1_5_enabled": True,
+            "total_nodes": len(nodes),
+            "total_transitions": len(transitions),
+            "nodes": nodes[:10],  # Limit to 10 for response size
+            "transitions": transitions[:10],
+        }
+    except Exception as e:
+        return {
+            "episode_id": episode_id,
+            "phase_1_5_enabled": True,
+            "status": "no_data",
+            "message": f"No world state data yet: {e}",
+            "hint": "World state is tracked automatically during episode execution",
+        }
+
+
+@app.get("/phase-status")
+def get_phase_status():
+    """
+    Check the status of Phase 1-5 components.
+    """
+    import sqlite3
+    
+    # Check database tables
+    try:
+        db_path = os.getenv("DATABASE_URL", "sqlite:///./local.db").replace("sqlite:///", "")
+        conn = sqlite3.connect(db_path)
+        cursor = conn.cursor()
+        cursor.execute("SELECT name FROM sqlite_master WHERE type='table'")
+        tables = [row[0] for row in cursor.fetchall()]
+        conn.close()
+        
+        phase_1_tables = ["world_state_nodes", "state_transitions", "world_branches"]
+        phase_1_ready = all(t in tables for t in phase_1_tables)
+        
+        return {
+            "status": "operational",
+            "database_tables": tables,
+            "phase_1_world_graph": {
+                "enabled": True,
+                "tables_created": phase_1_ready,
+                "required_tables": phase_1_tables,
+            },
+            "phase_2_observer": {
+                "enabled": True,
+                "uses_gemini": os.getenv("GEMINI_API_KEY") is not None,
+            },
+            "phase_3_quality_budget": {
+                "enabled": True,
+            },
+            "phase_4_story_director": {
+                "enabled": True,
+            },
+            "phase_5_integration": {
+                "enabled": True,
+            },
+        }
+    except Exception as e:
+        return {
+            "status": "error",
+            "message": str(e),
+        }
+

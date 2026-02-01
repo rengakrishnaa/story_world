@@ -1852,3 +1852,19 @@ KeyboardInterrupt
 [runtime] beat e4effeee-2a2f-44e6-b140-a6980cabbafc:beat-2 succeeded
 [runtime] beat e4effeee-2a2f-44e6-b140-a6980cabbafc:beat-3 succeeded
 [runtime] episode e4effeee-2a2f-44e6-b140-a6980cabbafc completed
+
+[run_decision_loop] starting for episode 10949dbe-4134-4e9e-af07-97a19d831f10
+[sql] using sqlite (./local.db)
+[run_decision_loop] connected to SQL: sqlite:///./local.db
+[run_decision_loop] connecting to Redis: rediss://defaul...
+[run_decision_loop] Redis ping successful
+[run_decision_loop] job_queue: storyworld:gpu:jobs
+[run_decision_loop] result_queue: storyworld:gpu:results:10949dbe-4134-4e9e-af07-97a19d831f10
+[runtime] decision loop started for 10949dbe-4134-4e9e-af07-97a19d831f10
+[runtime] submitted beat 10949dbe-4134-4e9e-af07-97a19d831f10:beat-1 as job f0ef9a4c-7ffb-4df4-9d29-c981ce253fbe
+[runtime] submitted beat 10949dbe-4134-4e9e-af07-97a19d831f10:beat-2 as job fc1884c9-08dc-4612-99fe-117b26b69755
+[runtime] submitted beat 10949dbe-4134-4e9e-af07-97a19d831f10:beat-3 as job 1fdeb617-0121-48d5-a93d-f0b376c14b0d
+[runtime] beat 10949dbe-4134-4e9e-af07-97a19d831f10:beat-1 succeeded
+[runtime] beat 10949dbe-4134-4e9e-af07-97a19d831f10:beat-2 succeeded
+[runtime] beat 10949dbe-4134-4e9e-af07-97a19d831f10:beat-3 succeeded
+[runtime] episode 10949dbe-4134-4e9e-af07-97a19d831f10 completed
