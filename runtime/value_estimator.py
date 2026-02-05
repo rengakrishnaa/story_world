@@ -33,9 +33,9 @@ class ValueComponents:
     """Components that contribute to expected value."""
     base_value: float = 1.0
     
-    # Story importance
-    narrative_weight: float = 1.0  # How important is this beat to the story
-    emotional_weight: float = 1.0  # Emotional impact of this beat
+    # Information & Complexity (Phase 7 Neutralization)
+    information_gain_potential: float = 1.0  # (Was narrative_weight) Value of resolving uncertainty
+    constraint_complexity: float = 1.0       # (Was emotional_weight) Complexity of constraints to test
     
     # Structural importance
     is_branch_point: bool = False
@@ -91,25 +91,13 @@ class ValueEstimator:
     Estimates expected value of beat rendering for budget decisions.
     
     Value formula:
-        EV = base_value * narrative_weight * downstream_mult * success_prob
+        EV = base_value * info_gain * complexity * downstream * success_prob
         
     Where:
-        - base_value: Default value of a beat (1.0)
-        - narrative_weight: Story importance (0.5 - 2.0)
-        - downstream_mult: 1.0 + 0.1 * downstream_beats
-        - success_prob: Estimated probability of success
-    
-    Usage:
-        estimator = ValueEstimator()
-        components = ValueComponents(
-            narrative_weight=1.5,
-            is_branch_point=True,
-            downstream_beats=3,
-        )
-        estimate = estimator.estimate(components)
-        
-        # Use for budget allocation
-        budget_request = estimate.expected_value * base_budget
+        - info_gain: Value of resolving uncertainty (0.5 - 2.0)
+        - complexity: Difficulty of constraints involved (0.5 - 1.5)
+        - downstream_mult: Impact on future state space
+        - success_prob: Estimated probability of valid execution
     """
     
     def __init__(
@@ -140,8 +128,9 @@ class ValueEstimator:
         Returns:
             ValueEstimate with expected value and breakdown
         """
-        # Base value with narrative weight
-        base = self.base_value * components.narrative_weight * components.emotional_weight
+        # Base value with information gain and complexity
+        base = self.base_value * components.information_gain_potential * components.constraint_complexity
+
         
         # Downstream impact
         downstream_mult = 1.0 + (components.downstream_beats * self.downstream_factor)
@@ -201,7 +190,8 @@ class ValueEstimator:
     def estimate_from_beat(
         self,
         beat_id: str,
-        narrative_weight: float = 1.0,
+        information_gain_potential: float = 1.0,  # Was narrative_weight
+        constraint_complexity: float = 1.0,      # Was emotional_weight   
         is_branch_point: bool = False,
         downstream_beats: int = 0,
         previous_attempts: int = 0,
@@ -212,7 +202,8 @@ class ValueEstimator:
         
         Args:
             beat_id: Beat ID
-            narrative_weight: Story importance
+            information_gain_potential: Value of resolving uncertainty
+            constraint_complexity: Complexity of constraints
             is_branch_point: Whether this is a branch point
             downstream_beats: Number of downstream beats
             previous_attempts: Number of previous attempts
@@ -222,7 +213,8 @@ class ValueEstimator:
             ValueEstimate
         """
         components = ValueComponents(
-            narrative_weight=narrative_weight,
+            information_gain_potential=information_gain_potential,
+            constraint_complexity=constraint_complexity,
             is_branch_point=is_branch_point,
             downstream_beats=downstream_beats,
             previous_attempts=previous_attempts,
@@ -289,12 +281,12 @@ def estimate_node_value(
     # Check if branch point (multiple children possible)
     is_branch = downstream_count > 1 or node.branch_name != "main"
     
-    # Estimate narrative weight from depth
-    # Deeper nodes tend to be more critical
-    depth_weight = 1.0 + (node.depth * 0.05)
+    # Estimate information gain from depth
+    # Deeper nodes represent more resolved uncertainty
+    depth_gain = 1.0 + (node.depth * 0.05)
     
     components = ValueComponents(
-        narrative_weight=min(2.0, depth_weight),
+        information_gain_potential=min(2.0, depth_gain),
         is_branch_point=is_branch,
         downstream_beats=downstream_count,
         tree_depth=node.depth,

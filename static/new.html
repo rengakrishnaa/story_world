@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>New Simulation</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+</head>
+<body>
+    <header>
+        <div class="layout-container">
+            <a href="/" class="brand">STORYWORLD INFRASTRUCTURE</a>
+            <nav>
+                <a href="/">Simulations</a>
+                <a href="/new.html" class="active">New Run</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="layout-container" style="max-width: 800px;"> <!-- Narrower for form -->
+        <h2>Initialize Simulation</h2>
+        <p>Define constraints and goals for a new physics simulation run. This will provision a GPU worker.</p>
+
+        <div class="panel padded">
+            <form onsubmit="submitSimulation(event)"> 
+                
+                <div class="form-group">
+                    <label>Simulation Goal (What should happen, not how it looks)</label>
+                    <textarea id="goal" name="goal" rows="4" placeholder="e.g. Robot arm must stack 3 boxes without tipping over. Gravity 9.8m/s." required></textarea>
+                    <small style="color:var(--text-muted);">Describe constraints and objectives. Avoid: scene, shot, cinematic, make it look good.</small>
+                </div>
+
+                <div class="metrics" style="grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;">
+                    <div class="form-group" style="margin-bottom:0;">
+                        <label>Max Budget (USD)</label>
+                        <input id="budget" name="budget" type="number" value="5" step="1" min="1" max="100" placeholder="5">
+                    </div>
+                    <div class="form-group" style="margin-bottom:0;">
+                        <label>Risk Profile (Exploration)</label>
+                        <select id="risk_profile" name="risk_profile">
+                            <option value="low">Conservative (Low Variance)</option>
+                            <option value="medium" selected>Balanced</option>
+                            <option value="high">Exploratory (High Variance)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div style="display:flex; justify-content: flex-end; gap: 12px;">
+                    <button type="button" onclick="window.location.href='/'" style="background:none; border:1px solid var(--border-subtle); color:var(--text-secondary); padding:8px 16px; border-radius:4px; cursor:pointer;">Cancel</button>
+                    <button type="submit" class="primary">Initialize Run</button>
+                </div>
+            </form>
+        </div>
+    </main>
+
+    <script src="/static/dashboard.js"></script>
+</body>
+</html>

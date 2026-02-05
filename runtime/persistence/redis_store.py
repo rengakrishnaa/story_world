@@ -1,5 +1,15 @@
 import json
+import os
 import redis
+
+# Queue names from config/env for production
+def _job_queue():
+    return os.getenv("GPU_JOB_QUEUE", os.getenv("JOB_QUEUE", "storyworld:gpu:jobs"))
+
+
+def _result_queue():
+    return os.getenv("GPU_RESULT_QUEUE", os.getenv("RESULT_QUEUE", "storyworld:gpu:results"))
+
 
 class RedisStore:
     def __init__(self, redis_client=None, url=None, lazy=False):
@@ -19,12 +29,19 @@ class RedisStore:
             if not self.url:
                 raise RuntimeError("Redis URL not provided")
 
-            self._redis = redis.from_url(
-                self.url,
-                decode_responses=True,
-                socket_timeout=5,
-                socket_connect_timeout=5,
-            )
+            try:
+                self._redis = redis.from_url(
+                    self.url,
+                    decode_responses=True,
+                    socket_timeout=5,
+                    socket_connect_timeout=5,
+                )
+                # Test connection
+                self._redis.ping()
+                print(f"[RedisStore] Connected to Redis (queue: {_job_queue()})")
+            except Exception as e:
+                print(f"[RedisStore] Failed to connect to Redis: {e}")
+                raise
 
     @property
     def redis(self):
@@ -37,14 +54,24 @@ class RedisStore:
     # -----------------------------
 
     def push_gpu_job(self, payload: dict):
-        self.redis.rpush(
-            "storyworld:gpu:jobs",
-            json.dumps(payload),
-        )
+        """
+        Push a GPU job to the Redis queue.
+        Returns the queue name for logging.
+        """
+        queue_name = _job_queue()
+        try:
+            self.redis.rpush(
+                queue_name,
+                json.dumps(payload),
+            )
+            return queue_name
+        except Exception as e:
+            print(f"[RedisStore] Failed to push job to queue '{queue_name}': {e}")
+            raise
 
     def pop_gpu_job(self, timeout=5):
         res = self.redis.blpop(
-            "storyworld:gpu:jobs",
+            _job_queue(),
             timeout=timeout,
         )
         if not res:
@@ -54,15 +81,20 @@ class RedisStore:
 
     def push_gpu_result(self, payload: dict):
         self.redis.rpush(
-            "storyworld:gpu:results",
+            _result_queue(),
             json.dumps(payload),
         )
 
     def pop_gpu_result(self, timeout=5):
-        res = self.redis.blpop(
-            "storyworld:gpu:results",
-            timeout=timeout,
-        )
+        try:
+            res = self.redis.blpop(
+                _result_queue(),
+                timeout=timeout,
+            )
+        except Exception as e:
+            if "Timeout" in type(e).__name__ or "timeout" in str(e).lower():
+                return None
+            raise
         if not res:
             return None
         _, data = res

@@ -1,0 +1,4 @@
+# Bridge: Redis -> RunPod Serverless (no GPU)
+redis>=5.0.1
+runpod>=1.0.0
+python-dotenv

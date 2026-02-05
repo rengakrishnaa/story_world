@@ -30,18 +30,21 @@ def render(input_spec: dict) -> dict:
         raise RuntimeError("SVD backend requires prompt")
     
     duration_sec = input_spec.get("duration_sec", 4)
-    
-    # Try Gemini for keyframe generation first
-    try:
-        keyframes = generate_keyframes_gemini(prompt)
-    except Exception as e:
-        print(f"[svd] Gemini keyframe generation failed: {e}")
-        # Fallback to SDXL
+    credit_exhausted = input_spec.get("_credit_exhausted", False)  # Veo fallback: skip API
+
+    # Try Gemini for keyframe generation first (skip if credit exhausted — use SDXL directly)
+    keyframes = None
+    if not credit_exhausted:
+        try:
+            keyframes = generate_keyframes_gemini(prompt)
+        except Exception as e:
+            print(f"[svd] Gemini keyframe generation failed: {e}")
+    if keyframes is None:
         try:
             keyframes = generate_keyframes_sdxl(prompt)
         except Exception as e2:
-            print(f"[svd] SDXL keyframe generation also failed: {e2}")
-            raise RuntimeError(f"All keyframe generation methods failed")
+            print(f"[svd] SDXL keyframe generation failed: {e2}")
+            raise RuntimeError("All keyframe generation methods failed")
     
     # Create motion engine
     try:

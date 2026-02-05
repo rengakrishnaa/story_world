@@ -100,6 +100,20 @@ class TestEnvironmentState:
         
         assert restored.objects == ["dummy", "tree"]
 
+    def test_strip_non_schema_fields(self):
+        """Observation model (EnvironmentObservation) has location_description; EnvironmentState schema does not."""
+        from models.world_state_graph import EnvironmentState, WorldState
+
+        obs_env = {"location_id": "room1", "location_description": "A busy intersection", "time_of_day": "noon"}
+        env = EnvironmentState.from_dict(obs_env)
+        assert env.location_id == "room1"
+        assert env.time_of_day == "noon"
+        assert "location_description" not in env.to_dict()
+
+        ws = WorldState(environment=EnvironmentState(location_id="start"))
+        merged = ws.merge({"environment": obs_env})
+        assert merged.environment.location_id == "room1"
+
 
 class TestWorldState:
     """Test WorldState dataclass."""

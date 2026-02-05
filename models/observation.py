@@ -13,6 +13,13 @@ from datetime import datetime
 from typing import Optional, List, Dict, Any
 from enum import Enum
 
+# Video-Native Compliance: Import verdict types
+try:
+    from models.episode_outcome import ObserverVerdict, ConstraintViolation
+except ImportError:
+    ObserverVerdict = None
+    ConstraintViolation = None
+
 
 class ActionOutcome(Enum):
     """Outcome of an action as observed in video."""
@@ -301,6 +308,42 @@ class ObservationResult:
     # Raw response (for training)
     raw_response: Optional[str] = None
     
+    # ==========================================================================
+    # Video-Native Compliance: Observer Verdict & Termination Authority
+    # ==========================================================================
+    # The observer can now declare actions impossible and force episode termination
+    
+    # Verdict (uses ObserverVerdict enum from episode_outcome.py)
+    verdict: Optional[str] = "valid"  # "valid", "degraded", "failed", "impossible", "contradicts", "blocks"
+    
+    # Termination authority
+    forces_termination: bool = False  # If True, episode MUST terminate
+    blocks_macro_intent: Optional[str] = None  # Which macro intent is now unreachable
+    
+    # Constraint violations detected
+    physics_violation: Optional[str] = None  # e.g., "Character cannot fly"
+    state_contradiction: Optional[str] = None  # e.g., "Character already dead in prior state"
+    impossible_reason: Optional[str] = None  # General explanation
+    
+    # ==========================================================================
+    # Phase 7: Epistemic Hardening (Causality & Uncertainty)
+    # ==========================================================================
+    
+    # Uncertainty
+    disagreement_score: float = 0.0  # 0.0=Consensus, 1.0=Total Disagreement
+    verdicts: List[str] = field(default_factory=list)  # List of verdicts from multiple observers
+    
+    # Causal Inference
+    constraints_inferred: List[str] = field(default_factory=list)  # e.g., "center_of_mass_unstable"
+    causal_explanation: Optional[str] = None  # e.g., "Box fell because imbalance"
+    
+    # ==========================================================================
+    # Phase 8: Epistemic Architecture - Evidence Ledger
+    # ==========================================================================
+    
+    # Evidence extracted from observation
+    evidence_ledger: Optional[Any] = None  # EvidenceLedger from models.epistemic (avoid circular import)
+    
     def to_dict(self) -> Dict[str, Any]:
         return {
             "observation_id": self.observation_id,
@@ -317,6 +360,18 @@ class ObservationResult:
             "observer_type": self.observer_type,
             "model_version": self.model_version,
             "raw_response": self.raw_response,
+            # Phase 6
+            "verdict": self.verdict,
+            "forces_termination": self.forces_termination,
+            "blocks_macro_intent": self.blocks_macro_intent,
+            "physics_violation": self.physics_violation,
+            "state_contradiction": self.state_contradiction,
+            "impossible_reason": self.impossible_reason,
+            # Phase 7
+            "disagreement_score": self.disagreement_score,
+            "verdicts": self.verdicts,
+            "constraints_inferred": self.constraints_inferred,
+            "causal_explanation": self.causal_explanation,
         }
     
     @classmethod
@@ -434,7 +489,10 @@ class TaskContext:
     
     # Quality requirements
     required_confidence: float = 0.7
-    
+
+    # Physics observability: explicit questions for dynamics beats
+    physics_questions: List[str] = field(default_factory=list)
+
     def to_dict(self) -> Dict[str, Any]:
         return {
             "task_type": self.task_type,

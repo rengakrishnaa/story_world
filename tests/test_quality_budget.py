@@ -548,12 +548,12 @@ class TestValueComponents:
         from runtime.value_estimator import ValueComponents
         
         components = ValueComponents(
-            narrative_weight=1.5,
+            information_gain_potential=1.5,
             is_branch_point=True,
             downstream_beats=3,
         )
         
-        assert components.narrative_weight == 1.5
+        assert components.information_gain_potential == 1.5
         assert components.is_branch_point is True
 
 
@@ -630,7 +630,7 @@ class TestValueEstimator:
         
         estimate = estimator.estimate_from_beat(
             beat_id="beat-001",
-            narrative_weight=1.5,
+            information_gain_potential=1.5,
             is_branch_point=True,
             downstream_beats=3,
         )
@@ -711,13 +711,13 @@ class TestQualityBudgetIntegration:
         
         # Low value beat
         low_value = estimator.estimate(ValueComponents(
-            narrative_weight=0.5,
+            information_gain_potential=0.5,
             downstream_beats=0,
         ))
         
         # High value beat
         high_value = estimator.estimate(ValueComponents(
-            narrative_weight=2.0,
+            information_gain_potential=2.0,
             is_branch_point=True,
             downstream_beats=5,
         ))

@@ -53,7 +53,7 @@ def render(input_spec):
         else:
             # Generate keyframes
             print(f"[animatediff] Generating keyframes...")
-            start_frame, end_frame = generate_keyframes(prompt)
+            start_frame, end_frame = generate_keyframes(prompt, input_spec)
 
     # Motion rendering
     frames = engine.render_motion(
@@ -93,15 +93,17 @@ def render(input_spec):
     return {"video": video_path}
 
 
-def generate_keyframes(prompt: str) -> tuple:
+def generate_keyframes(prompt: str, input_spec: dict = None) -> tuple:
     """
     Generate start and end keyframes.
-    Tries Gemini first, falls back to SDXL.
+    Tries Gemini first, falls back to SDXL. Skips Gemini when _credit_exhausted (Veo fallback).
     """
-    try:
-        return generate_keyframes_gemini(prompt)
-    except Exception as e:
-        print(f"[animatediff] Gemini failed: {e}")
+    credit_exhausted = (input_spec or {}).get("_credit_exhausted", False)
+    if not credit_exhausted:
+        try:
+            return generate_keyframes_gemini(prompt)
+        except Exception as e:
+            print(f"[animatediff] Gemini failed: {e}")
     
     try:
         return generate_keyframes_sdxl(prompt)

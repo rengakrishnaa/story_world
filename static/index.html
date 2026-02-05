@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>StoryWorld Infrastructure</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+</head>
+<body>
+    <header>
+        <div class="layout-container">
+            <a href="/" class="brand">STORYWORLD INFRASTRUCTURE</a>
+            <nav>
+                <a href="/" class="active">Simulations</a>
+                <a href="/new.html">New Run</a>
+                <a href="/docs" target="_blank">API Reference</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="layout-container">
+        <div class="flex-between mb-4">
+            <div>
+                <h2>Simulation Control Plane</h2>
+                <p>Monitor active physics simulations and enforcement gates.</p>
+            </div>
+            <a href="/new.html"><button class="primary">+ New Simulation</button></a>
+        </div>
+
+        <div class="panel">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th width="120">ID</th>
+                        <th>Goal / Constraint</th>
+                        <th width="120">Status</th>
+                        <th width="100">Conf.</th>
+                        <th width="100">Cost</th>
+                        <th width="140">Created</th>
+                        <th width="80"></th>
+                    </tr>
+                </thead>
+                <tbody id="sim-table-body">
+                    <tr>
+                        <td colspan="7" style="text-align:center; padding: 40px; color: var(--text-muted);">
+                            Connecting to control plane...
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </main>
+
+    <script src="/static/dashboard.js"></script>
+    <script>loadDashboard();</script>
+</body>
+</html>

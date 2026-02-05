@@ -117,11 +117,14 @@ class RuntimeDecisionLoop:
             
             # Also store in Redis for episode_composer to find
             # Key format: render_results:{world_id} -> beat_id -> result
+            # Use metrics when available; avoid hardcoded defaults for observability
+            conf = runtime_metrics.get("confidence")
+            dur = runtime_metrics.get("duration_sec")
             render_result = {
                 "status": "completed",
                 "video_url": artifacts.get("video"),
-                "confidence": runtime_metrics.get("confidence", 0.8),
-                "duration_sec": runtime_metrics.get("duration_sec", 8.0),
+                "confidence": conf if conf is not None else 0.5,  # Explicit uncertainty
+                "duration_sec": dur if dur is not None else 0.0,
                 "beat_id": beat_id,
             }
             self.redis.hset(

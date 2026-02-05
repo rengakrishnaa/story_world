@@ -19,10 +19,10 @@ from dataclasses import dataclass, field, asdict
 from typing import Optional, List, Dict, Any, Tuple, Callable
 from datetime import datetime
 
-from models.story_intent import (
+from models.goal_graph import (
     MicroAction,
     ActionType,
-    StoryBeat,
+    ActionProposal, # Replaces StoryBeat
 )
 
 logger = logging.getLogger(__name__)
@@ -214,7 +214,7 @@ class ActionReactor:
     def react(
         self,
         world_state: Dict[str, Any],
-        beat: Optional[StoryBeat] = None,
+        beat: Optional[ActionProposal] = None,
         characters: Optional[List[str]] = None,
         action_types: Optional[List[ActionType]] = None,
     ) -> List[MicroAction]:
@@ -223,7 +223,7 @@ class ActionReactor:
         
         Args:
             world_state: Current world state
-            beat: Optional story beat context
+            beat: Optional story beat/proposal context
             characters: Characters to generate actions for
             action_types: Restrict to specific action types
             
@@ -285,7 +285,7 @@ class ActionReactor:
     def _generate_contextual_actions(
         self,
         world_state: Dict[str, Any],
-        beat: Optional[StoryBeat],
+        beat: Optional[ActionProposal],
         characters: List[str],
         action_types: Optional[List[ActionType]],
     ) -> List[MicroAction]:
@@ -307,7 +307,7 @@ class ActionReactor:
         self,
         character: str,
         world_state: Dict[str, Any],
-        beat: Optional[StoryBeat],
+        beat: Optional[ActionProposal],
         action_types: Optional[List[ActionType]],
     ) -> List[MicroAction]:
         """Select actions for a specific character."""

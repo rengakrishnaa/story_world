@@ -21,3 +21,13 @@ class BeatState(str, Enum):
 
     # Beat permanently failed after retries / policy abort
     ABORTED = "ABORTED"
+    
+    # ==========================================================================
+    # Epistemic States (MANDATORY - No silent fallback, no probabilistic guessing)
+    # ==========================================================================
+    
+    # Evidence insufficient - cannot evaluate constraints
+    EPISTEMICALLY_INCOMPLETE = "EPISTEMICALLY_INCOMPLETE"
+    
+    # Progression blocked by unresolved uncertainty
+    UNCERTAIN_TERMINATION = "UNCERTAIN_TERMINATION"

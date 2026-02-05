@@ -153,8 +153,9 @@ class VideoRenderLoop:
         self.status = LoopStatus()
         
         # Components (lazy initialization)
+        # Components (lazy initialization)
         self._intent_graph = intent_graph
-        self._story_director = None
+        self._policy_engine = None # Was _story_director
         self._action_reactor = None
         self._world_graph = None
         self._observer = None
@@ -174,16 +175,26 @@ class VideoRenderLoop:
     # =========================================================================
     
     @property
-    def story_director(self):
-        if self._story_director is None:
-            from agents.story_director import StoryDirector
-            from models.story_intent import StoryIntentGraph
+    def policy_engine(self):
+        if self._policy_engine is None:
+            from agents.policy_engine import PolicyEngine
+            from models.goal_graph import GoalGraph
             
             if self._intent_graph is None:
-                self._intent_graph = StoryIntentGraph(episode_id=self.episode_id)
+                self._intent_graph = GoalGraph(episode_id=self.episode_id)
             
-            self._story_director = StoryDirector(self._intent_graph)
-        return self._story_director
+            self._policy_engine = PolicyEngine(self._intent_graph)
+            
+            # Hydrate from SQL if empty
+            if not self._policy_engine.goal_graph.proposals:
+                self._hydrate_policy_from_sql()
+                
+        return self._policy_engine
+
+    @property
+    def story_director(self):
+        """Legacy alias."""
+        return self.policy_engine
     
     @property
     def action_reactor(self):
@@ -207,6 +218,9 @@ class VideoRenderLoop:
             # Use mock (no Gemini) by default for testing
             config = ObserverConfig(
                 use_gemini=not self.config.use_mock_observer,
+                fallback_enabled=os.getenv("OBSERVER_FALLBACK_ENABLED", "").lower() in ("true", "1", "yes"),
+                ollama_base_url=os.getenv("OLLAMA_BASE_URL", "http://localhost:11434"),
+                ollama_model=os.getenv("OLLAMA_MODEL", "llava"),
             )
             self._observer = VideoObserverAgent(config=config)
         return self._observer
@@ -278,7 +292,7 @@ class VideoRenderLoop:
     def _is_complete(self) -> bool:
         """Check if loop should complete."""
         # Check story director
-        if self.story_director.is_complete():
+        if self.policy_engine.is_complete():
             return True
         
         # Check budget exhaustion
@@ -290,18 +304,24 @@ class VideoRenderLoop:
     
     def _process_one_cycle(self) -> None:
         """Process one cycle of the render loop."""
-        # 1. Get next decision from story director
-        from agents.story_director import DecisionType
+        # 1. Get next decision from policy engine
+        from agents.policy_engine import DecisionType
         
         world_state = self._get_current_world_state()
-        decision = self.story_director.next_decision(world_state)
+        decision = self.policy_engine.next_decision(world_state)
         
         if decision.decision_type == DecisionType.COMPLETE:
             return
+            
+        if decision.decision_type == DecisionType.WAIT:
+            logger.info("[video_render_loop] policy decision: WAIT (rational inaction)")
+            return
         
-        beat_id = decision.beat_id
+        # Map: proposal_id -> beat_id (for legacy compatibility)
+        beat_id = decision.proposal_id or decision.decision_id
+        
         if not beat_id:
-            logger.warning("[video_render_loop] decision has no beat_id")
+            logger.warning("[video_render_loop] decision has no proposal_id")
             return
         
         self.status.current_beat_id = beat_id
@@ -312,6 +332,8 @@ class VideoRenderLoop:
         
         estimate = self.value_estimator.estimate_from_beat(
             beat_id=beat_id,
+            information_gain_potential=1.0,  # Default
+            constraint_complexity=1.0,       # Default
             is_branch_point=getattr(decision, 'is_branch_point', False),
             downstream_beats=getattr(decision, 'downstream_beats', 0),
         )
@@ -386,11 +408,12 @@ class VideoRenderLoop:
                 self._update_world_state(video_uri, observation, beat_id, quality_result)
                 
                 # Record outcome with director
-                self.story_director.record_outcome(
+                self.policy_engine.record_outcome(
                     beat_id=beat_id,
                     observation=observation,
                     quality_result={"is_acceptable": True},
                     video_uri=video_uri,
+                    proposal_id=beat_id
                 )
                 
                 return True
@@ -471,7 +494,7 @@ class VideoRenderLoop:
     ) -> Dict[str, Any]:
         """Build GPU job payload."""
         # Get render hints from director
-        hints = self.story_director.get_render_hints()
+        hints = self.policy_engine.get_render_hints()
         
         return {
             "job_id": job_id,
@@ -572,9 +595,10 @@ class VideoRenderLoop:
     
     def _mark_beat_failed(self, beat_id: str, error: str) -> None:
         """Mark a beat as failed."""
-        self.story_director.record_outcome(
+        self.policy_engine.record_outcome(
             beat_id=beat_id,
             quality_result={"is_acceptable": False},
+            proposal_id=beat_id
         )
         logger.warning(f"[video_render_loop] beat {beat_id} failed: {error}")
     
@@ -591,9 +615,63 @@ class VideoRenderLoop:
             "beats_failed": self.status.beats_failed,
             "budget_spent_usd": self.status.budget_spent_usd,
             "world_graph_depth": self.world_graph.current.depth,
-            "director_progress": self.story_director.get_progress(),
+            "budget_spent_usd": self.status.budget_spent_usd,
+            "world_graph_depth": self.world_graph.current.depth,
+            "director_progress": self.policy_engine.get_progress(),
         }
     
+    
+    def _hydrate_policy_from_sql(self) -> None:
+        """Hydrate policy engine goal graph from SQL beats."""
+        if not self._policy_engine:
+            return
+
+        try:
+            beats = self.sql.get_beats(self.episode_id)
+        except Exception as e:
+            logger.warning(f"[video_render_loop] failed to load beats: {e}")
+            return
+
+        from models.goal_graph import create_action_proposal, ProposalStatus, ActionProposal
+        
+        count = 0
+        for beat in beats:
+            # Skip if already exists
+            if beat["beat_id"] in self._policy_engine.goal_graph.proposals:
+                continue
+                
+            spec = beat.get("spec", {})
+            if isinstance(spec, str):
+                import json
+                try:
+                    spec = json.loads(spec)
+                except:
+                    spec = {}
+            
+            # Map state
+            status = ProposalStatus.PENDING
+            if beat.get("state") == "ACCEPTED":
+                status = ProposalStatus.COMPLETED
+            elif beat.get("state") == "ABORTED":
+                status = ProposalStatus.FAILED
+            
+            # Create proposal
+            proposal = ActionProposal(
+                proposal_id=beat["beat_id"],
+                description=spec.get("description", "Unknown Action"),
+                objectives=spec.get("objectives", []),
+                participants=spec.get("characters", []),
+                context_location=spec.get("location"),
+                status=status,
+                is_optional=spec.get("is_optional", False),
+            )
+            
+            self._policy_engine.goal_graph.add_proposal(proposal)
+            count += 1
+            
+        if count > 0:
+            logger.info(f"[video_render_loop] hydrated {count} proposals from SQL")
+
     def on_beat_complete(self, callback: Callable[[str], None]) -> None:
         """Register callback for beat completion."""
         self._on_beat_complete = callback
@@ -877,7 +955,8 @@ def run_episode(
     Returns:
         Episode result
     """
-    from models.story_intent import StoryIntentGraph, StoryBeat, MacroIntent, NarrativeGoalType
+    from models.goal_graph import GoalGraph, ActionProposal, SimulationGoal
+    from models.simulation_goal import GoalType
     
     # Build intent graph
     intent_graph = StoryIntentGraph(episode_id=episode_id)

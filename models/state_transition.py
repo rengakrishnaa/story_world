@@ -24,6 +24,7 @@ class TransitionStatus(Enum):
     COMPLETED = "completed"   # Transition complete, new state available
     FAILED = "failed"         # Transition failed
     REJECTED = "rejected"     # Quality check failed, needs retry
+    BLOCKED = "blocked"       # Epistemic halt - missing evidence prevents evaluation
 
 
 class ActionOutcome(Enum):

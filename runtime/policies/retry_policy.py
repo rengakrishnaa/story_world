@@ -31,10 +31,33 @@ class RetryPolicy:
     def __init__(self, config=None):
         self.max_attempts = (config or {}).get("max_attempts", 2)
 
-    def decide(self, beat, attempts, observation=None, error=None):
+    def decide(self, beat, attempts, observation=None, error=None, observer_verdict=None):
+        """
+        Reality compiler: observer_verdict IMPOSSIBLE/CONTRADICTS -> no retry.
+        """
         num_attempts = len(attempts)
 
-        # 🔴 If error keeps happening, ABORT after max_attempts
+        # Reality compiler: observer says IMPOSSIBLE -> never retry
+        if observer_verdict in ("impossible", "contradicts", "blocks_intent"):
+            return RetryDecision(
+                "ABORT",
+                reason=f"Observer verdict {observer_verdict}: do not retry",
+            )
+
+        # Observer couldn't run (video unavailable, parse error, etc.)
+        # Enforce minimum one render attempt: allow retry while attempts remain.
+        if observer_verdict == "uncertain":
+            if num_attempts < self.max_attempts:
+                return RetryDecision(
+                    "RETRY",
+                    reason="Observer uncertain; retry to obtain evidence",
+                )
+            return RetryDecision(
+                "ABORT",
+                reason="Observer uncertain after max attempts; abort",
+            )
+
+        # If error keeps happening, ABORT after max_attempts
         if error is not None and num_attempts >= self.max_attempts:
             return RetryDecision(
                 "ABORT",

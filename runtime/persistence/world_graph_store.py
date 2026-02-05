@@ -15,12 +15,19 @@ from typing import Optional, List, Dict, Any
 from pathlib import Path
 import logging
 
+import uuid
+
 from models.world_state_graph import (
     WorldStateNode,
     WorldState,
     BranchType,
 )
-from models.state_transition import StateTransition, TransitionStatus
+from models.state_transition import (
+    StateTransition,
+    TransitionStatus,
+    ActionOutcome,
+    TransitionMetrics,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -416,7 +423,100 @@ class WorldGraphStore:
             return self._row_to_transition(dict(row))
         finally:
             cur.close()
-    
+
+    def record_beat_observation(
+        self,
+        episode_id: str,
+        beat_id: str,
+        video_uri: str,
+        observation: Dict[str, Any],
+        action_description: str = "",
+        video_duration_sec: float = 0.0,
+        quality_score: float = 0.0,
+        transition_status: TransitionStatus = TransitionStatus.COMPLETED,
+        action_outcome: Optional[ActionOutcome] = None,
+    ) -> None:
+        """
+        Record an observation from a beat's video into the world graph.
+        Creates root node if needed, appends new state node and transition.
+        Used by ResultConsumer when observer runs on successful render.
+        """
+        obs_id = observation.get("observation_id") or str(uuid.uuid4())
+        observation.setdefault("observation_id", obs_id)
+
+        # 1. Get or create root node
+        root = self.get_root_node(episode_id)
+        if not root:
+            graph = WorldStateNode(
+                node_id=str(uuid.uuid4()),
+                episode_id=episode_id,
+                parent_id=None,
+                created_at=datetime.utcnow(),
+                world_state=WorldState(),
+                branch_name="main",
+                branch_type=BranchType.MAIN,
+                depth=0,
+            )
+            self.insert_node(graph)
+            self._update_branch_head(episode_id, "main", graph.node_id)
+            parent = graph
+        else:
+            parent = self.get_branch_head(episode_id, "main") or root
+
+        new_node = None
+        if transition_status == TransitionStatus.COMPLETED:
+            # 2. Merge observation into parent state
+            try:
+                merged_state = parent.world_state.merge(observation)
+            except Exception as e:
+                logger.warning(f"[world_graph_store] merge failed, using minimal state: {e}")
+                merged_state = WorldState()
+
+            # 3. Create and insert new node
+            new_node = WorldStateNode(
+                node_id=str(uuid.uuid4()),
+                episode_id=episode_id,
+                parent_id=parent.node_id,
+                created_at=datetime.utcnow(),
+                world_state=merged_state,
+                transition_video_uri=video_uri,
+                transition_beat_id=beat_id,
+                observation_json=json.dumps(observation),
+                branch_name="main",
+                branch_type=BranchType.MAIN,
+                depth=parent.depth + 1,
+                quality_score=quality_score,
+            )
+            self.insert_node(new_node)
+            self._update_branch_head(episode_id, "main", new_node.node_id)
+
+        # 4. Create and insert transition
+        action = observation.get("action") or {}
+        if action_outcome is None:
+            outcome_str = action.get("outcome", "success")
+            try:
+                action_outcome = ActionOutcome(outcome_str)
+            except ValueError:
+                action_outcome = ActionOutcome.SUCCESS
+
+        trans = StateTransition(
+            transition_id=str(uuid.uuid4()),
+            episode_id=episode_id,
+            source_node_id=parent.node_id,
+            target_node_id=new_node.node_id if new_node else None,
+            beat_id=beat_id,
+            action_description=action_description or action.get("action_description", ""),
+            video_uri=video_uri,
+            video_duration_sec=video_duration_sec,
+            observation_json=json.dumps(observation),
+            action_outcome=action_outcome,
+            status=transition_status,
+            completed_at=datetime.utcnow(),
+            metrics=TransitionMetrics(quality_score=quality_score),
+        )
+        self.insert_transition(trans)
+        logger.info(f"[world_graph_store] recorded observation for {episode_id}/{beat_id}")
+
     def get_episode_transitions(
         self,
         episode_id: str,

@@ -23,12 +23,37 @@ import logging
 logger = logging.getLogger(__name__)
 
 
+class ProvenanceError(Exception):
+    """Raised when state update lacks required video provenance."""
+    pass
+
+
 class BranchType(Enum):
     """Type of branch in the world state graph."""
     MAIN = "main"           # Primary timeline
     RETRY = "retry"         # Regeneration attempt
     COUNTERFACTUAL = "cf"   # What-if exploration
     FORK = "fork"           # User-initiated branch
+
+
+# Schema version for audit/traceability. Bump on breaking changes.
+WORLD_STATE_SCHEMA_VERSION = "1.0"
+
+# Explicit field allowlists - no silent fallback from observation model drift
+_CHARACTER_STATE_FIELDS = frozenset({"character_id", "position", "emotion", "pose", "facing_direction", "visible"})
+_ENVIRONMENT_STATE_FIELDS = frozenset({"location_id", "time_of_day", "weather", "lighting", "objects"})
+
+
+def _strip_to_schema(data: Dict[str, Any], allowed: frozenset, defaults: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
+    """Strip dict to only allowed schema fields. Prevents observation model drift from breaking merge."""
+    if not data or not isinstance(data, dict):
+        return dict(defaults or {})
+    stripped = {k: v for k, v in data.items() if k in allowed and v is not None}
+    if defaults:
+        for k, default in defaults.items():
+            if k not in stripped and k in allowed:
+                stripped[k] = default
+    return stripped
 
 
 @dataclass
@@ -46,12 +71,19 @@ class CharacterState:
     
     @classmethod
     def from_dict(cls, data: Dict[str, Any]) -> "CharacterState":
-        return cls(**data)
+        clean = _strip_to_schema(data or {}, _CHARACTER_STATE_FIELDS)
+        if not clean.get("character_id") and data:
+            clean["character_id"] = data.get("character_id", "unknown")
+        return cls(**clean)
 
 
 @dataclass
 class EnvironmentState:
-    """Observable environment state extracted from video."""
+    """
+    Observable environment state extracted from video.
+    Schema v1.0: location_id, time_of_day, weather, lighting, objects.
+    Observation model may have location_description, mood, objects_detected - these are stripped.
+    """
     location_id: str
     time_of_day: Optional[str] = None
     weather: Optional[str] = None
@@ -63,7 +95,15 @@ class EnvironmentState:
     
     @classmethod
     def from_dict(cls, data: Dict[str, Any]) -> "EnvironmentState":
-        return cls(**data)
+        if not data or not isinstance(data, dict):
+            return cls(location_id="unknown")
+        # Map observation model fields to schema (objects_detected -> objects)
+        normalized = dict(data)
+        if "objects_detected" in normalized and "objects" not in normalized:
+            normalized["objects"] = normalized.pop("objects_detected", []) or []
+        clean = _strip_to_schema(normalized, _ENVIRONMENT_STATE_FIELDS)
+        clean.setdefault("location_id", data.get("location_id") or "unknown")
+        return cls(**clean)
 
 
 @dataclass
@@ -130,27 +170,33 @@ class WorldState:
             custom_state=dict(self.custom_state),
         )
         
-        # Update characters from observation
+        # Update characters from observation (schema-stripped)
         for char_id, char_data in observation.get("characters", {}).items():
             if char_id in new_state.characters:
-                # Update existing character (on the copy)
                 existing = new_state.characters[char_id]
-                for key, value in char_data.items():
+                clean = _strip_to_schema(char_data, _CHARACTER_STATE_FIELDS)
+                for key, value in clean.items():
                     if value is not None:
                         setattr(existing, key, value)
             else:
-                # New character appeared
-                new_state.characters[char_id] = CharacterState.from_dict(char_data)
+                merged = dict(char_data) if isinstance(char_data, dict) else {}
+                merged["character_id"] = merged.get("character_id") or char_id
+                new_state.characters[char_id] = CharacterState.from_dict(merged)
         
-        # Update environment
+        # Update environment (schema-stripped, no location_description etc.)
         if "environment" in observation:
             env_update = observation["environment"]
-            if new_state.environment:
-                for key, value in env_update.items():
-                    if value is not None:
-                        setattr(new_state.environment, key, value)
-            else:
-                new_state.environment = EnvironmentState.from_dict(env_update)
+            if env_update and isinstance(env_update, dict):
+                normalized = dict(env_update)
+                if "objects_detected" in normalized and "objects" not in normalized:
+                    normalized["objects"] = normalized.get("objects_detected") or []
+                if new_state.environment:
+                    clean = _strip_to_schema(normalized, _ENVIRONMENT_STATE_FIELDS)
+                    for key, value in clean.items():
+                        if value is not None and hasattr(new_state.environment, key):
+                            setattr(new_state.environment, key, value)
+                else:
+                    new_state.environment = EnvironmentState.from_dict(normalized)
         
         # Update narrative flags
         new_state.narrative_flags.update(observation.get("narrative_flags", {}))
@@ -321,9 +367,20 @@ class WorldStateGraph:
             
         Returns:
             New state node
+            
+        Raises:
+            ProvenanceError: If observation lacks observation_id or video_uri is missing
         """
         if not self._current_id:
             raise ValueError("Graph not initialized. Call initialize() first.")
+        
+        # Provenance Check (Hard Gate)
+        obs_id = observation.get("observation_id")
+        if not obs_id:
+            raise ProvenanceError("Strict Provenance Violation: State transition missing 'observation_id'")
+            
+        if not video_uri:
+            raise ProvenanceError("Strict Provenance Violation: State transition missing 'video_uri'")
         
         parent = self._nodes[self._current_id]
         

@@ -99,12 +99,12 @@ class TestVideoRenderLoopLazyInit:
         loop = VideoRenderLoop(episode_id="lazy-001")
         
         # Should not be initialized yet
-        assert loop._story_director is None
+        assert loop._policy_engine is None
         
         # Access triggers initialization
-        director = loop.story_director
+        director = loop.policy_engine
         assert director is not None
-        assert loop._story_director is not None
+        assert loop._policy_engine is not None
     
     def test_world_graph_lazy(self):
         from runtime.video_render_loop import VideoRenderLoop
@@ -141,24 +141,25 @@ class TestVideoRenderLoopRun:
     
     def test_run_with_beats(self):
         from runtime.video_render_loop import VideoRenderLoop, RenderLoopConfig
-        from models.story_intent import (
-            StoryIntentGraph, MacroIntent, StoryBeat, NarrativeGoalType
+        from models.goal_graph import (
+            GoalGraph, SimulationGoal, ActionProposal
         )
+        from models.simulation_goal import GoalType
         
         # Setup intent graph
-        intent_graph = StoryIntentGraph(episode_id="beats-001")
-        intent_graph.add_macro_intent(MacroIntent(
-            intent_id="goal",
-            goal_type=NarrativeGoalType.PLOT_MILESTONE,
+        intent_graph = GoalGraph(episode_id="beats-001")
+        intent_graph.add_goal(SimulationGoal(
+            goal_id="goal",
+            goal_type=GoalType.STATE_TARGET,
             description="Complete",
         ))
-        intent_graph.add_story_beat(StoryBeat(
-            beat_id="beat-001",
+        intent_graph.add_proposal(ActionProposal(
+            proposal_id="beat-001",
             description="First scene",
             contributes_to=["goal"],
         ))
-        intent_graph.add_story_beat(StoryBeat(
-            beat_id="beat-002",
+        intent_graph.add_proposal(ActionProposal(
+            proposal_id="beat-002",
             description="Second scene",
             suggested_position=2,
             contributes_to=["goal"],
@@ -179,18 +180,19 @@ class TestVideoRenderLoopRun:
     
     def test_callbacks(self):
         from runtime.video_render_loop import VideoRenderLoop, RenderLoopConfig
-        from models.story_intent import (
-            StoryIntentGraph, MacroIntent, StoryBeat, NarrativeGoalType
+        from models.goal_graph import (
+            GoalGraph, SimulationGoal, ActionProposal
         )
+        from models.simulation_goal import GoalType
         
-        intent_graph = StoryIntentGraph(episode_id="callback-001")
-        intent_graph.add_macro_intent(MacroIntent(
-            intent_id="goal",
-            goal_type=NarrativeGoalType.PLOT_MILESTONE,
+        intent_graph = GoalGraph(episode_id="callback-001")
+        intent_graph.add_goal(SimulationGoal(
+            goal_id="goal",
+            goal_type=GoalType.STATE_TARGET,
             description="Complete",
         ))
-        intent_graph.add_story_beat(StoryBeat(
-            beat_id="beat-001",
+        intent_graph.add_proposal(ActionProposal(
+            proposal_id="beat-001",
             description="Scene",
             contributes_to=["goal"],
         ))
@@ -293,10 +295,11 @@ class TestFullPipelineIntegration:
     def test_all_phases_integrated(self):
         """Test that all Phase 1-4 components work together."""
         from runtime.video_render_loop import VideoRenderLoop, RenderLoopConfig
-        from models.story_intent import (
-            StoryIntentGraph, MacroIntent, StoryBeat, MicroAction,
-            NarrativeGoalType, ActionType
+        from models.goal_graph import (
+            GoalGraph, SimulationGoal, ActionProposal, MicroAction,
+            ActionType
         )
+        from models.simulation_goal import GoalType
         
         # Phase 1: World State Graph
         from models.world_state_graph import WorldStateGraph, WorldState
@@ -309,40 +312,40 @@ class TestFullPipelineIntegration:
         from runtime.budget_controller import BudgetController
         from runtime.value_estimator import ValueEstimator
         
-        # Phase 4: Story Director
-        from agents.story_director import StoryDirector
+        # Phase 4: Policy Engine
+        from agents.policy_engine import PolicyEngine
         from runtime.action_reactor import ActionReactor
         
         # Build intent graph
-        intent_graph = StoryIntentGraph(episode_id="full-integration")
+        intent_graph = GoalGraph(episode_id="full-integration")
         
-        intent_graph.add_macro_intent(MacroIntent(
-            intent_id="main-goal",
-            goal_type=NarrativeGoalType.PLOT_MILESTONE,
+        intent_graph.add_goal(SimulationGoal(
+            goal_id="main-goal",
+            goal_type=GoalType.STATE_TARGET,
             description="Complete the story",
-            characters=["hero", "mentor"],
+            participants=["hero", "mentor"],
         ))
         
-        intent_graph.add_story_beat(StoryBeat(
-            beat_id="beat-001",
+        intent_graph.add_proposal(ActionProposal(
+            proposal_id="beat-001",
             description="Introduction",
-            characters=["hero"],
+            participants=["hero"],
             suggested_position=1,
             contributes_to=["main-goal"],
         ))
         
-        intent_graph.add_story_beat(StoryBeat(
-            beat_id="beat-002",
+        intent_graph.add_proposal(ActionProposal(
+            proposal_id="beat-002",
             description="Training",
-            characters=["hero", "mentor"],
+            participants=["hero", "mentor"],
             suggested_position=2,
             contributes_to=["main-goal"],
         ))
         
-        intent_graph.add_story_beat(StoryBeat(
-            beat_id="beat-003",
+        intent_graph.add_proposal(ActionProposal(
+            proposal_id="beat-003",
             description="Final challenge",
-            characters=["hero"],
+            participants=["hero"],
             suggested_position=3,
             contributes_to=["main-goal"],
         ))
@@ -374,26 +377,27 @@ class TestFullPipelineIntegration:
         assert result["world_graph_depth"] == 3
         assert result["budget_spent_usd"] > 0
         
-        # Verify director progress
+        # Verify policy engine progress
         progress = result["director_progress"]
-        assert progress["beats_completed"] == 3
+        assert progress["goals_completed"] == 1
         assert progress["is_complete"] is True
     
     def test_retry_on_low_quality(self):
         """Test that low quality triggers retry."""
         from runtime.video_render_loop import VideoRenderLoop, RenderLoopConfig
-        from models.story_intent import (
-            StoryIntentGraph, MacroIntent, StoryBeat, NarrativeGoalType
+        from models.goal_graph import (
+            GoalGraph, SimulationGoal, ActionProposal
         )
+        from models.simulation_goal import GoalType
         
-        intent_graph = StoryIntentGraph(episode_id="retry-test")
-        intent_graph.add_macro_intent(MacroIntent(
-            intent_id="goal",
-            goal_type=NarrativeGoalType.PLOT_MILESTONE,
+        intent_graph = GoalGraph(episode_id="retry-test")
+        intent_graph.add_goal(SimulationGoal(
+            goal_id="goal",
+            goal_type=GoalType.STATE_TARGET,
             description="Test",
         ))
-        intent_graph.add_story_beat(StoryBeat(
-            beat_id="beat-001",
+        intent_graph.add_proposal(ActionProposal(
+            proposal_id="beat-001",
             description="Single beat",
             contributes_to=["goal"],
         ))
@@ -418,21 +422,22 @@ class TestFullPipelineIntegration:
     def test_budget_exhaustion(self):
         """Test behavior when budget is exhausted."""
         from runtime.video_render_loop import VideoRenderLoop, RenderLoopConfig
-        from models.story_intent import (
-            StoryIntentGraph, MacroIntent, StoryBeat, NarrativeGoalType
+        from models.goal_graph import (
+            GoalGraph, SimulationGoal, ActionProposal
         )
+        from models.simulation_goal import GoalType
         
-        intent_graph = StoryIntentGraph(episode_id="budget-test")
-        intent_graph.add_macro_intent(MacroIntent(
-            intent_id="goal",
-            goal_type=NarrativeGoalType.PLOT_MILESTONE,
+        intent_graph = GoalGraph(episode_id="budget-test")
+        intent_graph.add_goal(SimulationGoal(
+            goal_id="goal",
+            goal_type=GoalType.STATE_TARGET,
             description="Test",
         ))
         
         # Add many beats to exhaust budget
         for i in range(20):
-            intent_graph.add_story_beat(StoryBeat(
-                beat_id=f"beat-{i+1:03d}",
+            intent_graph.add_proposal(ActionProposal(
+                proposal_id=f"beat-{i+1:03d}",
                 description=f"Scene {i+1}",
                 suggested_position=i+1,
                 contributes_to=["goal"],
@@ -462,23 +467,24 @@ class TestWorldGraphIntegration:
     
     def test_world_state_updates(self):
         from runtime.video_render_loop import VideoRenderLoop, RenderLoopConfig
-        from models.story_intent import (
-            StoryIntentGraph, MacroIntent, StoryBeat, NarrativeGoalType
+        from models.goal_graph import (
+            GoalGraph, SimulationGoal, ActionProposal
         )
+        from models.simulation_goal import GoalType
         
-        intent_graph = StoryIntentGraph(episode_id="world-state-test")
-        intent_graph.add_macro_intent(MacroIntent(
-            intent_id="goal",
-            goal_type=NarrativeGoalType.PLOT_MILESTONE,
+        intent_graph = GoalGraph(episode_id="world-state-test")
+        intent_graph.add_goal(SimulationGoal(
+            goal_id="goal",
+            goal_type=GoalType.STATE_TARGET,
             description="Test",
         ))
-        intent_graph.add_story_beat(StoryBeat(
-            beat_id="beat-001",
+        intent_graph.add_proposal(ActionProposal(
+            proposal_id="beat-001",
             description="Scene 1",
             contributes_to=["goal"],
         ))
-        intent_graph.add_story_beat(StoryBeat(
-            beat_id="beat-002",
+        intent_graph.add_proposal(ActionProposal(
+            proposal_id="beat-002",
             description="Scene 2",
             suggested_position=2,
             contributes_to=["goal"],
@@ -509,18 +515,19 @@ class TestObserverIntegration:
     
     def test_observer_called_for_each_beat(self):
         from runtime.video_render_loop import VideoRenderLoop, RenderLoopConfig
-        from models.story_intent import (
-            StoryIntentGraph, MacroIntent, StoryBeat, NarrativeGoalType
+        from models.goal_graph import (
+            GoalGraph, SimulationGoal, ActionProposal
         )
+        from models.simulation_goal import GoalType
         
-        intent_graph = StoryIntentGraph(episode_id="observer-test")
-        intent_graph.add_macro_intent(MacroIntent(
-            intent_id="goal",
-            goal_type=NarrativeGoalType.PLOT_MILESTONE,
+        intent_graph = GoalGraph(episode_id="observer-test")
+        intent_graph.add_goal(SimulationGoal(
+            goal_id="goal",
+            goal_type=GoalType.STATE_TARGET,
             description="Test",
         ))
-        intent_graph.add_story_beat(StoryBeat(
-            beat_id="beat-001",
+        intent_graph.add_proposal(ActionProposal(
+            proposal_id="beat-001",
             description="Scene",
             contributes_to=["goal"],
         ))
@@ -549,18 +556,19 @@ class TestQualityBudgetIntegration:
     
     def test_quality_affects_budget(self):
         from runtime.video_render_loop import VideoRenderLoop, RenderLoopConfig
-        from models.story_intent import (
-            StoryIntentGraph, MacroIntent, StoryBeat, NarrativeGoalType
+        from models.goal_graph import (
+            GoalGraph, SimulationGoal, ActionProposal
         )
+        from models.simulation_goal import GoalType
         
-        intent_graph = StoryIntentGraph(episode_id="quality-budget-test")
-        intent_graph.add_macro_intent(MacroIntent(
-            intent_id="goal",
-            goal_type=NarrativeGoalType.PLOT_MILESTONE,
+        intent_graph = GoalGraph(episode_id="quality-budget-test")
+        intent_graph.add_goal(SimulationGoal(
+            goal_id="goal",
+            goal_type=GoalType.STATE_TARGET,
             description="Test",
         ))
-        intent_graph.add_story_beat(StoryBeat(
-            beat_id="beat-001",
+        intent_graph.add_proposal(ActionProposal(
+            proposal_id="beat-001",
             description="Scene",
             contributes_to=["goal"],
         ))
@@ -585,37 +593,38 @@ class TestQualityBudgetIntegration:
         assert loop.budget_controller.state.spent_usd > 0
 
 
-class TestStoryDirectorIntegration:
-    """Test story director integration."""
+class TestPolicyEngineIntegration:
+    """Test policy engine integration."""
     
     def test_director_guides_progression(self):
         from runtime.video_render_loop import VideoRenderLoop, RenderLoopConfig
-        from models.story_intent import (
-            StoryIntentGraph, MacroIntent, StoryBeat, NarrativeGoalType, IntentStatus
+        from models.goal_graph import (
+            GoalGraph, SimulationGoal, ActionProposal, GoalStatus
         )
+        from models.simulation_goal import GoalType
         
-        intent_graph = StoryIntentGraph(episode_id="director-test")
+        intent_graph = GoalGraph(episode_id="director-test")
         
         # Add multiple intents
-        intent_graph.add_macro_intent(MacroIntent(
-            intent_id="intro",
-            goal_type=NarrativeGoalType.PLOT_MILESTONE,
+        intent_graph.add_goal(SimulationGoal(
+            goal_id="intro",
+            goal_type=GoalType.STATE_TARGET,
             description="Introduction",
         ))
-        intent_graph.add_macro_intent(MacroIntent(
-            intent_id="climax",
-            goal_type=NarrativeGoalType.PLOT_MILESTONE,
+        intent_graph.add_goal(SimulationGoal(
+            goal_id="climax",
+            goal_type=GoalType.STATE_TARGET,
             description="Climax",
         ))
         
-        intent_graph.add_story_beat(StoryBeat(
-            beat_id="beat-001",
+        intent_graph.add_proposal(ActionProposal(
+            proposal_id="beat-001",
             description="Opening",
             suggested_position=1,
             contributes_to=["intro"],
         ))
-        intent_graph.add_story_beat(StoryBeat(
-            beat_id="beat-002",
+        intent_graph.add_proposal(ActionProposal(
+            proposal_id="beat-002",
             description="Conflict",
             suggested_position=2,
             contributes_to=["climax"],
@@ -631,8 +640,8 @@ class TestStoryDirectorIntegration:
         result = loop.run()
         
         # Both intents should be completed
-        assert intent_graph.macro_intents["intro"].status == IntentStatus.COMPLETED
-        assert intent_graph.macro_intents["climax"].status == IntentStatus.COMPLETED
+        assert intent_graph.goals["intro"].status == GoalStatus.COMPLETED
+        assert intent_graph.goals["climax"].status == GoalStatus.COMPLETED
 
 
 class TestEndToEndScenarios:
@@ -658,56 +667,57 @@ class TestEndToEndScenarios:
     def test_complex_story_with_branching(self):
         """Test a more complex story structure."""
         from runtime.video_render_loop import VideoRenderLoop, RenderLoopConfig
-        from models.story_intent import (
-            StoryIntentGraph, MacroIntent, StoryBeat,
-            NarrativeGoalType, MicroAction, ActionType
+        from models.goal_graph import (
+            GoalGraph, SimulationGoal, ActionProposal,
+            ActionType, MicroAction
         )
+        from models.simulation_goal import GoalType
         
-        intent_graph = StoryIntentGraph(episode_id="complex-story")
+        intent_graph = GoalGraph(episode_id="complex-story")
         
         # Multiple macro intents
-        intent_graph.add_macro_intent(MacroIntent(
-            intent_id="character-growth",
-            goal_type=NarrativeGoalType.CHARACTER_ARC,
+        intent_graph.add_goal(SimulationGoal(
+            goal_id="character-growth",
+            goal_type=GoalType.STATE_TARGET,
             description="Hero grows stronger",
         ))
-        intent_graph.add_macro_intent(MacroIntent(
-            intent_id="defeat-villain",
-            goal_type=NarrativeGoalType.PLOT_MILESTONE,
+        intent_graph.add_goal(SimulationGoal(
+            goal_id="defeat-villain",
+            goal_type=GoalType.STATE_TARGET,
             description="Defeat the main villain",
         ))
         
         # Act 1: Setup
-        intent_graph.add_story_beat(StoryBeat(
-            beat_id="act1-intro",
+        intent_graph.add_proposal(ActionProposal(
+            proposal_id="act1-intro",
             description="Hero introduced",
             suggested_position=1,
             contributes_to=["character-growth"],
         ))
-        intent_graph.add_story_beat(StoryBeat(
-            beat_id="act1-call",
+        intent_graph.add_proposal(ActionProposal(
+            proposal_id="act1-call",
             description="Call to adventure",
             suggested_position=2,
             contributes_to=["character-growth"],
         ))
         
         # Act 2: Development
-        intent_graph.add_story_beat(StoryBeat(
-            beat_id="act2-training",
+        intent_graph.add_proposal(ActionProposal(
+            proposal_id="act2-training",
             description="Training montage",
             suggested_position=3,
             contributes_to=["character-growth"],
         ))
-        intent_graph.add_story_beat(StoryBeat(
-            beat_id="act2-setback",
+        intent_graph.add_proposal(ActionProposal(
+            proposal_id="act2-setback",
             description="Major setback",
             suggested_position=4,
             contributes_to=["character-growth"],
         ))
         
         # Act 3: Resolution
-        intent_graph.add_story_beat(StoryBeat(
-            beat_id="act3-final",
+        intent_graph.add_proposal(ActionProposal(
+            proposal_id="act3-final",
             description="Final battle",
             suggested_position=5,
             contributes_to=["defeat-villain"],

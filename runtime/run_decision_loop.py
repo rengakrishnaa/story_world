@@ -3,12 +3,15 @@
 import os
 import sys
 import redis
+from dotenv import load_dotenv
 
+from config import GPU_JOB_QUEUE, GPU_RESULT_QUEUE, GPU_RESULT_QUEUE_PREFIX
 from runtime.persistence.sql_store import SQLStore
 from runtime.episode_runtime import EpisodeRuntime
 from runtime.decision_loop import RuntimeDecisionLoop
-from dotenv import load_dotenv
+
 load_dotenv()
+
 
 def main():
     if len(sys.argv) < 2:
@@ -48,14 +51,8 @@ def main():
         sql=sql,
     )
 
-    # ✅ THIS is where your snippet belongs
-    gpu_job_queue = os.getenv("GPU_JOB_QUEUE", "storyworld:gpu:jobs")
-    # Use a per-episode result queue to avoid stale results from previous runs.
-    base_result_queue = (
-        os.getenv("GPU_RESULT_QUEUE_PREFIX")
-        or os.getenv("GPU_RESULT_QUEUE")
-        or "storyworld:gpu:results"
-    )
+    gpu_job_queue = GPU_JOB_QUEUE
+    base_result_queue = GPU_RESULT_QUEUE_PREFIX or GPU_RESULT_QUEUE
     gpu_result_queue = f"{base_result_queue}:{episode_id}"
     
     print(f"[run_decision_loop] job_queue: {gpu_job_queue}")

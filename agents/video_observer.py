@@ -37,6 +37,34 @@ from models.observation import (
 
 logger = logging.getLogger(__name__)
 
+# Canonical soft physics constraints (not epistemic). Observer should emit these when video shows degradation.
+SOFT_PHYSICS_CONSTRAINTS = frozenset({
+    "stress_limit_approached", "visible_bending", "tolerance_margin_low",
+    "likely_failure", "structural_bending", "load_limit_approached",
+})
+
+
+def _normalize_physics_constraints(raw: List[str]) -> List[str]:
+    """Map free-form observer output to canonical physics identifiers."""
+    result = []
+    raw_lower = " ".join(str(c).lower() for c in raw)
+    # Map physics keywords to canonical identifiers (so is_epistemic_only recognizes them)
+    if any(k in raw_lower for k in ("bending", "flex", "deformation", "strain")):
+        result.append("visible_bending")
+    if any(k in raw_lower for k in ("stress", "tolerance", "margin", "limit")):
+        result.append("stress_limit_approached")
+    if any(k in raw_lower for k in ("likely fail", "collapse", "progression")):
+        result.append("likely_failure")
+    # Keep canonical constraints from raw
+    for c in raw:
+        cnorm = str(c).strip().lower().replace(" ", "_").replace("-", "_")
+        if cnorm in SOFT_PHYSICS_CONSTRAINTS:
+            result.append(cnorm)
+        elif any(p in cnorm for p in ("structural", "load", "gravity", "stability", "energy")) and "insufficient" not in cnorm:
+            result.append("stress_limit_approached" if "stress" in cnorm or "load" in cnorm else "visible_bending")
+    out = list(dict.fromkeys(result))
+    return out if out else list(raw)
+
 
 # ============================================================================
 # Configuration
@@ -47,7 +75,12 @@ class ObserverConfig:
     """Configuration for VideoObserverAgent."""
     # Model selection
     use_gemini: bool = True
-    gemini_model: str = "gemini-2.0-flash"
+    gemini_model: str = "gemini-2.0-flash-lite"
+    
+    # Fallback open-source model (Ollama) when Gemini returns 429 RESOURCE_EXHAUSTED
+    fallback_enabled: bool = False
+    ollama_base_url: str = "http://localhost:11434"
+    ollama_model: str = "llava"
     
     # Local model (for internalization)
     use_local: bool = False
@@ -68,6 +101,11 @@ class ObserverConfig:
     
     # Timeouts
     observation_timeout_sec: float = 30.0
+    
+    # Phase 7: Multi-Observer
+    enable_multi_observer: bool = False
+    multi_observer_count: int = 2
+    disagreement_threshold: float = 0.3
 
 
 # ============================================================================
@@ -152,36 +190,62 @@ class GeminiObserver:
     This is the bootstrap observer before internalization.
     """
     
-    OBSERVATION_PROMPT = """You are a video analysis AI for anime/game storytelling.
-Analyze this video and extract structured observations.
+    OBSERVATION_PROMPT = """You are a video analysis AI for a physics/causal simulation.
+Analyze this video and extract structured observations. Focus on what is OBSERVABLE and physically verifiable.
+
+CRITICAL PHYSICS RULES (MUST ENFORCE):
+- If gravity is violated (unsupported mass floating), verdict = "impossible"
+- If energy conservation is violated (acceleration with no force), verdict = "impossible"
+- If action contradicts prior state, verdict = "contradicts"
+- If evidence is insufficient or conflicting, verdict = "uncertain"
+
+EPISTEMIC INTEGRITY (NON-NEGOTIABLE):
+- Never assume values. If you cannot measure it, mark it as missing.
+- Never interpolate physics without declaring uncertainty.
+- If a human expert would say "I need more data", you must say the same.
+- Explicitly state what evidence is missing or occluded.
+
+QUANTITATIVE PHYSICS EXTRACTION (REQUIRED):
+Extract quantitative measurements where observable. If not observable, mark as missing.
+For vehicle dynamics: measure speed_profile (m/s over time), turn_radius (m), yaw_rate (rad/s), slip_angle (deg), roll_angle (deg).
+For general motion: measure velocity_vector (m/s), acceleration_vector (m/s²), angular_velocity (rad/s).
+If camera perspective or video quality prevents measurement, explicitly state "observation_occluded" for that evidence.
+
+Never assume success because a video exists. The video is a hypothesis, not proof.
+
+For inferred_constraints: when video shows degradation (bending, strain, deformation) use physics identifiers:
+stress_limit_approached, visible_bending, tolerance_margin_low, likely_failure.
+Use "insufficient_evidence" or "observation_occluded" ONLY when video is unclear, occluded, or camera does not expose the dynamics.
+
+{physics_questions_section}
 
 Return ONLY valid JSON in this exact format:
-{
-    "characters": {
-        "<character_id>": {
+{{
+    "characters": {{
+        "<character_id>": {{
             "visible": true/false,
-            "position": {"x": 0.5, "y": 0.5},
+            "position": {{"x": 0.5, "y": 0.5}},
             "pose": "standing|sitting|running|fighting|etc",
             "emotion": "neutral|happy|angry|sad|fearful|surprised|determined|defeated|excited|confused",
             "motion_intensity": 0.0-1.0,
             "appearance_consistent": true/false
-        }
-    },
-    "environment": {
+        }}
+    }},
+    "environment": {{
         "location_description": "brief description",
         "time_of_day": "dawn|morning|noon|afternoon|dusk|night",
         "lighting": "bright|dim|dramatic|natural",
         "mood": "tense|peaceful|chaotic|etc"
-    },
-    "action": {
+    }},
+    "action": {{
         "action_description": "what happened in the video",
         "outcome": "success|partial|failed|interrupted|unknown",
         "action_type": "attack|dialogue|movement|etc",
         "participants": ["character_ids"],
         "narrative_beat_achieved": true/false,
         "narrative_implications": ["implication1", "implication2"]
-    },
-    "quality": {
+    }},
+    "quality": {{
         "visual_clarity": 0.0-1.0,
         "motion_smoothness": 0.0-1.0,
         "temporal_coherence": 0.0-1.0,
@@ -189,17 +253,39 @@ Return ONLY valid JSON in this exact format:
         "action_clarity": 0.0-1.0,
         "character_recognizability": 0.0-1.0,
         "artifacts_detected": 0
-    },
+    }},
     "continuity_errors": [
-        {
+        {{
             "error_type": "character_missing|location_mismatch|etc",
             "description": "what's wrong",
             "severity": 0.0-1.0,
             "affected_entities": ["entity_ids"]
-        }
+        }}
     ],
+    "evidence": {{
+        "available": [
+            {{
+                "name": "speed_profile",
+                "source": "observer",
+                "resolution": "coarse|fine|unknown",
+                "confidence": 0.0-1.0,
+                "value": [10.5, 12.3, 15.1],
+                "value_type": "array",
+                "units": "m/s",
+                "frame_range": [0, 30]
+            }}
+        ],
+        "missing": ["turn_radius", "friction_estimate"],
+        "occluded": ["slip_angle"]
+    }},
+    "causal_analysis": {{
+        "explanation": "Why did the action succeed or fail? (Causal chain)",
+        "inferred_constraints": ["constraint_1", "constraint_2"],
+        "physical_validity_confidence": 0.0-1.0
+    }},
+    "verdict": "valid|degraded|failed|impossible|contradicts|blocks|uncertain",
     "confidence": 0.0-1.0
-}
+}}
 
 CONTEXT:
 - Expected characters: {expected_characters}
@@ -209,9 +295,10 @@ CONTEXT:
 
 Analyze the video frames provided and return ONLY the JSON, no explanation."""
 
-    def __init__(self, config: ObserverConfig):
+    def __init__(self, config: ObserverConfig, fallback_observer=None):
         self.config = config
         self.client = None
+        self.fallback_observer = fallback_observer
         self._init_client()
     
     def _init_client(self) -> None:
@@ -249,31 +336,47 @@ Analyze the video frames provided and return ONLY the JSON, no explanation."""
             logger.warning("[gemini_observer] no client, returning mock observation")
             return self._mock_observation(observation_id, context)
         
+        # Physics observability: explicit questions for dynamics beats
+        pq = getattr(context, "physics_questions", None) or []
+        if pq:
+            physics_questions_section = (
+                "PHYSICS QUESTIONS (you MUST answer these; if camera does not expose them, use "
+                'inferred_constraints: ["observation_occluded"] and verdict: "uncertain"):\n'
+                + "\n".join(f"- {q}" for q in pq)
+            )
+        else:
+            physics_questions_section = ""
+
         # Build prompt with context
         prompt = self.OBSERVATION_PROMPT.format(
             expected_characters=", ".join(context.expected_characters) or "any",
             expected_action=context.expected_action or "any action",
             expected_location=context.expected_location or "any location",
             previous_state=json.dumps(context.previous_world_state) if context.previous_world_state else "none",
+            physics_questions_section=physics_questions_section,
         )
         
-        # Prepare content with frames
-        contents = [prompt]
+        # Prepare content: google-genai expects parts with "text" or "inline_data"
+        contents = [{"text": prompt}]
         for idx, frame_bytes in frames:
             contents.append({
-                "mime_type": "image/jpeg",
-                "data": base64.standard_b64encode(frame_bytes).decode("utf-8"),
+                "inline_data": {
+                    "mime_type": "image/jpeg",
+                    "data": base64.standard_b64encode(frame_bytes).decode("utf-8"),
+                }
             })
         
         # Call Gemini
+        last_error = None
         for attempt in range(self.config.max_retries):
             try:
                 response = self.client.models.generate_content(
                     model=self.config.gemini_model,
                     contents=contents,
                 )
-                
-                raw_text = response.text
+                raw_text = self._extract_response_text(response)
+                if not raw_text or not raw_text.strip():
+                    raise ValueError("Gemini returned empty or blocked content")
                 observation = self._parse_response(
                     raw_text,
                     observation_id,
@@ -291,12 +394,103 @@ Analyze the video frames provided and return ONLY the JSON, no explanation."""
                 
             except Exception as e:
                 logger.warning(f"[gemini_observer] attempt {attempt+1} failed: {e}")
+                # Check if this is a 429 error - if so, skip remaining retries and go straight to fallback
+                err_str_check = (str(e) + " " + repr(e)).upper()
+                if any(keyword in err_str_check for keyword in ["429", "RESOURCE_EXHAUSTED", "RATE", "QUOTA", "EXHAUSTED"]):
+                    logger.warning(f"[gemini_observer] 429 detected on attempt {attempt+1}, skipping remaining retries")
+                    last_error = e
+                    break  # Exit retry loop immediately for 429 errors
                 if attempt < self.config.max_retries - 1:
                     time.sleep(self.config.retry_delay_sec)
-        
+                last_error = e
+
+        # On 429 RESOURCE_EXHAUSTED, try open-source fallback before mock
+        err_str = (str(last_error) + " " + repr(last_error)).upper() if last_error else ""
+        err_code = getattr(last_error, "code", None) if last_error else None
+        # google-genai ClientError has .code; httpx uses response.status_code
+        if err_code is None and last_error:
+            resp = getattr(last_error, "response", None)
+            if resp is not None:
+                err_code = getattr(resp, "status_code", None)
+        if err_code is None and last_error:
+            details = getattr(last_error, "details", None)
+            if isinstance(details, dict):
+                err_code = details.get("code") or (details.get("error") or {}).get("code")
+        # Parse error dict from string representation (e.g., "{'error': {'code': 429}}")
+        if err_code is None and last_error:
+            import re
+            err_repr = repr(last_error)
+            # Look for 'code': 429 or "code": 429 patterns
+            code_match = re.search(r"['\"]code['\"]:\s*429", err_repr)
+            if code_match:
+                err_code = 429
+            # Also check for error dict structure
+            if err_code is None:
+                error_dict_match = re.search(r"\{['\"]error['\"]:\s*\{[^}]*['\"]code['\"]:\s*429", err_repr)
+                if error_dict_match:
+                    err_code = 429
+        is_429 = (
+            err_code == 429
+            or "429" in err_str
+            or "RESOURCE_EXHAUSTED" in err_str
+            or "RATE" in err_str
+            or "QUOTA" in err_str
+            or "EXHAUSTED" in err_str
+        )
+        # Use print so this always appears (logging level may filter logger.warning)
+        print(
+            f"[gemini_observer] fallback check: fallback_observer={self.fallback_observer is not None} "
+            f"is_429={is_429} err_code={err_code} err_sample={(err_str[:120] if err_str else '(none)')}"
+        )
+        logger.warning(
+            "[gemini_observer] fallback check: fallback_observer=%s is_429=%s err_code=%s err_sample=%s",
+            self.fallback_observer is not None,
+            is_429,
+            err_code,
+            err_str[:120] if err_str else "(none)",
+        )
+        if is_429 and not self.fallback_observer:
+            logger.warning(
+                "[gemini_observer] Gemini 429 detected but fallback_observer is None "
+                "(set OBSERVER_FALLBACK_ENABLED=true and ensure OllamaObserver initializes)"
+            )
+        if self.fallback_observer and is_429:
+            logger.warning(
+                "[gemini_observer] Gemini 429/RESOURCE_EXHAUSTED, trying open-source fallback"
+            )
+            try:
+                fallback_result = self.fallback_observer.observe(frames, context)
+                if fallback_result and fallback_result.observer_type != "mock":
+                    logger.info("[gemini_observer] fallback observer succeeded")
+                    return fallback_result
+                logger.warning("[gemini_observer] fallback returned mock (Ollama unavailable?)")
+            except Exception as fallback_e:
+                logger.warning(f"[gemini_observer] fallback observer failed: {fallback_e}")
+
         # Fallback to mock
         logger.error("[gemini_observer] all attempts failed, returning mock")
         return self._mock_observation(observation_id, context)
+
+    def _extract_response_text(self, response) -> str:
+        """Safely extract text from Gemini response (handles blocked/empty candidates)."""
+        try:
+            return response.text or ""
+        except (AttributeError, ValueError, KeyError, IndexError, TypeError) as e:
+            logger.debug(f"[gemini_observer] response.text failed ({e}), trying candidates")
+        try:
+            candidates = getattr(response, "candidates", None) or []
+            for c in candidates:
+                content = getattr(c, "content", None)
+                if not content:
+                    continue
+                parts = getattr(content, "parts", None) or []
+                for p in parts:
+                    t = getattr(p, "text", None)
+                    if t:
+                        return t
+        except Exception as e:
+            logger.debug(f"[gemini_observer] candidate extraction failed: {e}")
+        return ""
     
     def _parse_response(
         self,
@@ -317,14 +511,40 @@ Analyze the video frames provided and return ONLY the JSON, no explanation."""
         text = text.strip()
         
         try:
+            # Try to extract JSON from partial responses
+            # Look for JSON object boundaries
+            start_idx = text.find("{")
+            end_idx = text.rfind("}")
+            if start_idx >= 0 and end_idx > start_idx:
+                text = text[start_idx:end_idx + 1]
+            
             data = json.loads(text)
         except json.JSONDecodeError as e:
             logger.error(f"[gemini_observer] JSON parse error: {e}")
-            return self._mock_observation(observation_id, context)
+            logger.error(f"[gemini_observer] Raw response (first 500 chars): {raw_text[:500]}")
+            # Return mock observation with uncertain verdict
+            mock = self._mock_observation(observation_id, context)
+            mock.verdict = "uncertain"
+            mock.confidence = 0.3
+            mock.constraints_inferred = ["insufficient_evidence", "json_parse_error"]
+            return mock
+
+        if not isinstance(data, dict):
+            logger.error(f"[gemini_observer] Expected dict, got {type(data).__name__}")
+            mock = self._mock_observation(observation_id, context)
+            mock.verdict = "uncertain"
+            mock.confidence = 0.3
+            mock.constraints_inferred = ["insufficient_evidence", "invalid_response_structure"]
+            return mock
         
-        # Parse characters
+        # Parse characters (ensure we have a dict)
         characters = {}
-        for char_id, char_data in data.get("characters", {}).items():
+        chars_data = data.get("characters")
+        if not isinstance(chars_data, dict):
+            chars_data = {}
+        for char_id, char_data in chars_data.items():
+            if not isinstance(char_data, dict):
+                continue
             emotion = None
             if char_data.get("emotion"):
                 try:
@@ -385,6 +605,7 @@ Analyze the video frames provided and return ONLY the JSON, no explanation."""
         quality.compute_overall()
         
         # Parse continuity errors
+        # Parse continuity errors
         continuity_errors = []
         for err in data.get("continuity_errors", []):
             try:
@@ -399,7 +620,66 @@ Analyze the video frames provided and return ONLY the JSON, no explanation."""
                 affected_entities=err.get("affected_entities", []),
             ))
         
-        return ObservationResult(
+        # Parse Phase 7 Causal Analysis
+        causal_data = data.get("causal_analysis", {})
+        constraints_inferred = causal_data.get("inferred_constraints", []) or []
+        constraints_inferred = _normalize_physics_constraints(constraints_inferred)
+        causal_explanation = causal_data.get("explanation")
+        phys_conf = float(causal_data.get("physical_validity_confidence", 0.7) or 0.7)
+
+        # Parse Phase 8: Evidence Ledger
+        from models.epistemic import EvidenceLedger, Evidence, EvidenceSource, EvidenceResolution
+        evidence_ledger = EvidenceLedger(beat_id=context.beat_id or observation_id)
+        
+        evidence_data = data.get("evidence", {})
+        if isinstance(evidence_data, dict):
+            # Parse available evidence
+            available_evidence = evidence_data.get("available", [])
+            if isinstance(available_evidence, list):
+                for ev_data in available_evidence:
+                    if isinstance(ev_data, dict):
+                        try:
+                            evidence = Evidence(
+                                name=ev_data.get("name", ""),
+                                source=EvidenceSource(ev_data.get("source", "observer")),
+                                resolution=EvidenceResolution(ev_data.get("resolution", "unknown")),
+                                confidence=float(ev_data.get("confidence", 0.5)),
+                                value=ev_data.get("value"),
+                                value_type=ev_data.get("value_type"),
+                                units=ev_data.get("units"),
+                                frame_range=tuple(ev_data["frame_range"]) if ev_data.get("frame_range") else None,
+                            )
+                            evidence_ledger.add_evidence(evidence)
+                        except (ValueError, KeyError) as e:
+                            logger.warning(f"[gemini_observer] Failed to parse evidence: {e}")
+            
+            # Mark missing evidence
+            missing_evidence = evidence_data.get("missing", [])
+            if isinstance(missing_evidence, list):
+                for name in missing_evidence:
+                    if isinstance(name, str):
+                        evidence_ledger.mark_missing(name)
+            
+            # Mark occluded evidence as missing
+            occluded_evidence = evidence_data.get("occluded", [])
+            if isinstance(occluded_evidence, list):
+                for name in occluded_evidence:
+                    if isinstance(name, str):
+                        evidence_ledger.mark_missing(name)
+        
+        verdict = (data.get("verdict") or "").lower()
+        constraint_text = " ".join([str(c) for c in constraints_inferred]).lower()
+        if any(k in constraint_text for k in ("gravity", "unsupported", "energy", "conservation")):
+            verdict = "impossible"
+        if not verdict:
+            if phys_conf < 0.4:
+                verdict = "impossible"
+            elif phys_conf < 0.7:
+                verdict = "uncertain"
+            else:
+                verdict = "valid"
+        
+        observation = ObservationResult(
             observation_id=observation_id,
             video_uri=context.beat_id or "unknown",
             beat_id=context.beat_id,
@@ -413,7 +693,14 @@ Analyze the video frames provided and return ONLY the JSON, no explanation."""
             confidence=data.get("confidence", 0.7),
             observer_type="gemini",
             model_version=self.config.gemini_model,
+            constraints_inferred=constraints_inferred,
+            causal_explanation=causal_explanation,
+            verdict=verdict,
+            forces_termination=verdict in ("impossible", "contradicts", "blocks"),
+            evidence_ledger=evidence_ledger,
         )
+        
+        return observation
     
     def _mock_observation(
         self,
@@ -421,13 +708,43 @@ Analyze the video frames provided and return ONLY the JSON, no explanation."""
         context: TaskContext,
     ) -> ObservationResult:
         """Return mock observation when Gemini unavailable."""
+        from models.epistemic import EvidenceLedger
+        from models.physics_constraints import (
+            EVIDENCE_SPEED_PROFILE,
+            EVIDENCE_TURN_RADIUS,
+            EVIDENCE_FRICTION_ESTIMATE,
+            EVIDENCE_YAW_RATE,
+            EVIDENCE_SLIP_ANGLE,
+            EVIDENCE_ROLL_ANGLE,
+            EVIDENCE_LATERAL_ACCELERATION,
+            EVIDENCE_ANGULAR_VELOCITY,
+        )
+        
         characters = {}
-        for char_id in context.expected_characters:
+        expected = (context.expected_characters or []) if context else []
+        for char_id in expected:
             characters[char_id] = CharacterObservation(
                 character_id=char_id,
                 visible=True,
                 emotion=EmotionState.NEUTRAL,
             )
+        
+        # Create evidence ledger with all required evidence marked as missing
+        # This ensures epistemic evaluator will correctly identify missing evidence
+        evidence_ledger = EvidenceLedger(beat_id=context.beat_id or observation_id)
+        # Mark all common physics evidence as missing for vehicle dynamics
+        required_evidence = [
+            EVIDENCE_SPEED_PROFILE,
+            EVIDENCE_TURN_RADIUS,
+            EVIDENCE_FRICTION_ESTIMATE,
+            EVIDENCE_YAW_RATE,
+            EVIDENCE_SLIP_ANGLE,
+            EVIDENCE_ROLL_ANGLE,
+            EVIDENCE_LATERAL_ACCELERATION,
+            EVIDENCE_ANGULAR_VELOCITY,
+        ]
+        for ev_name in required_evidence:
+            evidence_ledger.mark_missing(ev_name)
         
         return ObservationResult(
             observation_id=observation_id,
@@ -451,9 +768,11 @@ Analyze the video frames provided and return ONLY the JSON, no explanation."""
                 action_clarity=0.75,
                 character_recognizability=0.75,
             ),
-            confidence=0.5,
+            confidence=0.3,
             observer_type="mock",
             model_version="mock",
+            constraints_inferred=["insufficient_evidence"],
+            verdict="uncertain",
         )
 
 
@@ -481,7 +800,35 @@ class VideoObserverAgent:
         
         # Initialize components
         self.frame_extractor = FrameExtractor(self.config.frame_extraction_method)
-        self.gemini_observer = GeminiObserver(self.config)
+
+        # Fallback open-source observer (Ollama) when Gemini returns 429
+        fallback_observer = None
+        _fallback_raw = os.getenv("OBSERVER_FALLBACK_ENABLED", "")
+        _fallback_enabled = _fallback_raw.lower() in ("true", "1", "yes")
+        if _fallback_enabled:
+            try:
+                from agents.backends.ollama_observer import (
+                    OllamaObserver,
+                    OllamaObserverConfig,
+                )
+                fallback_observer = OllamaObserver(
+                    OllamaObserverConfig(
+                        base_url=self.config.ollama_base_url,
+                        model=self.config.ollama_model,
+                    )
+                )
+                print(f"[video_observer] fallback enabled: ollama {self.config.ollama_model} at {self.config.ollama_base_url}")
+                logger.info(
+                    f"[video_observer] fallback enabled: ollama {self.config.ollama_model} "
+                    f"at {self.config.ollama_base_url}"
+                )
+            except Exception as e:
+                print(f"[video_observer] could not init fallback observer: {e}")
+                logger.warning(f"[video_observer] could not init fallback observer: {e}")
+        else:
+            print(f"[video_observer] fallback disabled: OBSERVER_FALLBACK_ENABLED={repr(_fallback_raw)}")
+
+        self.gemini_observer = GeminiObserver(self.config, fallback_observer=fallback_observer)
         self.local_model = None
         
         # Training data buffer
@@ -524,17 +871,33 @@ class VideoObserverAgent:
             ObservationResult with structured observations
         """
         logger.info(f"[video_observer] observing: {video_path[:50]}...")
-        start_time = time.time()
-        
-        # Download if URL
+        try:
+            return self._observe_impl(video_path, context)
+        except Exception as e:
+            logger.error(f"[video_observer] observer failed: {type(e).__name__}: {e}", exc_info=True)
+            return self.gemini_observer._mock_observation(str(uuid.uuid4()), context)
+
+    def _observe_impl(
+        self,
+        video_path: str,
+        context: TaskContext,
+    ) -> Optional[ObservationResult]:
+        """Internal observe implementation (wrapped by observe() for exception handling)."""
+        # Download if URL; if download fails, return None (never parse JSON)
         local_path = self._ensure_local(video_path)
-        
+        if not local_path or not Path(local_path).exists():
+            logger.warning("[video_observer] video unavailable, skipping observer (no parse)")
+            return None
+
         # Extract frames
         frames = self.frame_extractor.extract_frames(
             local_path,
             self.config.frames_to_analyze,
         )
-        
+        if not frames:
+            logger.warning("[video_observer] no frames extracted, skipping observer (no parse)")
+            return None
+
         # Try local model first if available and confident enough
         if self._should_use_local(context):
             observation = self._observe_local(frames, context)
@@ -544,6 +907,22 @@ class VideoObserverAgent:
         
         # Use Gemini
         if self.config.use_gemini:
+            # Multi-Observer Logic (Phase 7)
+            if self.config.enable_multi_observer and self.config.multi_observer_count > 1:
+                observations = []
+                # primary
+                obs1 = self.gemini_observer.observe(frames, context)
+                observations.append(obs1)
+                
+                # secondary (simulated by re-querying or using different model if avail)
+                # For now, we query Gemini again (assuming non-deterministic temp)
+                for _ in range(self.config.multi_observer_count - 1):
+                    obs_n = self.gemini_observer.observe(frames, context)
+                    observations.append(obs_n)
+                
+                # Consolidate
+                return self._consolidate_observations(observations, context)
+                
             observation = self.gemini_observer.observe(frames, context)
             
             # Record for training
@@ -582,19 +961,57 @@ class VideoObserverAgent:
             return self._download_video(video_path)
         return video_path
     
-    def _download_video(self, url: str) -> str:
-        """Download video from URL to temp file."""
+    def _download_video(self, url: str) -> Optional[str]:
+        """Download video from URL to temp file. Presigned URLs work for private R2."""
         try:
+            # Presigned URLs (X-Amz- in query) work with plain GET; try first
+            if "X-Amz-" in url or "x-amz-" in url.lower():
+                import requests
+                response = requests.get(url, timeout=60)
+                response.raise_for_status()
+                with tempfile.NamedTemporaryFile(suffix=".mp4", delete=False) as f:
+                    f.write(response.content)
+                    return f.name
+            # Fallback: boto3 for raw S3/R2 URLs when credentials available
+            try:
+                from urllib.parse import urlparse
+                import boto3
+                endpoint = os.getenv("S3_ENDPOINT")
+                bucket = os.getenv("S3_BUCKET")
+                access_key = os.getenv("S3_ACCESS_KEY")
+                secret_key = os.getenv("S3_SECRET_KEY")
+                region = os.getenv("S3_REGION", "auto")
+                if endpoint and bucket and access_key and secret_key:
+                    parsed = urlparse(url)
+                    path = (parsed.path or "").lstrip("/")
+                    if path.startswith(bucket + "/"):
+                        key = path[len(bucket) + 1 :]
+                    else:
+                        key = path.lstrip("/")
+                    if "video" in key and not key.endswith(".mp4"):
+                        key = f"{key}.mp4"
+                    s3 = boto3.client(
+                        "s3",
+                        endpoint_url=endpoint,
+                        region_name=region,
+                        aws_access_key_id=access_key,
+                        aws_secret_access_key=secret_key,
+                    )
+                    with tempfile.NamedTemporaryFile(suffix=".mp4", delete=False) as f:
+                        s3.download_file(bucket, key, f.name)
+                        return f.name
+            except Exception as ex:
+                logger.debug(f"[video_observer] boto3 download failed: {ex}")
+                pass
             import requests
-            response = requests.get(url, timeout=30)
+            response = requests.get(url, timeout=60)
             response.raise_for_status()
-            
             with tempfile.NamedTemporaryFile(suffix=".mp4", delete=False) as f:
                 f.write(response.content)
                 return f.name
         except Exception as e:
             logger.error(f"[video_observer] download failed: {e}")
-            return url  # Return URL, frame extraction will fail gracefully
+            return None
     
     def _record_for_training(
         self,
@@ -630,6 +1047,79 @@ class VideoObserverAgent:
         logger.info(f"[video_observer] saved {len(self.training_buffer)} training samples to {output_file}")
         self.training_buffer.clear()
     
+    def _consolidate_observations(
+        self,
+        observations: List[ObservationResult],
+        context: TaskContext,
+    ) -> ObservationResult:
+        """Consolidate multiple observations into one with disagreement score."""
+        if not observations:
+            return self.gemini_observer._mock_observation(str(uuid.uuid4()), context)
+        
+        # Select primary (highest confidence)
+        primary = max(observations, key=lambda o: o.confidence)
+        
+        # Compute disagreement
+        disagreement = self._compute_disagreement(observations)
+        
+        # Collect verdicts and constraints
+        all_verdicts = [o.verdict for o in observations if o.verdict]
+        all_constraints = set()
+        for o in observations:
+            all_constraints.update(o.constraints_inferred)
+        
+        # Create result based on primary, but enriched
+        result = primary
+        result.disagreement_score = disagreement
+        result.verdicts = list(set(all_verdicts))
+        result.constraints_inferred = list(all_constraints)
+        
+        # If high disagreement, force UNCERTAIN verdict or lower confidence
+        if disagreement > self.config.disagreement_threshold:
+            result.confidence *= (1.0 - disagreement)
+            if "uncertain" not in result.verdicts:
+                result.verdicts.append("uncertain")
+        
+        return result
+
+    def _compute_disagreement(self, observations: List[ObservationResult]) -> float:
+        """Compute disagreement score (0.0 - 1.0)."""
+        if len(observations) < 2:
+            return 0.0
+            
+        score = 0.0
+        
+        # 1. Verdict Mismatch (Weight: 0.5)
+        verdicts = set(o.verdict for o in observations if o.verdict)
+        if len(verdicts) > 1:
+            score += 0.5
+            
+        # 2. Action Outcome Mismatch (Weight: 0.3)
+        outcomes = set(o.action.outcome if o.action else None for o in observations)
+        if len(outcomes) > 1:
+            score += 0.3
+            
+        # 3. Constraint Mismatch (Weight: 0.2)
+        # Compare Jaccard similarity of constraints
+        constraints_sets = [set(o.constraints_inferred) for o in observations]
+        # Pairwise Jaccard
+        jaccard_sum = 0.0
+        pairs = 0
+        for i in range(len(constraints_sets)):
+            for j in range(i + 1, len(constraints_sets)):
+                s1, s2 = constraints_sets[i], constraints_sets[j]
+                union = len(s1.union(s2))
+                if union == 0:
+                    jaccard_sum += 1.0 # Both empty = match
+                else:
+                    jaccard_sum += len(s1.intersection(s2)) / union
+                pairs += 1
+        
+        avg_jaccard = jaccard_sum / max(1, pairs)
+        score += 0.2 * (1.0 - avg_jaccard)
+        
+        return min(1.0, score)
+
     def get_training_sample_count(self) -> int:
         """Get total number of training samples collected."""
         count = len(self.training_buffer)

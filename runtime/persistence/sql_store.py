@@ -126,9 +126,51 @@ class SQLStore:
         finally:
             cur.close()
 
+    def list_episodes(self, limit: int = 20, world_id: str = None) -> List[Dict]:
+        """List recent episodes for infrastructure console."""
+        cur = self._cursor()
+        try:
+            limit = max(1, min(100, int(limit)))
+            if world_id:
+                cur.execute(
+                    f"""
+                    SELECT episode_id, world_id, intent, state, updated_at
+                    FROM episodes
+                    WHERE world_id = {self._ph()}
+                    ORDER BY updated_at DESC
+                    LIMIT {self._ph()}
+                    """,
+                    (world_id, limit),
+                )
+            else:
+                cur.execute(
+                    f"""
+                    SELECT episode_id, world_id, intent, state, updated_at
+                    FROM episodes
+                    ORDER BY updated_at DESC
+                    LIMIT {self._ph()}
+                    """,
+                    (limit,),
+                )
+            rows = cur.fetchall()
+            return [
+                {
+                    "episode_id": r[0],
+                    "world_id": r[1],
+                    "intent": r[2],
+                    "state": r[3],
+                    "updated_at": r[4],
+                }
+                for r in rows
+            ]
+        finally:
+            cur.close()
+
     def update_episode_state(self, episode_id, state, ts=None):
         cur = self._cursor()
         try:
+            # Ensure string value (Enum.value) for DB storage
+            state_val = getattr(state, "value", state) if state is not None else str(state)
             cur.execute(
                 f"""
                 UPDATE episodes
@@ -136,7 +178,7 @@ class SQLStore:
                 WHERE episode_id = {self._ph()}
                 """,
                 (
-                    state,
+                    state_val,
                     ts or datetime.utcnow().isoformat(),
                     episode_id,
                 ),
@@ -257,16 +299,34 @@ class SQLStore:
         finally:
             cur.close()
 
+    def update_beat_spec(self, beat_id: str, updated_spec: dict) -> None:
+        """Update beat spec (e.g. refined description from prior observation)."""
+        cur = self._cursor()
+        try:
+            cur.execute(
+                f"""
+                UPDATE beats
+                SET spec = {self._ph()}
+                WHERE beat_id = {self._ph()}
+                """,
+                (json.dumps(updated_spec), beat_id),
+            )
+            if self.backend == "sqlite":
+                self.conn.commit()
+        finally:
+            cur.close()
+
     def mark_beat_state(self, beat_id, state, error=None):
         cur = self._cursor()
         try:
+            state_val = getattr(state, "value", state) if state is not None else str(state)
             cur.execute(
                 f"""
                 UPDATE beats
                 SET state = {self._ph()}, last_error = {self._ph()}
                 WHERE beat_id = {self._ph()}
                 """,
-                (state, error, beat_id),
+                (state_val, error, beat_id),
             )
             if self.backend == "sqlite":
                 self.conn.commit()
@@ -433,12 +493,8 @@ class SQLStore:
     def all_beats_completed(self, episode_id: str) -> bool:
         """
         Check if all beats for an episode are in ACCEPTED state.
-        
-        Args:
-            episode_id: Episode ID to check
-            
-        Returns:
-            True if all beats are completed, False otherwise
+        NOTE: This is execution scaffolding state. Semantic success requires
+        observer-validated transitions in WorldStateGraph (enforced in get_episode_result).
         """
         cur = self._cursor()
         try:
@@ -499,6 +555,25 @@ class SQLStore:
             
             return failed_count > 0
             
+        finally:
+            cur.close()
+
+    def any_beats_epistemically_incomplete(self, episode_id: str) -> bool:
+        """True if any beat is EPISTEMICALLY_INCOMPLETE or UNCERTAIN_TERMINATION."""
+        cur = self._cursor()
+        try:
+            cur.execute(
+                f"""
+                SELECT COUNT(*)
+                FROM beats
+                WHERE episode_id = {self._ph()}
+                  AND state IN ('EPISTEMICALLY_INCOMPLETE', 'UNCERTAIN_TERMINATION')
+                """,
+                (episode_id,)
+            )
+            row = cur.fetchone()
+            count = row[0] if row else 0
+            return count > 0
         finally:
             cur.close()
 

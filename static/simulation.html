@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Simulation Detail</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+    <script>mermaid.initialize({ startOnLoad: false, theme: 'dark' });</script>
+</head>
+<body>
+    <header>
+        <div class="layout-container">
+            <a href="/" class="brand">STORYWORLD INFRASTRUCTURE</a>
+            <nav>
+                <a href="/">Simulations</a>
+                <a href="/new.html">New Run</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="layout-container">
+        <div class="mb-4">
+            <a href="/" style="color:var(--text-muted); text-decoration:none; font-size:12px;">&larr; Back to Dashboard</a>
+        </div>
+
+        <div class="flex-between mb-4">
+            <h2 class="mono" id="sim-id">SIM-XXXX</h2>
+            <span class="status status-running" id="outcome-badge">LOADING</span>
+        </div>
+
+        <div class="metrics">
+            <div class="metric-card">
+                <div class="metric-label">Confidence Score</div>
+                <div class="metric-value" id="confidence">-</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-label">Compute Cost</div>
+                <div class="metric-value" id="total-cost">-</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-label">State Nodes</div>
+                <div class="metric-value" id="state-nodes">-</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-label">Transitions</div>
+                <div class="metric-value" id="transitions">-</div>
+            </div>
+        </div>
+
+        <div class="panel padded mb-4">
+            <h3>World State Graph (Visual)</h3>
+            <div id="world-graph" class="mermaid" style="display:flex; justify-content:center; padding: 20px;">
+                graph LR
+                A[Start] --> B(Initializing...)
+                style A fill:#333,stroke:#666,stroke-width:2px,color:#fff
+            </div>
+        </div>
+
+        <div class="panel padded">
+            <h3>State Delta (JSON)</h3>
+            <pre class="json" id="json-state">Loading state telemetry...</pre>
+        </div>
+        
+        <div style="margin-top: 24px; text-align: right;">
+            <button id="debug-artifacts-btn" style="background:none; border:none; color:var(--text-muted); font-size:12px; cursor:pointer;">Ephemeral Debug Artifacts (Video) — Collapsed</button>
+        </div>
+    </main>
+
+    <script src="/static/dashboard.js"></script>
+    <script>loadDetail();</script>
+</body>
+</html>

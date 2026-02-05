@@ -3,12 +3,13 @@ Quality Evaluator
 
 Adaptive, task-dependent quality thresholds for video generation.
 Quality is defined as "good enough to make the next decision safely."
+Default task type is SIMULATION (physical plausibility) per product contract.
 
 Design Principles:
 1. Quality is context-dependent, not absolute
 2. Different tasks have different quality requirements
 3. Thresholds adapt based on downstream impact
-4. Quality is multi-dimensional (visual, narrative, continuity)
+4. Quality is multi-dimensional (observability, continuity, action clarity)
 """
 
 from __future__ import annotations
@@ -42,8 +43,8 @@ class QualityDimension(Enum):
 
 class TaskType(Enum):
     """Types of tasks with different quality requirements."""
-    STORYTELLING = "storytelling"  # Emotional clarity matters most
-    SIMULATION = "simulation"      # Physical plausibility critical
+    SIMULATION = "simulation"      # Physical plausibility critical (default)
+    STORYTELLING = "storytelling"  # Legacy: emotional clarity
     TRAINING_DATA = "training"     # Causal correctness essential
     QA_TESTING = "qa"             # Anomaly detection focus
     PREVIEW = "preview"           # Low quality acceptable
@@ -232,7 +233,7 @@ class EvaluationContext:
     Context for quality evaluation.
     Provides information about the task and its downstream impact.
     """
-    task_type: TaskType = TaskType.STORYTELLING
+    task_type: TaskType = TaskType.SIMULATION
     beat_id: Optional[str] = None
     episode_id: Optional[str] = None
     
@@ -382,7 +383,7 @@ class QualityEvaluator:
         # Get profile
         profile = context.custom_profile or self.profiles.get(
             context.task_type,
-            QUALITY_PROFILES[TaskType.STORYTELLING],
+            QUALITY_PROFILES[TaskType.SIMULATION],
         )
         
         # Compute adaptive threshold
@@ -515,7 +516,7 @@ class QualityEvaluator:
     
     def get_profile(self, task_type: TaskType) -> QualityProfile:
         """Get profile for a task type."""
-        return self.profiles.get(task_type, QUALITY_PROFILES[TaskType.STORYTELLING])
+        return self.profiles.get(task_type, QUALITY_PROFILES[TaskType.SIMULATION])
     
     def create_custom_profile(
         self,
@@ -525,7 +526,7 @@ class QualityEvaluator:
         critical_dimensions: Optional[List[QualityDimension]] = None,
     ) -> QualityProfile:
         """Create a custom quality profile."""
-        base = self.profiles.get(task_type, QUALITY_PROFILES[TaskType.STORYTELLING])
+        base = self.profiles.get(task_type, QUALITY_PROFILES[TaskType.SIMULATION])
         return QualityProfile(
             task_type=task_type,
             name=name,
@@ -542,7 +543,7 @@ class QualityEvaluator:
 
 def evaluate_observation_quality(
     observation,  # ObservationResult
-    task_type: TaskType = TaskType.STORYTELLING,
+    task_type: TaskType = TaskType.SIMULATION,
     is_branch_point: bool = False,
     downstream_beats: int = 0,
 ) -> QualityResult:
@@ -573,8 +574,8 @@ def evaluate_observation_quality(
 
 def quick_quality_check(
     overall_score: float,
-    task_type: TaskType = TaskType.STORYTELLING,
+    task_type: TaskType = TaskType.SIMULATION,
 ) -> bool:
     """Quick check if overall score meets task threshold."""
-    profile = QUALITY_PROFILES.get(task_type, QUALITY_PROFILES[TaskType.STORYTELLING])
+    profile = QUALITY_PROFILES.get(task_type, QUALITY_PROFILES[TaskType.SIMULATION])
     return overall_score >= profile.overall_threshold

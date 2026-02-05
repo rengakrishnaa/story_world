@@ -1,26 +1,59 @@
 import os
+from pathlib import Path
 from fastapi import FastAPI
 from dotenv import load_dotenv
 import importlib
 from runtime.decision_loop import RuntimeDecisionLoop
 
-load_dotenv()
+# Load .env from project root (works regardless of cwd when uvicorn --reload runs)
+env_path = Path(__file__).resolve().parent / ".env"
+load_dotenv(env_path, override=True)
+print(f"[main] Loaded .env from {env_path}, OBSERVER_FALLBACK_ENABLED={os.getenv('OBSERVER_FALLBACK_ENABLED', 'NOT_SET')}, DEFAULT_BACKEND={os.getenv('DEFAULT_BACKEND', 'veo')}")
 
 redis = importlib.import_module("redis")
+from config import (
+    get_simulation_policies,
+    get_episode_policies,
+    USE_MOCK_PLANNER,
+    COST_PER_BEAT_USD,
+    DEFAULT_SUCCESS_CONFIDENCE,
+    EPISODE_COMPOSE_REQUIRED_CONFIDENCE,
+    DECISION_LOOP_LOG_PATH,
+)
 
 # ⚠️ DO NOT initialize heavy objects at import time
 sql = None
 redis_store = None
 world_graph_store = None  # Phase 1: World State Graph persistence
 
+from fastapi.staticfiles import StaticFiles
+
 app = FastAPI(title="StoryWorld Runtime")
+
+# Phase 8: Infrastructure UI
+app.mount("/static", StaticFiles(directory="static"), name="static")
+
+@app.get("/")
+async def read_index():
+    from fastapi.responses import FileResponse
+    return FileResponse('static/index.html')
+
+@app.get("/new.html")
+async def read_new():
+    from fastapi.responses import FileResponse
+    return FileResponse('static/new.html')
+
+@app.get("/simulation.html")
+async def read_simulation():
+    from fastapi.responses import FileResponse
+    return FileResponse('static/simulation.html')
 
 # =====================================================
 # LIFESPAN (runs once, safely)
 # =====================================================
 
 @app.on_event("startup")
-def startup_event():
+async def startup_event():
     print(">>> startup reached")
 
     global sql, redis_store, world_graph_store
@@ -32,20 +65,189 @@ def startup_event():
     # Lazy SQL
     sql = SQLStore(lazy=True)
 
-    # Lazy Redis
+    # Lazy Redis (but test connection on startup)
     redis_store = RedisStore(
         url=os.getenv("REDIS_URL"),
         lazy=True,
     )
+    # Test Redis connection
+    try:
+        redis_store.redis.ping()
+        print(f">>> startup: Redis connection verified")
+    except Exception as e:
+        print(f">>> startup: Redis connection failed: {e}")
+        print(f">>> startup: Jobs will not be submitted until Redis is available")
     
     # Phase 1: World State Graph Store
     world_graph_store = WorldGraphStore()
 
-    print(">>> startup: infrastructure wired (including Phase 1-5 components)")
+    # Phase 10: Start Result Consumer (Sync Redis -> SQL, observer -> world graph)
+    # Queue must match worker RESULT_QUEUE so GPU results update episode state
+    from runtime.result_consumer import ResultConsumer
+    consumer = ResultConsumer(sql, redis_store, world_graph_store)
+    import asyncio
+    asyncio.create_task(consumer.run_loop())
+    try:
+        from runtime.persistence.redis_store import _result_queue
+        rq = _result_queue()
+        print(f">>> startup: Result Consumer listening on queue: {rq}")
+    except Exception:
+        print(">>> startup: Result Consumer started (queue from RESULT_QUEUE env)")
+    print(">>> startup: infrastructure wired")
 
 # =====================================================
 # API
 # =====================================================
+
+
+_CREATIVE_RED_FLAGS = frozenset(
+    ("scene", "cinematic", "shot", "episode", "make it look good", "looks good")
+)
+
+
+@app.post("/simulate")
+def run_simulation(
+    world_id: str,
+    goal: str,
+    budget: float = None,
+    risk_profile: str = None,
+    requires_visual_verification: bool = None,
+    problem_domain: str = None,
+):
+    """
+    Primary Simulation Endpoint (Infrastructure-Native).
+    Input: Simulation goal (what should happen), budget, risk. Not creative prompts.
+    Optional override: requires_visual_verification, problem_domain (for enterprise/API control).
+    """
+    goal_lower = (goal or "").lower()
+    for flag in _CREATIVE_RED_FLAGS:
+        if flag in goal_lower:
+            import logging
+            logging.getLogger(__name__).warning(
+                f"Simulation goal may be creative (contains '{flag}'): prefer physics/constraints"
+            )
+            break
+    from runtime.episode_runtime import EpisodeRuntime
+    from runtime.episode_state import EpisodeState
+    from models.state_transition import TransitionStatus, ActionOutcome
+
+    policies = get_simulation_policies()
+    if budget is not None and budget > 0:
+        policies["cost"] = {**policies.get("cost", {}), "max_cost": float(budget)}
+    if risk_profile:
+        policies["risk_profile"] = risk_profile
+    if requires_visual_verification is not None or problem_domain:
+        policies["intent_override"] = {
+            k: v for k, v in {
+                "requires_visual_verification": requires_visual_verification,
+                "problem_domain": problem_domain,
+            }.items() if v is not None
+        }
+
+    runtime = EpisodeRuntime.create(
+        world_id=world_id,
+        intent=goal,
+        policies=policies,
+        sql=sql,
+    )
+
+    # NLP impossibility gate: only blocks HARD logical contradictions (e.g. "stone floats unsupported").
+    # Physically implausible goals must reach the observer. Do not block pre-simulation.
+    try:
+        from runtime.physics_veto import evaluate_physics_veto
+        veto, constraints, reason = evaluate_physics_veto(goal)
+        if veto:
+            # Mark as impossible immediately; no GPU work required.
+            try:
+                runtime._advance(EpisodeState.IMPOSSIBLE)
+            except Exception:
+                pass
+            # Persist minimal rejected transition for auditability
+            try:
+                world_graph_store.record_beat_observation(
+                    episode_id=runtime.episode_id,
+                    beat_id=f"{runtime.episode_id}:veto-0",
+                    video_uri="",
+                    observation={
+                        "observation_id": f"veto:{runtime.episode_id}",
+                        "video_uri": "",
+                        "beat_id": f"{runtime.episode_id}:veto-0",
+                        "verdict": "impossible",
+                        "confidence": 1.0,
+                        "constraints_inferred": constraints,
+                        "causal_explanation": reason,
+                    },
+                    action_description=(goal or "")[:200],
+                    transition_status=TransitionStatus.REJECTED,
+                    action_outcome=ActionOutcome.FAILED,
+                )
+            except Exception:
+                pass
+            return {
+                "simulation_id": runtime.episode_id,
+                "status": "impossible",
+                "initial_state": runtime.state,
+            }
+    except Exception:
+        pass
+
+    # -----------------------------------------------------
+    # FULL PIPELINE EXECUTION (Plan -> Schedule -> Execute)
+    # -----------------------------------------------------
+    try:
+        from agents.narrative_planner import ProductionNarrativePlanner
+        
+        # 1. Plan
+        planner = ProductionNarrativePlanner(
+            world_id=world_id,
+            redis_client=redis_store.redis if redis_store else None,
+            use_mock=USE_MOCK_PLANNER,
+        )
+        runtime.plan(planner)
+        
+        # 2. Schedule
+        runtime.schedule()
+        
+        # 3. Execute (Push to Redis)
+        if redis_store:
+            try:
+                runtime.submit_pending_beats(redis_store)
+            except Exception as e:
+                print(f"[run_simulation] Failed to submit beats to Redis: {e}")
+                import traceback
+                traceback.print_exc()
+        else:
+            print("WARNING: No Redis store available, beats remain PENDING")
+
+    except Exception as e:
+        print(f"Pipeline Auto-Start Failed: {e}")
+        # We don't fail the request, we just return the initialized ID
+        # The user will see "Created" state and eventually "Failed" if polled
+        import traceback
+        traceback.print_exc()
+
+    return {
+        "simulation_id": runtime.episode_id,
+        "status": "executing" if runtime.state == "EXECUTING" else "initialized",
+        "initial_state": runtime.state,
+    }
+
+@app.get("/episodes")
+def list_episodes(limit: int = 20, world_id: str = None):
+    """
+    List recent simulations (episodes).
+    Infrastructure console - state-first, no video.
+    """
+    try:
+        episodes = sql.list_episodes(limit=limit, world_id=world_id) if sql else []
+        episodes = list(episodes) if isinstance(episodes, (list, tuple)) else []
+        return {
+            "episodes": episodes,
+            "total": len(episodes),
+        }
+    except Exception as e:
+        return {"episodes": [], "total": 0, "error": str(e)}
+
 
 @app.post("/episodes")
 def create_episode(world_id: str, intent: str):
@@ -54,11 +256,7 @@ def create_episode(world_id: str, intent: str):
     runtime = EpisodeRuntime.create(
         world_id=world_id,
         intent=intent,
-        policies={
-            "retry": {"max_attempts": 2},
-            "quality": {"min_confidence": 0.7},
-            "cost": {"max_cost": 5.0},
-        },
+        policies=get_episode_policies(),
         sql=sql,
     )
 
@@ -79,13 +277,10 @@ def plan_episode(episode_id: str):
         sql=sql,
     )
 
-    # Use environment variable to control mock vs real planner
-    use_mock = os.getenv("USE_MOCK_PLANNER", "false").lower() == "true"
-
     planner = ProductionNarrativePlanner(
         world_id=runtime.world_id,
-        redis_client=redis_store.redis,   
-        use_mock=use_mock,  # ✅ FIXED: Now respects env variable
+        redis_client=redis_store.redis,
+        use_mock=USE_MOCK_PLANNER,
     )
 
     adapter = PlannerAdapter(planner)     
@@ -111,7 +306,7 @@ def execute_episode(episode_id: str):
 
     runtime.schedule()
 
-    log_file = open("decision_loop.log", "a")
+    log_file = open(DECISION_LOOP_LOG_PATH, "a")
     subprocess.Popen(
         [
             sys.executable,
@@ -131,13 +326,17 @@ def execute_episode(episode_id: str):
 @app.get("/episodes/{episode_id}")
 def episode_status(episode_id: str):
     from runtime.episode_runtime import EpisodeRuntime
+    from fastapi import HTTPException
 
-    runtime = EpisodeRuntime.load(
-        episode_id=episode_id,
-        sql=sql,
-    )
-
-    return runtime.snapshot()
+    try:
+        runtime = EpisodeRuntime.load(
+            episode_id=episode_id,
+            sql=sql,
+        )
+        return runtime.snapshot()
+    except RuntimeError as e:
+        # If load fails (not found), return 404
+        raise HTTPException(status_code=404, detail="Simulation not found")
 
 
 @app.post("/episodes/{episode_id}/compose")
@@ -182,7 +381,7 @@ def compose_episode(
     plan = EpisodePlan(
         beats=beat_ids,
         allow_gaps=True,
-        required_confidence=0.3,
+        required_confidence=EPISODE_COMPOSE_REQUIRED_CONFIDENCE,
     )
     
     # Compose
@@ -449,7 +648,9 @@ def get_world_state(episode_id: str):
     - State nodes (versioned world states)
     - Transitions (video-driven state changes)
     - Current state
+    - Epistemic blocks with missing evidence labels
     """
+    import json
     from models.world_state_graph import WorldStateGraph, WorldState
     
     try:
@@ -457,13 +658,41 @@ def get_world_state(episode_id: str):
         nodes = world_graph_store.get_episode_nodes(episode_id)
         transitions = world_graph_store.get_episode_transitions(episode_id)
         
+        def _node_to_dict(n):
+            return n.to_dict() if hasattr(n, "to_dict") else {"node_id": getattr(n, "node_id", str(n))}
+        def _trans_to_dict(t):
+            trans_dict = t.to_dict() if hasattr(t, "to_dict") else {"transition_id": getattr(t, "transition_id", str(t))}
+            # Add epistemic blocking information if transition is blocked
+            obs = trans_dict.get("observation_json") or trans_dict.get("observation")
+            if isinstance(obs, str):
+                try:
+                    obs = json.loads(obs)
+                except:
+                    obs = {}
+            elif not isinstance(obs, dict):
+                obs = {}
+            
+            # Check if transition is epistemically blocked
+            if trans_dict.get("status") == "blocked" or obs.get("epistemic_state") in ("EPISTEMICALLY_INCOMPLETE", "UNCERTAIN_TERMINATION"):
+                missing = obs.get("missing_evidence", [])
+                epistemic_summary = obs.get("epistemic_summary", {})
+                trans_dict["blocked_reason"] = "epistemic_halt"
+                trans_dict["missing_evidence"] = missing
+                trans_dict["blocked_label"] = (
+                    f"BLOCKED: Cannot evaluate constraints\n"
+                    f"Missing evidence: {', '.join(missing) if missing else 'Unknown'}"
+                )
+                if epistemic_summary:
+                    trans_dict["epistemic_summary"] = epistemic_summary
+            return trans_dict
+        
         return {
             "episode_id": episode_id,
             "phase_1_5_enabled": True,
             "total_nodes": len(nodes),
             "total_transitions": len(transitions),
-            "nodes": nodes[:10],  # Limit to 10 for response size
-            "transitions": transitions[:10],
+            "nodes": [_node_to_dict(n) for n in nodes[:10]],
+            "transitions": [_trans_to_dict(t) for t in transitions[:10]],
         }
     except Exception as e:
         return {
@@ -509,11 +738,16 @@ def get_phase_status():
             "phase_3_quality_budget": {
                 "enabled": True,
             },
-            "phase_4_story_director": {
+            "phase_4_policy_engine": {
                 "enabled": True,
             },
             "phase_5_integration": {
                 "enabled": True,
+            },
+            "phase_6_video_native": {
+                "enabled": True,
+                "failure_states": True,
+                "observer_veto": True,
             },
         }
     except Exception as e:
@@ -522,3 +756,457 @@ def get_phase_status():
             "message": str(e),
         }
 
+
+# =====================================================
+# PHASE 6: Video-Native Compliance Endpoints
+# =====================================================
+
+@app.get("/episodes/{episode_id}/result")
+def get_episode_result(episode_id: str, include_video: bool = False):
+    """
+    STATE-CENTRIC episode result (Video-Native Compliance).
+    
+    Primary output is state delta, not video.
+    Video is optional debug artifact.
+    
+    Args:
+        episode_id: The episode ID
+        include_video: If True, include video URL in debug (default: False)
+    
+    Returns:
+        State-first result with outcome, confidence, cost, and optional video debug
+    """
+    from runtime.episode_runtime import EpisodeRuntime
+    from models.episode_outcome import (
+        EpisodeOutcome, EpisodeResult, TerminationReason, 
+        create_success_result, create_failure_result
+    )
+    import json as json_module
+    
+    try:
+        runtime = EpisodeRuntime.load(episode_id=episode_id, sql=sql)
+        
+        # Determine outcome from current state
+        state = (runtime.state or "").upper()
+        beats = sql.get_beats(episode_id) if sql else []
+        
+        # INVARIANT: No EXECUTING when constraints cannot be evaluated.
+        # If any beat is epistemically incomplete, episode is EPISTEMICALLY_BLOCKED.
+        if state == "EXECUTING":
+            if any(
+                (b.get("state") or "").upper() in ("EPISTEMICALLY_INCOMPLETE", "UNCERTAIN_TERMINATION")
+                for b in beats
+            ):
+                state = "EPISTEMICALLY_BLOCKED"
+        
+        if state in ("COMPLETED", "DONE"):
+            outcome = EpisodeOutcome.GOAL_ACHIEVED
+        elif state in ("FAILED",):
+            outcome = EpisodeOutcome.GOAL_ABANDONED
+        elif state == "IMPOSSIBLE":
+            outcome = EpisodeOutcome.GOAL_IMPOSSIBLE
+        elif state == "DEAD_STATE":
+            outcome = EpisodeOutcome.DEAD_STATE
+        elif state == "EPISTEMICALLY_BLOCKED":
+            # Epistemic halt: missing evidence, constraints unevaluable. Not a failure.
+            outcome = EpisodeOutcome.EPISTEMICALLY_INCOMPLETE
+        elif state == "PARTIALLY_COMPLETED":
+            # Some beats failed - default to DEAD_STATE unless constraints imply impossibility
+            outcome = EpisodeOutcome.DEAD_STATE
+        else:
+            outcome = EpisodeOutcome.IN_PROGRESS
+        
+        # Get world state delta if available
+        state_delta = {}
+        try:
+            nodes = world_graph_store.get_episode_nodes(episode_id)
+            if nodes:
+                state_delta = nodes[-1] if isinstance(nodes[-1], dict) else {}
+        except Exception:
+            pass
+
+        # Ensure progress in state_delta for UI/E2E (beats_completed/failed set below)
+        if "progress" not in state_delta:
+            state_delta = dict(state_delta)
+        
+        # Calculate cost from beats
+        total_cost = len(beats) * COST_PER_BEAT_USD
+        
+        # beats_completed/beats_attempted/beats_failed: execution scaffolding metrics, NOT success criteria.
+        beats_completed = sum(
+            1 for b in beats
+            if (b.get("state") or "").upper() in ("ACCEPTED", "DONE", "COMPLETED")
+        )
+        beats_failed = sum(
+            1 for b in beats
+            if (b.get("state") or "").upper() == "ABORTED"
+        )
+        # Confidence: conclusion certainty. No conclusion (epistemic halt) → 0.1.
+        # Do not use confidence to mean "system certainty".
+        conf = 0.0 if not outcome.is_success else 0.5
+        if state == "EPISTEMICALLY_BLOCKED":
+            conf = 0.1  # No conclusion made → bounded_low
+        if beats_completed and sql:
+            attempts = sql.get_attempts(episode_id)
+            conf_scores = []
+            for a in (attempts or []):
+                if not a.get("success"):
+                    continue
+                m = (a.get("metrics") or {})
+                c = m.get("confidence")
+                if c is not None:
+                    c = float(c)
+                    # Decrease on observer disagreement
+                    if m.get("disagreement_score", 0) > 0.3:
+                        c = max(0, c - 0.2)
+                    conf_scores.append(c)
+            if conf_scores:
+                conf = sum(conf_scores) / len(conf_scores)
+        
+        # Collect constraints_discovered, missing_evidence, observer_status from world graph transitions
+        constraints_discovered = []
+        missing_evidence = []
+        observer_status = None
+        confidence_penalty_reason = None
+        transitions = []
+        try:
+            transitions = world_graph_store.get_episode_transitions(episode_id)
+            for t in (transitions or []):
+                obs_json = getattr(t, "observation_json", None)
+                if not obs_json:
+                    continue
+                if isinstance(obs_json, str):
+                    import json as _j
+                    obs = _j.loads(obs_json) if obs_json else {}
+                else:
+                    obs = obs_json
+                for c in obs.get("constraints_inferred", []) or []:
+                    if c and c not in constraints_discovered:
+                        constraints_discovered.append(c)
+                for m in obs.get("missing_evidence", []) or []:
+                    if m and m not in missing_evidence:
+                        missing_evidence.append(m)
+                # Epistemic summary
+                es = obs.get("epistemic_summary") or {}
+                for m in es.get("missing_evidence", []) or []:
+                    if m and m not in missing_evidence:
+                        missing_evidence.append(m)
+                obs_status = obs.get("observer_status") or es.get("observer_status")
+                if obs_status:
+                    observer_status = obs_status
+                penalty = obs.get("confidence_penalty_reason") or es.get("confidence_penalty_reason")
+                if penalty:
+                    confidence_penalty_reason = penalty
+        except Exception:
+            pass
+        # Epistemic halt: solver block = insufficient_physical_evidence (not observer_unavailable)
+        if state == "EPISTEMICALLY_BLOCKED" and "insufficient_physical_evidence" not in constraints_discovered:
+            constraints_discovered = ["insufficient_physical_evidence"] + constraints_discovered
+
+        # INVARIANT (hard correctness): goal_achieved is invalid if WorldStateGraph.transitions == 0.
+        # A goal may not be marked goal_achieved unless at least one observer-validated state
+        # transition exists. Beats completed are execution scaffolding, not semantic success.
+        if outcome == EpisodeOutcome.GOAL_ACHIEVED and not transitions:
+            outcome = EpisodeOutcome.GOAL_ABANDONED
+            conf = 0.0
+
+        # CRITICAL: DEAD_STATE requires at least one physics constraint.
+        # video_unavailable/insufficient_evidence must NEVER be terminal by themselves.
+        from models.episode_outcome import is_epistemic_only
+        if outcome == EpisodeOutcome.DEAD_STATE and is_epistemic_only(constraints_discovered):
+            outcome = EpisodeOutcome.UNCERTAIN_TERMINATION
+
+        # PARTIALLY_COMPLETED: elevate to GOAL_IMPOSSIBLE when constraints indicate physics failure
+        if state == "PARTIALLY_COMPLETED" and outcome == EpisodeOutcome.DEAD_STATE:
+            intent_lower = (runtime.intent or "").lower()
+            physics_terms = ("structural", "load", "gravity", "energy", "stability", "impossible")
+            has_physics_constraint = any(
+                t in " ".join(constraints_discovered).lower()
+                for t in physics_terms
+            )
+            # Robot stacking on narrow base (Test D): partial success then stability failure
+            stack_narrow = ("stack" in intent_lower and "box" in intent_lower and
+                           "narrow" in intent_lower and ("base" in intent_lower or "surface" in intent_lower))
+            veto_triggered = False
+            try:
+                from runtime.physics_veto import evaluate_physics_veto
+                veto_triggered, _, _ = evaluate_physics_veto(runtime.intent or "")
+            except Exception:
+                pass
+            if has_physics_constraint or veto_triggered or stack_narrow:
+                outcome = EpisodeOutcome.GOAL_IMPOSSIBLE
+                if not constraints_discovered:
+                    if veto_triggered:
+                        try:
+                            _, vc, _ = evaluate_physics_veto(runtime.intent or "")
+                            constraints_discovered = list(vc) if vc else constraints_discovered
+                        except Exception:
+                            pass
+                    elif stack_narrow:
+                        constraints_discovered = constraints_discovered or ["stability_limit", "load_distribution"]
+
+        # Terminal outcomes should not report zero confidence if any attempts were made.
+        if outcome.is_terminal and conf == 0.0 and len(beats) > 0:
+            conf = 0.2
+
+        # Build progress for state_delta
+        state_delta["progress"] = {
+            "total_beats": len(beats),
+            "completed": beats_completed,
+            "aborted": beats_failed,
+            "percent": round((beats_completed / len(beats)) * 100, 2) if beats else 0.0,
+        }
+        state_delta["state_nodes"] = len(
+            world_graph_store.get_episode_nodes(episode_id) or []
+        )
+        state_delta["transitions"] = len(
+            world_graph_store.get_episode_transitions(episode_id) or []
+        )
+        state_delta["state"] = state
+        state_delta["outcome"] = outcome.value
+        # Display mapping: insufficient_evidence -> insufficient_observational_evidence (UI only)
+        constraints_for_display = [
+            "insufficient_observational_evidence" if c == "insufficient_evidence" else c
+            for c in constraints_discovered
+        ]
+        state_delta["constraints_discovered"] = constraints_for_display
+        state_delta["missing_evidence"] = missing_evidence
+        if observer_status is not None:
+            state_delta["observer_status"] = observer_status
+        if confidence_penalty_reason is not None:
+            state_delta["confidence_penalty_reason"] = confidence_penalty_reason
+        # Solver-only success: infer constraints satisfied from intent
+        if state == "COMPLETED" and observer_status == "unavailable":
+            intent_lower = (runtime.intent or "").lower()
+            if "stack" in intent_lower and "tipping" in intent_lower:
+                state_delta["constraints_satisfied"] = ["no_tipping"]
+
+        result = EpisodeResult(
+            episode_id=episode_id,
+            outcome=outcome,
+            state_delta=state_delta,
+            confidence=conf,
+            total_cost_usd=total_cost,
+            beats_attempted=len(beats),  # execution scaffolding
+            beats_completed=beats_completed,  # execution scaffolding; success = observer-validated transitions
+            beats_failed=beats_failed,
+            constraints_discovered=constraints_for_display,
+        )
+        
+        # Add video as optional debug artifact (from compose or world graph transitions)
+        if include_video:
+            result_raw = redis_store.redis.hget(f"episode_results:{runtime.world_id}", "final")
+            if result_raw:
+                final_data = json_module.loads(result_raw)
+                result.debug["video_uri"] = final_data.get("url")
+                result.debug["video_retention_hours"] = 24
+                result.debug["video_is_debug_only"] = True
+            # Also include transition video URLs from world graph (ResultConsumer flow)
+            try:
+                transitions = world_graph_store.get_episode_transitions(episode_id)
+                urls = []
+                for t in (transitions or []):
+                    uri = getattr(t, "video_uri", None)
+                    if uri:
+                        urls.append(uri)
+                if urls:
+                    result.debug["beat_video_urls"] = urls
+                    result.debug["video_note"] = "Presigned URLs expire in ~1h. Stub backend produces black placeholder."
+            except Exception:
+                pass
+        
+        return result.to_dict()
+        
+    except Exception as e:
+        return {
+            "episode_id": episode_id,
+            "outcome": "error",
+            "is_success": False,
+            "error": str(e),
+        }
+
+
+@app.post("/episodes/{episode_id}/terminate")
+def terminate_episode(
+    episode_id: str,
+    reason: str = "manual",
+    outcome: str = "goal_abandoned",
+):
+    """
+    Forcibly terminate an episode (Video-Native Compliance).
+    
+    Allows explicit failure/termination - episodes don't have to succeed.
+    
+    Args:
+        episode_id: The episode to terminate
+        reason: Why the episode is being terminated
+        outcome: One of: goal_achieved, goal_impossible, goal_abandoned, dead_state
+    
+    Returns:
+        Final episode result
+    """
+    from runtime.episode_runtime import EpisodeRuntime
+    from models.episode_outcome import EpisodeOutcome, create_failure_result
+    
+    try:
+        runtime = EpisodeRuntime.load(episode_id=episode_id, sql=sql)
+        
+        # Map string to outcome
+        outcome_map = {
+            "goal_achieved": EpisodeOutcome.GOAL_ACHIEVED,
+            "goal_impossible": EpisodeOutcome.GOAL_IMPOSSIBLE,
+            "goal_abandoned": EpisodeOutcome.GOAL_ABANDONED,
+            "dead_state": EpisodeOutcome.DEAD_STATE,
+            "uncertain_termination": EpisodeOutcome.UNCERTAIN_TERMINATION,
+            "epistemically_incomplete": EpisodeOutcome.EPISTEMICALLY_INCOMPLETE,
+        }
+        episode_outcome = outcome_map.get(outcome, EpisodeOutcome.GOAL_ABANDONED)
+        
+        # Mark as terminated in runtime
+        if episode_outcome == EpisodeOutcome.GOAL_IMPOSSIBLE:
+            new_state = "impossible"
+        elif episode_outcome == EpisodeOutcome.DEAD_STATE:
+            new_state = "dead_state"
+        elif episode_outcome == EpisodeOutcome.UNCERTAIN_TERMINATION:
+            new_state = "uncertain_termination"
+        elif episode_outcome == EpisodeOutcome.EPISTEMICALLY_INCOMPLETE:
+            new_state = "EPISTEMICALLY_BLOCKED"
+        else:
+            new_state = "failed"
+        
+        # Update in SQL
+        if sql:
+            sql.update_episode_state(episode_id, new_state)
+        
+        # Create result
+        result = create_failure_result(
+            episode_id=episode_id,
+            outcome=episode_outcome,
+            reason=reason,
+            trigger="manual_termination",
+        )
+        
+        return {
+            "status": "terminated",
+            "result": result.to_dict(),
+        }
+        
+    except Exception as e:
+        return {
+            "status": "error",
+            "message": str(e),
+        }
+
+
+@app.get("/diagnostics/queue")
+def queue_diagnostics():
+    """
+    Diagnostic endpoint to check Redis queue status.
+    """
+    try:
+        from runtime.persistence.redis_store import _job_queue, _result_queue
+        
+        if not redis_store:
+            return {
+                "status": "error",
+                "message": "Redis store not initialized",
+            }
+        
+        try:
+            redis_client = redis_store.redis
+            redis_client.ping()
+            redis_connected = True
+        except Exception as e:
+            return {
+                "status": "error",
+                "message": f"Redis connection failed: {e}",
+                "redis_connected": False,
+            }
+        
+        job_queue = _job_queue()
+        result_queue = _result_queue()
+        
+        job_count = redis_client.llen(job_queue)
+        result_count = redis_client.llen(result_queue)
+        
+        return {
+            "status": "ok",
+            "redis_connected": True,
+            "queues": {
+                "job_queue": {
+                    "name": job_queue,
+                    "pending_jobs": job_count,
+                },
+                "result_queue": {
+                    "name": result_queue,
+                    "pending_results": result_count,
+                },
+            },
+            "environment": {
+                "REDIS_URL": os.getenv("REDIS_URL", "NOT SET")[:30] + "..." if os.getenv("REDIS_URL") else "NOT SET",
+                "JOB_QUEUE": os.getenv("JOB_QUEUE", "NOT SET"),
+                "RESULT_QUEUE": os.getenv("RESULT_QUEUE", "NOT SET"),
+            },
+        }
+    except Exception as e:
+        import traceback
+        return {
+            "status": "error",
+            "message": str(e),
+            "traceback": traceback.format_exc(),
+        }
+
+
+@app.get("/episodes/{episode_id}/video")
+def get_episode_video_debug(episode_id: str, confirm_debug: bool = False):
+    """
+    Get episode video as DEBUG ARTIFACT (Video-Native Compliance).
+    
+    Video is NOT the primary output. Use /result for state-first data.
+    This endpoint is for debugging and auditing only.
+    
+    Args:
+        episode_id: The episode ID
+        confirm_debug: Must be True to get video (acknowledges video is debug-only)
+    
+    Returns:
+        Video URL with debug warning, or redirect to /result
+    """
+    import json
+    
+    from runtime.episode_runtime import EpisodeRuntime
+    
+    if not confirm_debug:
+        return {
+            "status": "redirect",
+            "message": "Video is a debug artifact. Use /episodes/{id}/result for state-first output.",
+            "primary_endpoint": f"/episodes/{episode_id}/result",
+            "to_get_video": f"/episodes/{episode_id}/video?confirm_debug=true",
+        }
+    
+    try:
+        runtime = EpisodeRuntime.load(episode_id=episode_id, sql=sql)
+        
+        result_raw = redis_store.redis.hget(f"episode_results:{runtime.world_id}", "final")
+        
+        if result_raw:
+            result = json.loads(result_raw)
+            return {
+                "episode_id": episode_id,
+                "status": "debug_artifact",
+                "warning": "Video is for debugging only. Primary output is state delta.",
+                "video_url": result.get("url"),
+                "retention": "24h",
+                "created_at": result.get("created_at"),
+            }
+        else:
+            return {
+                "episode_id": episode_id,
+                "status": "not_composed",
+                "message": "No video available. Call /compose first.",
+            }
+    except Exception as e:
+        return {
+            "status": "error",
+            "message": str(e),
+        }

@@ -59,25 +59,38 @@ def render(input_spec: dict) -> dict:
             prompt = f"{prompt}. Characters: {char_details}"
     
     errors = []
-    
+
+    def _is_credit_exhausted(exc: BaseException) -> bool:
+        """Detect API credit/quota exhaustion (429, resource exhausted, rate limit)."""
+        msg = str(exc).lower()
+        code = getattr(exc, "code", None) or getattr(exc, "status_code", None)
+        if code in (429, 503):
+            return True
+        indicators = ("429", "resource_exhausted", "quota", "rate limit", "credit", "too many requests")
+        return any(ind in msg for ind in indicators)
+
     # Try Veo 3.1 first
+    credit_exhausted = False
     try:
         print("[veo] Attempting Veo 3.1 API...")
         video_path = generate_with_veo(prompt, duration_sec, input_spec)
         return {"video": video_path}
     except Exception as e:
         errors.append(f"Veo: {e}")
-        print(f"[veo] Veo 3.1 failed: {e}")
-    
-    # Fallback to Gemini image + motion
-    try:
-        print("[veo] Attempting Gemini image fallback...")
-        video_path = generate_with_gemini_image_motion(prompt, duration_sec, input_spec)
-        return {"video": video_path}
-    except Exception as e:
-        errors.append(f"Gemini: {e}")
-        print(f"[veo] Gemini image fallback failed: {e}")
-    
+        credit_exhausted = _is_credit_exhausted(e)
+        print(f"[veo] Veo 3.1 failed: {e}" + (" (credit exhausted, skipping Gemini)" if credit_exhausted else ""))
+
+    # Fallback to Gemini image + motion (skip if credit exhausted — Gemini would likely 429 too)
+    if not credit_exhausted:
+        try:
+            print("[veo] Attempting Gemini image fallback...")
+            video_path = generate_with_gemini_image_motion(prompt, duration_sec, input_spec)
+            return {"video": video_path}
+        except Exception as e:
+            errors.append(f"Gemini: {e}")
+            credit_exhausted = _is_credit_exhausted(e)
+            print(f"[veo] Gemini image fallback failed: {e}")
+
     # Final fallback to SDXL + motion (local, no API)
     try:
         print("[veo] Attempting SDXL local fallback...")
