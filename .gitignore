@@ -18,3 +18,33 @@ videos/
 *.png
 .DS_Store
 Thumbs.db
+
+# IDE / editor
+.cursor/
+
+# Tests (pytest, ad-hoc test scripts)
+tests/
+pytest.ini
+*_test.py
+inject_test.py
+boto3_test.py
+run_e2e_validation.py
+run_shelf_validation.py
+
+# Env templates (keep .env in gitignore, exclude example too if desired)
+env.example
+env_example
+.env.example
+
+# Debug / diagnostic scripts
+debug_*.py
+diagnose_state.py
+check_db_status.py
+
+# Local / dev artifacts
+*.log
+*.db
+test_render.json
+
+# Redis (Windows binaries; use Docker or cloud Redis in prod)
+redis/
