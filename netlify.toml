@@ -1,0 +1,78 @@
+# StoryWorld Frontend on Netlify
+# 1. Replace YOUR_RENDER_URL with your Render service URL (e.g. https://storyworld-api.onrender.com)
+# 2. Deploy: Netlify connects to GitHub, builds, publishes
+
+[build]
+  publish = "."
+  command = "true"
+
+# Serve static frontend (index at /)
+[[redirects]]
+  from = "/"
+  to = "/static/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/new.html"
+  to = "/static/new.html"
+  status = 200
+
+[[redirects]]
+  from = "/simulation.html"
+  to = "/static/simulation.html"
+  status = 200
+
+# Proxy API calls to Render backend (replace YOUR_RENDER_URL)
+[[redirects]]
+  from = "/episodes"
+  to = "https://YOUR_RENDER_URL/episodes"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/episodes/*"
+  to = "https://YOUR_RENDER_URL/episodes/:splat"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/simulate"
+  to = "https://YOUR_RENDER_URL/simulate"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/world-state/*"
+  to = "https://YOUR_RENDER_URL/world-state/:splat"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/phase-status"
+  to = "https://YOUR_RENDER_URL/phase-status"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/diagnostics/*"
+  to = "https://YOUR_RENDER_URL/diagnostics/:splat"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/debug/*"
+  to = "https://YOUR_RENDER_URL/debug/:splat"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/docs"
+  to = "https://YOUR_RENDER_URL/docs"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/openapi.json"
+  to = "https://YOUR_RENDER_URL/openapi.json"
+  status = 200
+  force = true
