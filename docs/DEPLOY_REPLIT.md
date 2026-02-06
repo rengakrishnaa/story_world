@@ -65,6 +65,17 @@ Replit binds the app to port 8000. The **Webview** and **Deploy** URL expose it.
 
 ---
 
+## 6. Build Failed / No Logs
+
+If deployment shows "build failed" with no logs:
+
+1. **Run locally first** – Click **Run** in Replit. Check the **Console** for pip/build errors.
+2. **Lighter deps** – We use `requirements-replit.txt` (no CLIP) to avoid git clone and long installs.
+3. **Retry deploy** – Push changes, then **Deploy** again.
+4. **Replit status** – Check [status.replit.com](https://status.replit.com) for outages.
+
+---
+
 ## Stack (all on Replit)
 
 | Component | Service |

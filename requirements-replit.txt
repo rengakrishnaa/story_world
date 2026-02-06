@@ -1,0 +1,17 @@
+# Replit – no git deps (avoids build failures)
+numpy==1.26.4
+pillow
+tqdm
+requests
+python-dotenv
+moviepy<2.0
+opencv-python
+mediapipe==0.10.9
+fastapi
+uvicorn
+pydantic
+sqlalchemy
+redis
+boto3
+google-genai
+# CLIP excluded – observer uses Gemini fallback when CLIP not installed

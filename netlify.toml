@@ -25,60 +25,60 @@
 # Proxy API calls to backend
 [[redirects]]
   from = "/health"
-  to = "https://YOUR_REPLIT_URL/health"
+  to = "https://storyworld--rengakrishnaa.replit.app/health"
   status = 200
   force = true
 
 [[redirects]]
   from = "/episodes"
-  to = "https://YOUR_REPLIT_URL/episodes"
+  to = "https://storyworld--rengakrishnaa.replit.app/episodes"
   status = 200
   force = true
 
 [[redirects]]
   from = "/episodes/*"
-  to = "https://YOUR_REPLIT_URL/episodes/:splat"
+  to = "https://storyworld--rengakrishnaa.replit.app/episodes/:splat"
   status = 200
   force = true
 
 [[redirects]]
   from = "/simulate"
-  to = "https://YOUR_REPLIT_URL/simulate"
+  to = "https://storyworld--rengakrishnaa.replit.app/simulate"
   status = 200
   force = true
 
 [[redirects]]
   from = "/world-state/*"
-  to = "https://YOUR_REPLIT_URL/world-state/:splat"
+  to = "https://storyworld--rengakrishnaa.replit.app/world-state/:splat"
   status = 200
   force = true
 
 [[redirects]]
   from = "/phase-status"
-  to = "https://YOUR_REPLIT_URL/phase-status"
+  to = "https://storyworld--rengakrishnaa.replit.app/phase-status"
   status = 200
   force = true
 
 [[redirects]]
   from = "/diagnostics/*"
-  to = "https://YOUR_REPLIT_URL/diagnostics/:splat"
+  to = "https://storyworld--rengakrishnaa.replit.app/diagnostics/:splat"
   status = 200
   force = true
 
 [[redirects]]
   from = "/debug/*"
-  to = "https://YOUR_REPLIT_URL/debug/:splat"
+  to = "https://storyworld--rengakrishnaa.replit.app/debug/:splat"
   status = 200
   force = true
 
 [[redirects]]
   from = "/docs"
-  to = "https://YOUR_REPLIT_URL/docs"
+  to = "https://storyworld--rengakrishnaa.replit.app/docs"
   status = 200
   force = true
 
 [[redirects]]
   from = "/openapi.json"
-  to = "https://YOUR_REPLIT_URL/openapi.json"
+  to = "https://storyworld--rengakrishnaa.replit.app/openapi.json"
   status = 200
   force = true

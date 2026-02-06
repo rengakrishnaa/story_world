@@ -5,15 +5,15 @@ language = "python3"
 # Python 3.10 for mediapipe 0.10.9 compatibility
 modules = ["python-3.10"]
 
-# Install deps on boot
-onBoot = "pip install -r requirements.base.txt"
+# Install deps on boot (use requirements-replit.txt – no CLIP git clone)
+onBoot = "pip install -r requirements-replit.txt"
 
 # Run FastAPI
 run = "uvicorn main:app --host 0.0.0.0 --port 8000"
 
-# Deployment (when you Deploy)
+# Deployment – lighter deps avoid build timeout/failure
 [deployment]
-build = "pip install -r requirements.base.txt"
+build = "pip install -r requirements-replit.txt"
 run = ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
 
 [nix]
