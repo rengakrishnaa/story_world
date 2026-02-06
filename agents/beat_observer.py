@@ -82,52 +82,56 @@ class BeatObserver:
                 )
 
         # ------------------------------------------------
-        # 3️⃣ Identity continuity (ONCE)
+        # 3️⃣ Identity continuity (ONCE) - skipped when CLIP not installed
         # ------------------------------------------------
         if characters and image_path:
-            current_embedding = self.embedder.embed_image(image_path)
+            try:
+                current_embedding = self.embedder.embed_image(image_path)
+            except (RuntimeError, ImportError) as e:
+                if "CLIP" in str(e) or "clip" in str(e).lower():
+                    current_embedding = None  # skip identity checks
+                else:
+                    raise
 
+            if current_embedding is not None:
+                for character in characters:
+                    profile = self.characters.get(character)
 
-            for character in characters:
-                profile = self.characters.get(character)
+                    if profile and profile.reference_embeddings:
+                        ref_sims = [
+                            self._cosine(current_embedding, ref)
+                            for ref in profile.reference_embeddings
+                        ]
 
-                if profile and profile.reference_embeddings:
-                    ref_sims = [
-                        self._cosine(current_embedding, ref)
-                        for ref in profile.reference_embeddings
-                    ]
+                        ref_sim = max(ref_sims)
 
-                    ref_sim = max(ref_sims)
+                        if ref_sim < 0.75:
+                            return BeatObservation(
+                                beat_id=beat_id,
+                                success=False,
+                                confidence=ref_sim,
+                                intent_satisfied=True,
+                                entity_presence={character: ref_sim},
+                                constraint_violations=["identity_mismatch"],
+                                failure_type="identity",
+                                explanation=f"{character} does not match reference identity ({ref_sim:.2f})",
+                                recommended_action="retry_model"
+                            )
 
-
-                    if ref_sim < 0.75:
-                        return BeatObservation(
-                            beat_id=beat_id,
-                            success=False,
-                            confidence=ref_sim,
-                            intent_satisfied=True,
-                            entity_presence={character: ref_sim},
-                            constraint_violations=["identity_mismatch"],
-                            failure_type="identity",
-                            explanation=f"{character} does not match reference identity ({ref_sim:.2f})",
-                            recommended_action="retry_model"
-                
-                        )
-
-                # 3B — Temporal continuity check (RELATIVE)
-                prev_sim = self.continuity.similarity(character, current_embedding)
-                if prev_sim is not None and prev_sim < 0.8:
-                    return BeatObservation(
-                        beat_id=beat_id,
-                        success=False,
-                        confidence=prev_sim,
-                        intent_satisfied=True,
-                        entity_presence={character: prev_sim},
-                        constraint_violations=["identity_drift"],
-                        failure_type="continuity",
-                        explanation=f"Temporal drift for {character} ({prev_sim:.2f})",
-                        recommended_action="retry_model"
-                    )
+                        # 3B — Temporal continuity check (RELATIVE)
+                        prev_sim = self.continuity.similarity(character, current_embedding)
+                        if prev_sim is not None and prev_sim < 0.8:
+                            return BeatObservation(
+                                beat_id=beat_id,
+                                success=False,
+                                confidence=prev_sim,
+                                intent_satisfied=True,
+                                entity_presence={character: prev_sim},
+                                constraint_violations=["identity_drift"],
+                                failure_type="continuity",
+                                explanation=f"Temporal drift for {character} ({prev_sim:.2f})",
+                                recommended_action="retry_model"
+                            )
                 
         # ------------------------------------------------
         # 4️⃣ Location validation

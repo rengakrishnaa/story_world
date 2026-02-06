@@ -1,2 +1,17 @@
-# Vercel API deployment - full deps
--r requirements.base.txt
+# Vercel API - no git deps (avoids github.com resolution issues in Vercel build)
+numpy==1.26.4
+pillow
+tqdm
+requests
+python-dotenv
+moviepy<2.0
+opencv-python
+mediapipe>=0.10.30
+fastapi
+uvicorn
+pydantic
+sqlalchemy
+redis
+boto3
+google-genai
+# CLIP excluded - requires git clone from GitHub; observer uses Gemini fallback
