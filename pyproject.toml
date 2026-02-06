@@ -1,0 +1,16 @@
+[project]
+name = "storyworld"
+version = "0.1.0"
+description = "StoryWorld Reality Compiler"
+requires-python = ">=3.10"
+dependencies = [
+    "fastapi",
+    "uvicorn",
+]
+
+[project.scripts]
+app = "main:app"
+
+[tool.vercel]
+# Point Vercel to FastAPI app
+# build = "pip install -r requirements.txt"

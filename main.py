@@ -83,16 +83,20 @@ async def startup_event():
 
     # Phase 10: Start Result Consumer (Sync Redis -> SQL, observer -> world graph)
     # Queue must match worker RESULT_QUEUE so GPU results update episode state
+    # On serverless (Vercel), skip background loop; use cron-hooked /internal/process-results
     from runtime.result_consumer import ResultConsumer
     consumer = ResultConsumer(sql, redis_store, world_graph_store)
     import asyncio
-    asyncio.create_task(consumer.run_loop())
-    try:
-        from runtime.persistence.redis_store import _result_queue
-        rq = _result_queue()
-        print(f">>> startup: Result Consumer listening on queue: {rq}")
-    except Exception:
-        print(">>> startup: Result Consumer started (queue from RESULT_QUEUE env)")
+    if os.getenv("SERVERLESS", "").lower() not in ("true", "1", "yes"):
+        asyncio.create_task(consumer.run_loop())
+        try:
+            from runtime.persistence.redis_store import _result_queue
+            rq = _result_queue()
+            print(f">>> startup: Result Consumer listening on queue: {rq}")
+        except Exception:
+            print(">>> startup: Result Consumer started (queue from RESULT_QUEUE env)")
+    else:
+        print(">>> startup: SERVERLESS mode – use /internal/process-results (cron) for result consumption")
     print(">>> startup: infrastructure wired")
 
 # =====================================================
@@ -1155,6 +1159,21 @@ def queue_diagnostics():
             "message": str(e),
             "traceback": traceback.format_exc(),
         }
+
+
+@app.get("/internal/process-results")
+@app.post("/internal/process-results")
+async def process_results_batch(max_items: int = 5):
+    """
+    Process up to max_items GPU results from Redis. For serverless (Vercel cron)
+    where ResultConsumer background loop cannot run. Vercel cron hits this every minute.
+    """
+    if not sql or not redis_store or not world_graph_store:
+        return {"status": "error", "message": "Stores not initialized"}
+    from runtime.result_consumer import ResultConsumer
+    consumer = ResultConsumer(sql, redis_store, world_graph_store)
+    count = await consumer.process_batch(max_items=max_items)
+    return {"status": "ok", "processed": count}
 
 
 @app.get("/episodes/{episode_id}/video")

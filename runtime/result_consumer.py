@@ -90,6 +90,43 @@ class ResultConsumer:
     def stop(self):
         self._running = False
 
+    async def process_batch(self, max_items: int = 5) -> int:
+        """
+        Process up to max_items results from the queue. For serverless (Vercel cron)
+        where a background loop cannot run. Returns number of results processed.
+        """
+        processed = 0
+        for _ in range(max_items):
+            try:
+                result = await asyncio.to_thread(self.redis.pop_gpu_result, timeout=1)
+                if not result:
+                    break
+                try:
+                    await asyncio.wait_for(
+                        asyncio.to_thread(self._process_result, result),
+                        timeout=120.0,
+                    )
+                    processed += 1
+                except asyncio.TimeoutError:
+                    job_id = result.get("job_id", "?")
+                    meta = result.get("meta", {})
+                    beat_id = meta.get("beat_id")
+                    print(f"[ResultConsumer] process_batch: observer timeout for {job_id}")
+                    try:
+                        runtime = EpisodeRuntime.load(meta.get("episode_id"), self.sql)
+                        runtime.mark_beat_failure(
+                            beat_id=beat_id,
+                            error="Observer timeout (exceeded 120s)",
+                            metrics={"verdict": "uncertain", "confidence": 0.0},
+                        )
+                    except Exception as e:
+                        print(f"[ResultConsumer] Failed to mark timeout: {e}")
+                    processed += 1
+            except Exception as e:
+                print(f"[ResultConsumer] process_batch error: {e}")
+                break
+        return processed
+
     def _process_result(self, result: dict):
         meta = result.get("meta", {})
         episode_id = meta.get("episode_id")

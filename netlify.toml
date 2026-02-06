@@ -22,7 +22,7 @@
   to = "/static/simulation.html"
   status = 200
 
-# Proxy API calls to Render backend (replace YOUR_RENDER_URL)
+# Proxy API calls to backend (Vercel or Render - replace YOUR_RENDER_URL with your API URL)
 [[redirects]]
   from = "/episodes"
   to = "https://YOUR_RENDER_URL/episodes"

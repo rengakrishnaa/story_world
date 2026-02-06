@@ -17,6 +17,7 @@ Welcome to the StoryWorld documentation. This guide helps you understand, use, a
 | **[Low-Cost Deployment](LOW_COST_DEPLOYMENT.md)** | DevOps | Netlify + Render + RunPod Serverless, minimal cost setup |
 | **[Setup Serverless](SETUP_SERVERLESS.md)** | DevOps | Step-by-step Dockerfile.serverless + RunPod setup |
 | **[Deploy Render + Netlify](DEPLOY_RENDER_NETLIFY.md)** | DevOps | Main app (Render) + frontend (Netlify) deployment |
+| **[Deploy Vercel](DEPLOY_VERCEL.md)** | DevOps | Main app on Vercel (no card) + Netlify frontend |
 | **[Changelog & Roadmap](CHANGELOG_AND_ROADMAP.md)** | Everyone | Completed features, known issues, future plans |
 | **[Troubleshooting](TROUBLESHOOTING.md)** | Support, operators | Common issues and solutions |
 
