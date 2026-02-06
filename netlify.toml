@@ -1,5 +1,5 @@
 # StoryWorld Frontend on Netlify
-# Backend API: Fly.io (https://story-world.fly.dev)
+# Backend API: Render (https://storyworld-api.onrender.com)
 
 [build]
   publish = "."
@@ -21,69 +21,69 @@
   to = "/static/simulation.html"
   status = 200
 
-# Proxy API calls to Fly.io backend
+# Proxy API calls to Render backend
 [[redirects]]
   from = "/health"
-  to = "https://story-world.fly.dev/health"
+  to = "https://storyworld-api.onrender.com/health"
   status = 200
   force = true
 
 [[redirects]]
   from = "/episodes"
-  to = "https://story-world.fly.dev/episodes"
+  to = "https://storyworld-api.onrender.com/episodes"
   status = 200
   force = true
 
 [[redirects]]
   from = "/episodes/*"
-  to = "https://story-world.fly.dev/episodes/:splat"
+  to = "https://storyworld-api.onrender.com/episodes/:splat"
   status = 200
   force = true
 
 [[redirects]]
   from = "/simulate"
-  to = "https://story-world.fly.dev/simulate"
+  to = "https://storyworld-api.onrender.com/simulate"
   status = 200
   force = true
 
 [[redirects]]
   from = "/world-state/*"
-  to = "https://story-world.fly.dev/world-state/:splat"
+  to = "https://storyworld-api.onrender.com/world-state/:splat"
   status = 200
   force = true
 
 [[redirects]]
   from = "/phase-status"
-  to = "https://story-world.fly.dev/phase-status"
+  to = "https://storyworld-api.onrender.com/phase-status"
   status = 200
   force = true
 
 [[redirects]]
   from = "/internal/*"
-  to = "https://story-world.fly.dev/internal/:splat"
+  to = "https://storyworld-api.onrender.com/internal/:splat"
   status = 200
   force = true
 
 [[redirects]]
   from = "/diagnostics/*"
-  to = "https://story-world.fly.dev/diagnostics/:splat"
+  to = "https://storyworld-api.onrender.com/diagnostics/:splat"
   status = 200
   force = true
 
 [[redirects]]
   from = "/debug/*"
-  to = "https://story-world.fly.dev/debug/:splat"
+  to = "https://storyworld-api.onrender.com/debug/:splat"
   status = 200
   force = true
 
 [[redirects]]
   from = "/docs"
-  to = "https://story-world.fly.dev/docs"
+  to = "https://storyworld-api.onrender.com/docs"
   status = 200
   force = true
 
 [[redirects]]
   from = "/openapi.json"
-  to = "https://story-world.fly.dev/openapi.json"
+  to = "https://storyworld-api.onrender.com/openapi.json"
   status = 200
   force = true

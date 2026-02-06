@@ -1,18 +1,18 @@
 # StoryWorld Main Server on Render (Free Tier)
-# After creating the service, add env vars in Render Dashboard > Environment
-# Replace YOUR_SERVICE_NAME with your actual Render service name for Netlify proxy
+# Blueprint: New + > Blueprint > connect repo > Apply
+# Add secrets in Dashboard > storyworld-api > Environment
 
 services:
   - type: web
     name: storyworld-api
     env: python
-    buildCommand: pip install -r requirements.base.txt
+    buildCommand: pip install -r requirements-replit.txt
     startCommand: uvicorn main:app --host 0.0.0.0 --port $PORT
     envVars:
       - key: REDIS_URL
         sync: false
       - key: DATABASE_URL
-        value: sqlite:///./local.db
+        value: sqlite:////tmp/storyworld.db
       - key: S3_ENDPOINT
         sync: false
       - key: S3_BUCKET

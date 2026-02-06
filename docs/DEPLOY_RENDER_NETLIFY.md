@@ -1,66 +1,61 @@
 # Deploy Main App (Render) + Frontend (Netlify)
 
-Step-by-step deployment for StoryWorld using Render (free) and Netlify (free).
+StoryWorld on Render (free) + Netlify (free). **Final setup.**
 
 ---
 
 ## 1. Deploy Main App on Render
 
-### Option A: Blueprint (render.yaml)
+### Option A: Blueprint (recommended)
 
 1. Push `render.yaml` to your repo.
 2. Go to [Render Dashboard](https://dashboard.render.com/) → **New +** → **Blueprint**.
-3. Connect your GitHub repo, select the repo.
-4. Render will detect `render.yaml`. Click **Apply**.
-5. Add **Environment Variables** (Dashboard → your service → Environment):
-   - `REDIS_URL` (Upstash URL)
-   - `S3_ENDPOINT`, `S3_BUCKET`, `S3_ACCESS_KEY`, `S3_SECRET_KEY`
-   - `GEMINI_API_KEY`
-   - `NANOBANANA_API_KEY` (if using Veo)
-6. Wait for deploy. Note your service URL: `https://storyworld-api.onrender.com` (or similar).
+3. Connect GitHub, select repo.
+4. Render detects `render.yaml`. Click **Apply**.
+5. Add **Environment Variables** (Dashboard → storyworld-api → Environment):
+
+   | Key | Value |
+   |-----|-------|
+   | `REDIS_URL` | Upstash Redis URL |
+   | `S3_ENDPOINT` | R2 endpoint |
+   | `S3_BUCKET` | Bucket name |
+   | `S3_ACCESS_KEY` | R2 access key |
+   | `S3_SECRET_KEY` | R2 secret key |
+   | `GEMINI_API_KEY` | Gemini API key |
+   | `JOB_QUEUE` | `storyworld:gpu:jobs` |
+   | `RESULT_QUEUE` | `storyworld:gpu:results` |
+
+6. Wait for deploy. URL: `https://storyworld-api.onrender.com` (or `https://storyworld-api-XXXX.onrender.com` if name taken).
 
 ### Option B: Manual
 
 1. **New +** → **Web Service**.
 2. Connect GitHub, select repo.
-3. Settings:
-   - **Name**: `storyworld-api`
-   - **Environment**: Python 3
-   - **Build Command**: `pip install -r requirements.base.txt`
-   - **Start Command**: `uvicorn main:app --host 0.0.0.0 --port $PORT`
-   - **Instance Type**: Free
-4. Add env vars (same as above).
-5. Deploy. Copy the service URL.
+3. **Name**: `storyworld-api`
+4. **Build Command**: `pip install -r requirements-replit.txt`
+5. **Start Command**: `uvicorn main:app --host 0.0.0.0 --port $PORT`
+6. **Instance Type**: Free
+7. Add env vars (same as above).
 
 ### Notes
 
-- **SQLite**: Data is ephemeral on Render free tier (lost on restart). Acceptable for demos.
+- **Deps**: Uses `requirements-replit.txt` (no CLIP/mediapipe/opencv) to avoid build timeout.
+- **SQLite**: `/tmp/storyworld.db` – ephemeral (lost on restart).
 - **Cold start**: Free tier spins down after ~15 min; first request may take 30–60 s.
-- **CLIP build**: If `pip install` fails on the CLIP git dependency, ensure the build has git. Render's default Python environment includes git. If it fails, try adding `nixpacksPackages = [pkgs.git]` in a `render.yaml` config or use a Docker deploy.
 
 ---
 
 ## 2. Deploy Frontend on Netlify
 
-### Step 1: Update netlify.toml
+`netlify.toml` is pre-configured for `https://storyworld-api.onrender.com`.
 
-Replace `YOUR_RENDER_URL` with your Render URL (no trailing slash):
+If your Render URL is different (e.g. `storyworld-api-xxxx.onrender.com`), update all proxy `to` URLs in `netlify.toml`.
 
-```toml
-# Example:
-to = "https://storyworld-api.onrender.com/episodes"
-```
-
-Use Find & Replace: `YOUR_RENDER_URL` → `storyworld-api.onrender.com` (or your actual URL).
-
-### Step 2: Deploy
-
-1. Go to [Netlify](https://app.netlify.com/) → **Add new site** → **Import an existing project**.
-2. Connect GitHub, select your repo.
-3. Settings:
-   - **Build command**: (leave empty or `true`)
-   - **Publish directory**: `.` (root)
-4. Click **Deploy site**.
+1. [Netlify](https://app.netlify.com/) → **Add new site** → **Import from Git**.
+2. Connect GitHub, select repo.
+3. **Build command**: `true` (or empty)
+4. **Publish directory**: `.`
+5. **Deploy**.
 
 ### Step 3: Custom Domain (optional)
 

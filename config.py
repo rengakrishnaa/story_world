@@ -101,8 +101,8 @@ EPISODE_COMPOSE_REQUIRED_CONFIDENCE = _env_float(
 # ---------------------------------------------------------------------------
 # Paths & Logging
 # ---------------------------------------------------------------------------
-# On Vercel/Fly, /tmp is writable (ephemeral)
-_use_tmp = os.getenv("VERCEL") or os.getenv("FLY_APP_NAME")
+# On Vercel/Fly/Render, /tmp is writable (ephemeral)
+_use_tmp = os.getenv("VERCEL") or os.getenv("FLY_APP_NAME") or os.getenv("RENDER")
 _default_log = "/tmp/decision_loop.log" if _use_tmp else "decision_loop.log"
 DECISION_LOOP_LOG_PATH = os.getenv(
     "DECISION_LOOP_LOG_PATH",
