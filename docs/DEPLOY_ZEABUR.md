@@ -1,0 +1,71 @@
+# Deploy Main API on Zeabur
+
+Zeabur hosts the FastAPI app with **Python 3.10**, no card required.
+
+---
+
+## 1. Connect GitHub
+
+1. Go to [zeabur.com](https://zeabur.com) and sign in (GitHub)
+2. **Create Project** → **Deploy from GitHub**
+3. Select your `story_world` repo
+4. Zeabur will detect the project
+
+---
+
+## 2. Dockerfile (Auto-Used)
+
+We use `zbpack.json` so Zeabur deploys with `Dockerfile.zeabur`:
+- Python 3.10
+- `requirements-replit.txt` (no CLIP git clone)
+- uvicorn
+
+No extra config needed—push and deploy.
+
+---
+
+## 3. Environment Variables
+
+In Zeabur: **Service** → **Variables** (or **Environment**)
+
+Add:
+
+| Key | Value |
+|-----|-------|
+| `REDIS_URL` | Upstash Redis URL |
+| `DATABASE_URL` | `sqlite:///./local.db` |
+| `S3_ENDPOINT` | R2 endpoint |
+| `S3_BUCKET` | Bucket name |
+| `S3_ACCESS_KEY` | R2 access key |
+| `S3_SECRET_KEY` | R2 secret key |
+| `GEMINI_API_KEY` | Gemini API key |
+| `JOB_QUEUE` | `storyworld:gpu:jobs` |
+| `RESULT_QUEUE` | `storyworld:gpu:results` |
+
+---
+
+## 4. Deploy
+
+1. Click **Deploy**
+2. Wait for the build (Dockerfile uses `requirements-replit.txt` – no CLIP, faster)
+3. Copy your URL: `https://storyworld-xxx.zeabur.app`
+
+---
+
+## 5. Connect Netlify
+
+In `netlify.toml`, replace `YOUR_REPLIT_URL` with your Zeabur URL:
+
+```toml
+to = "https://YOUR_ZEABUR_DOMAIN.zeabur.app/episodes"
+```
+
+Example: `https://storyworld-abc123.zeabur.app`
+
+---
+
+## 6. Override Dockerfile (if needed)
+
+If Zeabur ignores the Dockerfile, add env var:  
+`ZBPACK_DOCKERFILE_NAME=zeabur`  
+so it uses `Dockerfile.zeabur`.

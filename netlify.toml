@@ -1,5 +1,5 @@
 # StoryWorld Frontend on Netlify
-# Replace YOUR_REPLIT_URL with your Replit deploy URL (e.g. https://storyworld-xxx.yourusername.repl.co)
+# Replace YOUR_REPLIT_URL with your backend URL (Replit: .repl.co, Zeabur: .zeabur.app)
 
 [build]
   publish = "."

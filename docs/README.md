@@ -19,6 +19,7 @@ Welcome to the StoryWorld documentation. This guide helps you understand, use, a
 | **[Deploy Render + Netlify](DEPLOY_RENDER_NETLIFY.md)** | DevOps | Main app (Render) + frontend (Netlify) deployment |
 | **[Deploy Vercel](DEPLOY_VERCEL.md)** | DevOps | Main app on Vercel (no card) + Netlify frontend |
 | **[Deploy Replit](DEPLOY_REPLIT.md)** | DevOps | Main app on Replit (Python 3.10, no card) + Netlify frontend |
+| **[Deploy Zeabur](DEPLOY_ZEABUR.md)** | DevOps | Main app on Zeabur (Python 3.10, no card) + Netlify frontend |
 | **[Changelog & Roadmap](CHANGELOG_AND_ROADMAP.md)** | Everyone | Completed features, known issues, future plans |
 | **[Troubleshooting](TROUBLESHOOTING.md)** | Support, operators | Common issues and solutions |
 
