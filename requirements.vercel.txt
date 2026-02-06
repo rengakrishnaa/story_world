@@ -1,0 +1,2 @@
+# Vercel API deployment - full deps
+-r requirements.base.txt

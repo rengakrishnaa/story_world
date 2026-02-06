@@ -1,2 +1,2 @@
-# Vercel deployment - same as requirements.base.txt
--r requirements.base.txt
+# Netlify: static frontend only, no Python deps.
+# Vercel API uses requirements.vercel.txt (see vercel.json installCommand)

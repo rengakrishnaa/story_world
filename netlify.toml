@@ -5,8 +5,7 @@
 [build]
   publish = "."
   command = "true"
-  # Static site only - skip Python/pip (requirements.txt is for Vercel API)
-  install = "true"
+  # requirements.txt is empty (comments only) - pip installs nothing, succeeds
 
 # Serve static frontend (index at /)
 [[redirects]]
