@@ -1,6 +1,5 @@
 # StoryWorld Frontend on Netlify
-# 1. Replace meiengine-8aooub3ij-krishnaas-projects-ee8b74e8.vercel.app with your Render service URL (e.g. https://storyworld-api.onrender.com)
-# 2. Deploy: Netlify connects to GitHub, builds, publishes
+# Replace YOUR_REPLIT_URL with your Replit deploy URL (e.g. https://storyworld-xxx.yourusername.repl.co)
 
 [build]
   publish = "."
@@ -26,60 +25,60 @@
 # Proxy API calls to backend
 [[redirects]]
   from = "/health"
-  to = "https://meiengine-8aooub3ij-krishnaas-projects-ee8b74e8.vercel.app/health"
+  to = "https://YOUR_REPLIT_URL/health"
   status = 200
   force = true
 
 [[redirects]]
   from = "/episodes"
-  to = "https://meiengine-8aooub3ij-krishnaas-projects-ee8b74e8.vercel.app/episodes"
+  to = "https://YOUR_REPLIT_URL/episodes"
   status = 200
   force = true
 
 [[redirects]]
   from = "/episodes/*"
-  to = "https://meiengine-8aooub3ij-krishnaas-projects-ee8b74e8.vercel.app/episodes/:splat"
+  to = "https://YOUR_REPLIT_URL/episodes/:splat"
   status = 200
   force = true
 
 [[redirects]]
   from = "/simulate"
-  to = "https://meiengine-8aooub3ij-krishnaas-projects-ee8b74e8.vercel.app/simulate"
+  to = "https://YOUR_REPLIT_URL/simulate"
   status = 200
   force = true
 
 [[redirects]]
   from = "/world-state/*"
-  to = "https://meiengine-8aooub3ij-krishnaas-projects-ee8b74e8.vercel.app/world-state/:splat"
+  to = "https://YOUR_REPLIT_URL/world-state/:splat"
   status = 200
   force = true
 
 [[redirects]]
   from = "/phase-status"
-  to = "https://meiengine-8aooub3ij-krishnaas-projects-ee8b74e8.vercel.app/phase-status"
+  to = "https://YOUR_REPLIT_URL/phase-status"
   status = 200
   force = true
 
 [[redirects]]
   from = "/diagnostics/*"
-  to = "https://meiengine-8aooub3ij-krishnaas-projects-ee8b74e8.vercel.app/diagnostics/:splat"
+  to = "https://YOUR_REPLIT_URL/diagnostics/:splat"
   status = 200
   force = true
 
 [[redirects]]
   from = "/debug/*"
-  to = "https://meiengine-8aooub3ij-krishnaas-projects-ee8b74e8.vercel.app/debug/:splat"
+  to = "https://YOUR_REPLIT_URL/debug/:splat"
   status = 200
   force = true
 
 [[redirects]]
   from = "/docs"
-  to = "https://meiengine-8aooub3ij-krishnaas-projects-ee8b74e8.vercel.app/docs"
+  to = "https://YOUR_REPLIT_URL/docs"
   status = 200
   force = true
 
 [[redirects]]
   from = "/openapi.json"
-  to = "https://meiengine-8aooub3ij-krishnaas-projects-ee8b74e8.vercel.app/openapi.json"
+  to = "https://YOUR_REPLIT_URL/openapi.json"
   status = 200
   force = true

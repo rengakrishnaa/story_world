@@ -1,0 +1,20 @@
+# StoryWorld – Replit (Python 3.10)
+entrypoint = "main.py"
+language = "python3"
+
+# Python 3.10 for mediapipe 0.10.9 compatibility
+modules = ["python-3.10"]
+
+# Install deps on boot
+onBoot = "pip install -r requirements.base.txt"
+
+# Run FastAPI
+run = "uvicorn main:app --host 0.0.0.0 --port 8000"
+
+# Deployment (when you Deploy)
+[deployment]
+build = "pip install -r requirements.base.txt"
+run = ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
+
+[nix]
+channel = "stable-23_11"

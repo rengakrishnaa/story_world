@@ -8,7 +8,7 @@ python-dotenv
 # Video / Image
 moviepy<2.0
 opencv-python
-mediapipe==0.10.9
+mediapipe>=0.10.9
 
 # Backend / API
 fastapi
