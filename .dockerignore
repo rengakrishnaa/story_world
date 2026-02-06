@@ -1,8 +1,17 @@
 __pycache__/
 venv/
+.venv/
 .env
 videos/
 keyframes/
 *.mp4
 *.png
 .git
+tests/
+docs/
+runtime/
+static/
+main.py
+*.md
+*.db
+*.log

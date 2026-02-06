@@ -36,16 +36,25 @@ if not all([S3_ENDPOINT, S3_BUCKET, S3_ACCESS_KEY, S3_SECRET_KEY]):
 # CLIENTS
 # =========================================================
 
-redis_client = redis.Redis.from_url(
-    REDIS_URL,
-    decode_responses=True,
-    socket_timeout=30,
-    socket_connect_timeout=10,
-    retry_on_timeout=True,
-    health_check_interval=30,
-    ssl_cert_reqs=ssl.CERT_REQUIRED,
-)
+_redis_client = None
 
+
+def _get_redis_client():
+    """Lazy init: RunPod Serverless only uses execute_job, never Redis."""
+    global _redis_client
+    if _redis_client is None:
+        if not REDIS_URL:
+            raise RuntimeError("REDIS_URL required for worker_loop mode")
+        _redis_client = redis.Redis.from_url(
+            REDIS_URL,
+            decode_responses=True,
+            socket_timeout=30,
+            socket_connect_timeout=10,
+            retry_on_timeout=True,
+            health_check_interval=30,
+            ssl_cert_reqs=ssl.CERT_REQUIRED,
+        )
+    return _redis_client
 
 
 s3 = boto3.client(
@@ -239,9 +248,10 @@ def execute_job(job: Dict[str, Any]) -> Dict[str, Any]:
 
 async def worker_loop():
     print("[gpu-worker] started")
+    rc = _get_redis_client()
 
     while True:
-        job_data = redis_client.blpop(JOB_QUEUE, timeout=5)
+        job_data = rc.blpop(JOB_QUEUE, timeout=5)
         if not job_data:
             await asyncio.sleep(1)
             continue
@@ -260,7 +270,7 @@ async def worker_loop():
         result["meta"] = result.get("meta") or {}
         result["meta"]["episode_id"] = job_meta.get("episode_id")
         result["meta"]["beat_id"] = job_meta.get("beat_id")
-        redis_client.rpush(target_result_queue, json.dumps(result))
+        rc.rpush(target_result_queue, json.dumps(result))
 
         print(
             f"[gpu-worker] job={result['job_id']} "

@@ -15,6 +15,7 @@ Welcome to the StoryWorld documentation. This guide helps you understand, use, a
 | **[Configuration Reference](CONFIGURATION_REFERENCE.md)** | DevOps, developers | Environment variables, deployment config |
 | **[Deployment Guide](DEPLOYMENT_GUIDE.md)** | DevOps | Production setup, main server, GPU worker |
 | **[Low-Cost Deployment](LOW_COST_DEPLOYMENT.md)** | DevOps | Netlify + Render + RunPod Serverless, minimal cost setup |
+| **[Setup Serverless](SETUP_SERVERLESS.md)** | DevOps | Step-by-step Dockerfile.serverless + RunPod setup |
 | **[Changelog & Roadmap](CHANGELOG_AND_ROADMAP.md)** | Everyone | Completed features, known issues, future plans |
 | **[Troubleshooting](TROUBLESHOOTING.md)** | Support, operators | Common issues and solutions |
 
