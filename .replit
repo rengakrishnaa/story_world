@@ -5,6 +5,11 @@ language = "python3"
 # Python 3.10 for mediapipe 0.10.9 compatibility
 modules = ["python-3.10"]
 
+# Disable packager auto-install for deployment – prevents torch/CLIP/mediapipe/etc
+# from being bundled (we use requirements-replit.txt only)
+[packager.features]
+enabledForHosting = false
+
 # Install deps on boot (use requirements-replit.txt – no CLIP git clone)
 onBoot = "pip install -r requirements-replit.txt"
 
