@@ -31,7 +31,15 @@ from fastapi.staticfiles import StaticFiles
 app = FastAPI(title="StoryWorld Runtime")
 
 # Phase 8: Infrastructure UI
-app.mount("/static", StaticFiles(directory="static"), name="static")
+try:
+    app.mount("/static", StaticFiles(directory="static"), name="static")
+except Exception:
+    pass  # static/ may not exist in minimal deploy
+
+@app.get("/health")
+async def health():
+    """Minimal health check - no deps."""
+    return {"status": "ok", "service": "storyworld"}
 
 @app.get("/")
 async def read_index():
@@ -54,50 +62,34 @@ async def read_simulation():
 
 @app.on_event("startup")
 async def startup_event():
-    print(">>> startup reached")
-
     global sql, redis_store, world_graph_store
-
-    from runtime.persistence.sql_store import SQLStore
-    from runtime.persistence.redis_store import RedisStore
-    from runtime.persistence.world_graph_store import WorldGraphStore
-
-    # Lazy SQL
-    sql = SQLStore(lazy=True)
-
-    # Lazy Redis (but test connection on startup)
-    redis_store = RedisStore(
-        url=os.getenv("REDIS_URL"),
-        lazy=True,
-    )
-    # Test Redis connection
     try:
-        redis_store.redis.ping()
-        print(f">>> startup: Redis connection verified")
-    except Exception as e:
-        print(f">>> startup: Redis connection failed: {e}")
-        print(f">>> startup: Jobs will not be submitted until Redis is available")
-    
-    # Phase 1: World State Graph Store
-    world_graph_store = WorldGraphStore()
+        print(">>> startup reached")
+        from runtime.persistence.sql_store import SQLStore
+        from runtime.persistence.redis_store import RedisStore
+        from runtime.persistence.world_graph_store import WorldGraphStore
 
-    # Phase 10: Start Result Consumer (Sync Redis -> SQL, observer -> world graph)
-    # Queue must match worker RESULT_QUEUE so GPU results update episode state
-    # On serverless (Vercel), skip background loop; use cron-hooked /internal/process-results
-    from runtime.result_consumer import ResultConsumer
-    consumer = ResultConsumer(sql, redis_store, world_graph_store)
-    import asyncio
-    if os.getenv("SERVERLESS", "").lower() not in ("true", "1", "yes"):
-        asyncio.create_task(consumer.run_loop())
+        sql = SQLStore(lazy=True)
+        redis_store = RedisStore(url=os.getenv("REDIS_URL"), lazy=True)
         try:
-            from runtime.persistence.redis_store import _result_queue
-            rq = _result_queue()
-            print(f">>> startup: Result Consumer listening on queue: {rq}")
-        except Exception:
-            print(">>> startup: Result Consumer started (queue from RESULT_QUEUE env)")
-    else:
-        print(">>> startup: SERVERLESS mode – use /internal/process-results (cron) for result consumption")
-    print(">>> startup: infrastructure wired")
+            redis_store.redis.ping()
+            print(">>> startup: Redis connection verified")
+        except Exception as e:
+            print(f">>> startup: Redis connection failed: {e}")
+
+        world_graph_store = WorldGraphStore()
+
+        from runtime.result_consumer import ResultConsumer
+        consumer = ResultConsumer(sql, redis_store, world_graph_store)
+        import asyncio
+        if os.getenv("SERVERLESS", "").lower() not in ("true", "1", "yes"):
+            asyncio.create_task(consumer.run_loop())
+        print(">>> startup: infrastructure wired")
+    except Exception as e:
+        import traceback
+        print(f">>> startup FAILED: {e}")
+        traceback.print_exc()
+        sql = redis_store = world_graph_store = None
 
 # =====================================================
 # API

@@ -23,7 +23,13 @@
   to = "/static/simulation.html"
   status = 200
 
-# Proxy API calls to backend (Vercel or Render - replace meiengine-8aooub3ij-krishnaas-projects-ee8b74e8.vercel.app with your API URL)
+# Proxy API calls to backend
+[[redirects]]
+  from = "/health"
+  to = "https://meiengine-8aooub3ij-krishnaas-projects-ee8b74e8.vercel.app/health"
+  status = 200
+  force = true
+
 [[redirects]]
   from = "/episodes"
   to = "https://meiengine-8aooub3ij-krishnaas-projects-ee8b74e8.vercel.app/episodes"

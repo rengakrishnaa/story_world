@@ -101,8 +101,12 @@ EPISODE_COMPOSE_REQUIRED_CONFIDENCE = _env_float(
 # ---------------------------------------------------------------------------
 # Paths & Logging
 # ---------------------------------------------------------------------------
+# On Vercel, /tmp is writable
+_default_log = "/tmp/decision_loop.log" if os.getenv("VERCEL") else "decision_loop.log"
 DECISION_LOOP_LOG_PATH = os.getenv(
     "DECISION_LOOP_LOG_PATH",
-    os.getenv("LOG_PATH", "decision_loop.log"),
+    os.getenv("LOG_PATH", _default_log),
 )
-DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///./local.db")
+# Vercel sets VERCEL=1; use /tmp for writable SQLite
+_default_db = "sqlite:////tmp/storyworld.db" if os.getenv("VERCEL") else "sqlite:///./local.db"
+DATABASE_URL = os.getenv("DATABASE_URL", _default_db)
