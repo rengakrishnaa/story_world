@@ -70,14 +70,14 @@ Replit binds the app to port 8000. The **Webview** and **Deploy** URL expose it.
 If deployment shows "build failed" with no logs:
 
 1. **Run locally first** – Click **Run** in Replit. Check the **Console** for pip/build errors.
-2. **Lighter deps** – We use `requirements-replit.txt` (no CLIP, `opencv-python-headless`) to avoid git clone and long installs.
+2. **Minimal deps** – We use `requirements-replit.txt` without opencv, mediapipe, moviepy to avoid build timeout. Observer uses Gemini-only; compose uses ffmpeg (no moviepy).
 3. **PORT** – Replit deploys to Cloud Run; `run_replit.sh` reads `$PORT` (default 8080) so the app binds correctly.
 4. **Retry deploy** – Push changes, then **Deploy** again.
 5. **Replit status** – Check [status.replit.com](https://status.replit.com) for outages.
 
 ### Pip install times out
 
-- `requirements-replit.txt` pins versions for reproducible builds. If it still times out, try removing `opencv-python-headless` and `mediapipe` temporarily to isolate the slow package (the app will fail on vision features but `/health` should work).
+- `requirements-replit.txt` omits opencv, mediapipe, moviepy to fit Replit's build limit. If it still times out, try removing `pandas` (would break narrative planner) or use Replit's "Always on" / upgrade.
 
 ---
 
