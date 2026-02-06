@@ -46,12 +46,15 @@ After adding env vars, trigger a new deploy: **Deployments → ⋮ → Redeploy*
 
 ---
 
-## 3. Cron (Result Processing)
+## 3. Result Processing (No Cron Needed)
 
-`vercel.json` configures a cron that hits `/internal/process-results` every minute. This processes GPU results from Redis (since serverless cannot run a background loop).
+Vercel Hobby limits cron to **once per day**. Instead, results are processed **on-demand** when you hit:
 
-- Cron runs automatically after deploy
-- No extra setup needed
+- `GET /episodes` (dashboard)
+- `GET /episodes/{id}` (simulation detail)
+- `GET /phase-status`
+
+Each request processes up to 3 pending GPU results from Redis before responding. Refreshing the page will process more results.
 
 ---
 

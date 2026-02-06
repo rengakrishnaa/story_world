@@ -1,8 +1,1 @@
-{
-  "crons": [
-    {
-      "path": "/internal/process-results",
-      "schedule": "* * * * *"
-    }
-  ]
-}
+{}

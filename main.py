@@ -236,12 +236,27 @@ def run_simulation(
         "initial_state": runtime.state,
     }
 
+async def _process_results_if_serverless():
+    """On Vercel Hobby (1 cron/day), process results on-demand when user hits API."""
+    if os.getenv("SERVERLESS", "").lower() not in ("true", "1", "yes"):
+        return
+    if not (sql and redis_store and world_graph_store):
+        return
+    try:
+        from runtime.result_consumer import ResultConsumer
+        consumer = ResultConsumer(sql, redis_store, world_graph_store)
+        await consumer.process_batch(max_items=3)
+    except Exception as e:
+        print(f"[main] on-demand process_batch: {e}")
+
+
 @app.get("/episodes")
-def list_episodes(limit: int = 20, world_id: str = None):
+async def list_episodes(limit: int = 20, world_id: str = None):
     """
     List recent simulations (episodes).
     Infrastructure console - state-first, no video.
     """
+    await _process_results_if_serverless()
     try:
         episodes = sql.list_episodes(limit=limit, world_id=world_id) if sql else []
         episodes = list(episodes) if isinstance(episodes, (list, tuple)) else []
@@ -328,10 +343,11 @@ def execute_episode(episode_id: str):
 
 
 @app.get("/episodes/{episode_id}")
-def episode_status(episode_id: str):
+async def episode_status(episode_id: str):
     from runtime.episode_runtime import EpisodeRuntime
     from fastapi import HTTPException
 
+    await _process_results_if_serverless()
     try:
         runtime = EpisodeRuntime.load(
             episode_id=episode_id,
@@ -709,10 +725,11 @@ def get_world_state(episode_id: str):
 
 
 @app.get("/phase-status")
-def get_phase_status():
+async def get_phase_status():
     """
     Check the status of Phase 1-5 components.
     """
+    await _process_results_if_serverless()
     import sqlite3
     
     # Check database tables
