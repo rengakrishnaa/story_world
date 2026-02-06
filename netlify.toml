@@ -1,10 +1,9 @@
 # StoryWorld Frontend on Netlify
-# Replace YOUR_REPLIT_URL with your backend URL (Replit: .repl.co, Zeabur: .zeabur.app)
+# Backend API: Fly.io (https://story-world.fly.dev)
 
 [build]
   publish = "."
   command = "true"
-  # requirements.txt is empty (comments only) - pip installs nothing, succeeds
 
 # Serve static frontend (index at /)
 [[redirects]]
@@ -22,63 +21,69 @@
   to = "/static/simulation.html"
   status = 200
 
-# Proxy API calls to backend
+# Proxy API calls to Fly.io backend
 [[redirects]]
   from = "/health"
-  to = "https://storyworld--rengakrishnaa.replit.app/health"
+  to = "https://story-world.fly.dev/health"
   status = 200
   force = true
 
 [[redirects]]
   from = "/episodes"
-  to = "https://storyworld--rengakrishnaa.replit.app/episodes"
+  to = "https://story-world.fly.dev/episodes"
   status = 200
   force = true
 
 [[redirects]]
   from = "/episodes/*"
-  to = "https://storyworld--rengakrishnaa.replit.app/episodes/:splat"
+  to = "https://story-world.fly.dev/episodes/:splat"
   status = 200
   force = true
 
 [[redirects]]
   from = "/simulate"
-  to = "https://storyworld--rengakrishnaa.replit.app/simulate"
+  to = "https://story-world.fly.dev/simulate"
   status = 200
   force = true
 
 [[redirects]]
   from = "/world-state/*"
-  to = "https://storyworld--rengakrishnaa.replit.app/world-state/:splat"
+  to = "https://story-world.fly.dev/world-state/:splat"
   status = 200
   force = true
 
 [[redirects]]
   from = "/phase-status"
-  to = "https://storyworld--rengakrishnaa.replit.app/phase-status"
+  to = "https://story-world.fly.dev/phase-status"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/internal/*"
+  to = "https://story-world.fly.dev/internal/:splat"
   status = 200
   force = true
 
 [[redirects]]
   from = "/diagnostics/*"
-  to = "https://storyworld--rengakrishnaa.replit.app/diagnostics/:splat"
+  to = "https://story-world.fly.dev/diagnostics/:splat"
   status = 200
   force = true
 
 [[redirects]]
   from = "/debug/*"
-  to = "https://storyworld--rengakrishnaa.replit.app/debug/:splat"
+  to = "https://story-world.fly.dev/debug/:splat"
   status = 200
   force = true
 
 [[redirects]]
   from = "/docs"
-  to = "https://storyworld--rengakrishnaa.replit.app/docs"
+  to = "https://story-world.fly.dev/docs"
   status = 200
   force = true
 
 [[redirects]]
   from = "/openapi.json"
-  to = "https://storyworld--rengakrishnaa.replit.app/openapi.json"
+  to = "https://story-world.fly.dev/openapi.json"
   status = 200
   force = true

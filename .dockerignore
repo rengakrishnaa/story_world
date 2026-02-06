@@ -9,9 +9,6 @@ keyframes/
 .git
 tests/
 docs/
-runtime/
-static/
-main.py
 *.md
 *.db
 *.log
