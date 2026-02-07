@@ -13,4 +13,11 @@
            with:
              python-version: '3.11'
          - run: pip install -r requirements.bridge.txt
-         - run: BRIDGE_CRON_MODE=true REDIS_URL=${{ secrets.REDIS_URL }} RUNPOD_API_KEY=${{ secrets.RUNPOD_API_KEY }} RUNPOD_ENDPOINT_ID=${{ secrets.RUNPOD_ENDPOINT_ID }} JOB_QUEUE=storyworld:gpu:jobs RESULT_QUEUE=storyworld:gpu:results python bridge_serverless.py
+         - run: python bridge_serverless.py
+           env:
+             BRIDGE_CRON_MODE: "true"
+             REDIS_URL: ${{ secrets.REDIS_URL }}
+             RUNPOD_API_KEY: ${{ secrets.RUNPOD_API_KEY }}
+             RUNPOD_ENDPOINT_ID: ${{ secrets.RUNPOD_ENDPOINT_ID }}
+             JOB_QUEUE: storyworld:gpu:jobs
+             RESULT_QUEUE: storyworld:gpu:results
