@@ -2,11 +2,11 @@
 
 ## ✅ PIPELINE STATUS: FULLY FUNCTIONAL
 
-Your complete workflow from uvicorn → API → RunPod → video output is **production-ready** with one fix applied.
+The workflow from uvicorn → API → RunPod → video output is **production-ready** with one fix applied.
 
 ---
 
-## Your Workflow (As Described)
+## Workflow
 
 ### 1. Start Main Server
 ```bash
@@ -47,7 +47,7 @@ docker run --gpus all \
   -e S3_REGION=$S3_REGION \
   -e S3_ACCESS_KEY=$S3_ACCESS_KEY \
   -e S3_SECRET_KEY=$S3_SECRET_KEY \
-  your-registry/storyworld-gpu:latest
+  <registry>/storyworld-gpu:latest
 ```
 
 **What Happens:**
@@ -483,7 +483,7 @@ All components verified and tested:
 - Artifact storage integrated
 - State management robust
 
-**You can now:**
+**Next steps:**
 1. Start uvicorn server
 2. Deploy RunPod GPU worker
 3. Make API calls from browser

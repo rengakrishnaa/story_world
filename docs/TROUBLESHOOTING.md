@@ -47,7 +47,7 @@ Common issues and solutions.
 **Solution:** 
 - Ensure goal specifies physical parameters (mass, dimensions, friction, gravity)
 - Closed-form intents now accept solver-only success when observer has insufficient evidence
-- If still blocked, check intent classifier returns `requires_visual_verification=false` for your goal
+- If still blocked, check intent classifier returns `requires_visual_verification=false` for the goal
 
 ---
 
@@ -55,7 +55,7 @@ Common issues and solutions.
 
 **Cause:** Intent requires perceptual evidence; observer could not extract it.
 
-**Solution:** Add more physical parameters to goal; or use API override `requires_visual_verification=false` if appropriate for your use case.
+**Solution:** Add more physical parameters to the goal; or use API override `requires_visual_verification=false` when appropriate.
 
 ---
 

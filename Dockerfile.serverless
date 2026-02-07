@@ -1,5 +1,5 @@
 # StoryWorld RunPod Serverless Worker
-# Deploy to RunPod Serverless. Set env vars in Console > Endpoint > Settings > Environment Variables (persist).
+# RunPod Serverless. We set env vars in Console > Endpoint > Settings > Environment Variables.
 # Base: runpod/base (if available) or nvidia/cuda
 
 FROM nvidia/cuda:11.8.0-cudnn8-runtime-ubuntu22.04

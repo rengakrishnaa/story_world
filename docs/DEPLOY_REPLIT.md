@@ -24,7 +24,7 @@ Add:
 
 | Key | Value |
 |-----|-------|
-| `REDIS_URL` | Your Upstash Redis URL |
+| `REDIS_URL` | Upstash Redis URL |
 | `DATABASE_URL` | `sqlite:///./local.db` |
 | `S3_ENDPOINT` | R2 endpoint |
 | `S3_BUCKET` | Bucket name |
@@ -43,16 +43,16 @@ Add:
 1. Click **Run** – Replit will `pip install` and start uvicorn
 2. Open the **Webview** tab to test
 3. Click **Deploy** (top right) → **Deploy**
-4. Copy your Replit URL: `https://storyworld-xxx.replit.app` (or your repl name)
+4. We note the Replit URL (e.g. `https://storyworld-xxx.replit.app`)
 
 ---
 
 ## 4. Connect Netlify Frontend
 
-In `netlify.toml`, replace the backend URL with your Replit URL:
+We update `netlify.toml` with the Replit URL:
 
 ```toml
-to = "https://YOUR_REPL_NAME.YOUR_USERNAME.repl.co/episodes"
+to = "https://<repl-name>.<username>.repl.co/episodes"
 ```
 
 Example: `https://storyworld-abc123.yourname.repl.co`

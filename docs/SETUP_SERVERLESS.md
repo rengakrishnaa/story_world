@@ -17,8 +17,8 @@ Step-by-step setup for `Dockerfile.serverless` on RunPod.
 From the project root:
 
 ```bash
-# Replace YOUR_DOCKERHUB_USER with your Docker Hub username
-docker build -f Dockerfile.serverless -t YOUR_DOCKERHUB_USER/storyworld-worker:serverless .
+# We use our Docker Hub username in the image tag
+docker build -f Dockerfile.serverless -t <dockerhub-username>/storyworld-worker:serverless .
 ```
 
 ---
@@ -27,7 +27,7 @@ docker build -f Dockerfile.serverless -t YOUR_DOCKERHUB_USER/storyworld-worker:s
 
 ```bash
 docker login
-docker push YOUR_DOCKERHUB_USER/storyworld-worker:serverless
+docker push <dockerhub-username>/storyworld-worker:serverless
 ```
 
 ---
@@ -37,7 +37,7 @@ docker push YOUR_DOCKERHUB_USER/storyworld-worker:serverless
 1. Go to [RunPod Console → Serverless](https://www.runpod.io/console/serverless)
 2. Click **New Endpoint**
 3. **Select GPU**: T4 (cheapest ~$0.0002/sec) or L4 (faster)
-4. **Container Image**: `YOUR_DOCKERHUB_USER/storyworld-worker:serverless`
+4. **Container Image**: `<dockerhub-username>/storyworld-worker:serverless`
 5. **Container Disk**: 20 GB (or more if models are large)
 6. **Handler**: RunPod auto-detects from `runpod.serverless.start({"handler": handler})`
 7. Create the endpoint
@@ -48,34 +48,31 @@ docker push YOUR_DOCKERHUB_USER/storyworld-worker:serverless
 
 In RunPod Console: **Endpoint → Settings → Environment Variables**
 
-Add these (copy values from your `.env` or `runpod-template.env`):
+We add these (values come from `.env` or `runpod-template.env`):
 
 | Variable | Required | Example |
 |----------|----------|---------|
-| `S3_ENDPOINT` | Yes | `https://xxx.r2.cloudflarestorage.com` |
+| `S3_ENDPOINT` | Yes | R2 endpoint URL |
 | `S3_BUCKET` | Yes | `storyworld-artifacts` |
-| `S3_ACCESS_KEY` | Yes | Your R2 access key |
-| `S3_SECRET_KEY` | Yes | Your R2 secret key |
+| `S3_ACCESS_KEY` | Yes | R2 access key |
+| `S3_SECRET_KEY` | Yes | R2 secret key |
 | `S3_REGION` | Yes | `auto` |
 | `DEFAULT_BACKEND` | Yes | `veo` or `svd` |
 | `VEO_FALLBACK_BACKEND` | No | `svd` |
 | `USE_DIFFUSION` | No | `true` |
-| `GEMINI_API_KEY` | If using Veo | Your API key |
+| `GEMINI_API_KEY` | If using Veo | Gemini API key |
 
-**Note:** `REDIS_URL` is **not** needed. The bridge handles Redis; the worker only receives jobs via RunPod HTTP and uploads to R2.
-
----
-
-## 6. Note Endpoint ID and API Key
-
-- **Endpoint ID**: From the endpoint URL (e.g. `abc123xyz`) or Settings
-- **API Key**: RunPod Console → Settings → API Keys
-
-You need these for the bridge (`RUNPOD_ENDPOINT_ID`, `RUNPOD_API_KEY`).
+We don't set `REDIS_URL` on the worker. The bridge handles Redis; the worker receives jobs via RunPod HTTP and uploads to R2.
 
 ---
 
-## 7. Test Locally (Optional)
+## 6. Endpoint ID and API Key
+
+We grab the Endpoint ID from the endpoint URL or Settings, and the API Key from RunPod Console → Settings → API Keys. These go into the bridge as `RUNPOD_ENDPOINT_ID` and `RUNPOD_API_KEY`.
+
+---
+
+## 7. Test Locally
 
 ```bash
 # Without RunPod (uses handler fallback, needs a valid job payload)

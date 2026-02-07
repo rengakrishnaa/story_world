@@ -10,7 +10,7 @@ When scaling: Zeabur hosts the FastAPI app with Python 3.10.
 
 1. Go to [zeabur.com](https://zeabur.com) and sign in (GitHub)
 2. **Create Project** → **Deploy from GitHub**
-3. Select your `story_world` repo
+3. Select the `story_world` repo
 4. Zeabur will detect the project
 
 ---
@@ -50,19 +50,17 @@ Add:
 
 1. Click **Deploy**
 2. Wait for the build (Dockerfile uses `requirements-replit.txt` – no CLIP, faster)
-3. Copy your URL: `https://storyworld-xxx.zeabur.app`
+3. We note the URL (e.g. `https://storyworld-xxx.zeabur.app`)
 
 ---
 
 ## 5. Connect Netlify
 
-In `netlify.toml`, replace `YOUR_REPLIT_URL` with your Zeabur URL:
+We update `netlify.toml` with our Zeabur URL (e.g. `https://storyworld-abc123.zeabur.app`):
 
 ```toml
-to = "https://YOUR_ZEABUR_DOMAIN.zeabur.app/episodes"
+to = "https://storyworld-abc123.zeabur.app/episodes"
 ```
-
-Example: `https://storyworld-abc123.zeabur.app`
 
 ---
 

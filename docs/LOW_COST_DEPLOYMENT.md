@@ -49,13 +49,13 @@ When we scale: Deploy StoryWorld with minimal cost. GPU runs only when a simulat
 
 ### Step 2: Set Environment Variables (Persist Forever)
 
-**Critical:** RunPod Console > Your Endpoint > **Settings** > **Environment Variables**
+**Critical:** RunPod Console > Endpoint > **Settings** > **Environment Variables**
 
-Add these **once**. They are saved with the endpoint. You never set them again:
+We add these once. They persist with the endpoint.
 
 | Variable | Value | Required |
 |----------|-------|----------|
-| `S3_ENDPOINT` | Your R2 endpoint URL | Yes |
+| `S3_ENDPOINT` | R2 endpoint URL | Yes |
 | `S3_BUCKET` | storyworld-artifacts | Yes |
 | `S3_ACCESS_KEY` | R2 access key | Yes |
 | `S3_SECRET_KEY` | R2 secret key | Yes |
@@ -63,13 +63,13 @@ Add these **once**. They are saved with the endpoint. You never set them again:
 | `DEFAULT_BACKEND` | veo or svd | Yes |
 | `VEO_FALLBACK_BACKEND` | svd | No |
 | `USE_DIFFUSION` | true | For credit fallback |
-| `GEMINI_API_KEY` | Your key | If using Veo |
+| `GEMINI_API_KEY` | Gemini API key | If using Veo |
 
 Copy from `runpod-template.env`.
 
 ### Step 3: Note Endpoint ID and API Key
 
-- **Endpoint ID:** From endpoint URL or Settings (e.g., `abc123xyz`)
+- **Endpoint ID:** From endpoint URL or Settings
 - **API Key:** RunPod Console > Settings > API Keys
 
 ---
@@ -140,7 +140,7 @@ fly deploy
 | `JOB_QUEUE` | storyworld:gpu:jobs |
 | `RESULT_QUEUE` | storyworld:gpu:results |
 | `RUNPOD_API_KEY` | RunPod API key |
-| `RUNPOD_ENDPOINT_ID` | Your serverless endpoint ID |
+| `RUNPOD_ENDPOINT_ID` | RunPod serverless endpoint ID |
 
 ---
 
@@ -175,7 +175,7 @@ fly deploy
 3. Rewrite: `/* /index.html` (for SPA routing if needed)
 4. Env: `VITE_API_URL` or similar pointing to main server URL
 
-If frontend calls API directly, set `API_BASE_URL` to your main server (e.g., `https://storyworld-xxx.onrender.com`).
+When the frontend calls the API directly, we set `API_BASE_URL` to the main server URL.
 
 ---
 
@@ -211,10 +211,10 @@ If frontend calls API directly, set `API_BASE_URL` to your main server (e.g., `h
 
 ```bash
 # Build
-docker build -f Dockerfile.serverless -t your-dockerhub/storyworld-worker:serverless .
+docker build -f Dockerfile.serverless -t <dockerhub>/storyworld-worker:serverless .
 
 # Push
-docker push your-dockerhub/storyworld-worker:serverless
+docker push <dockerhub>/storyworld-worker:serverless
 ```
 
-In RunPod, create endpoint with image `your-dockerhub/storyworld-worker:serverless`.
+In RunPod we create an endpoint with the image `<dockerhub>/storyworld-worker:serverless`.

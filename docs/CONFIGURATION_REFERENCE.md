@@ -1,6 +1,6 @@
 # StoryWorld Configuration Reference
 
-Complete reference for environment variables and configuration. Copy `env.example` to `.env` and set values. **Never commit `.env`.**
+We use `env.example` as a template. I copy it to `.env`, fill in Redis, R2, and Gemini credentials, and never commit `.env`.
 
 ---
 
@@ -27,7 +27,7 @@ Complete reference for environment variables and configuration. Copy `env.exampl
 
 | Variable | Default | Description |
 |----------|---------|-------------|
-| `REDIS_URL` | — | **Required.** Upstash Redis URL (e.g., `rediss://...`) |
+| `REDIS_URL` | — | Upstash Redis URL (`rediss://...`) |
 | `JOB_QUEUE` | `storyworld:gpu:jobs` | GPU job queue name |
 | `RESULT_QUEUE` | `storyworld:gpu:results` | GPU result queue name |
 | `GPU_JOB_QUEUE` | — | Override job queue |
@@ -40,12 +40,12 @@ Complete reference for environment variables and configuration. Copy `env.exampl
 
 | Variable | Default | Description |
 |----------|---------|-------------|
-| `S3_ENDPOINT` | — | R2/S3 endpoint (e.g., `https://xxx.r2.cloudflarestorage.com`) |
-| `S3_BUCKET` | — | Bucket name (e.g., `storyworld-artifacts`) |
+| `S3_ENDPOINT` | — | R2/S3 endpoint |
+| `S3_BUCKET` | — | Bucket name |
 | `S3_ACCESS_KEY` | — | Access key |
 | `S3_SECRET_KEY` | — | Secret key |
 | `S3_REGION` | `auto` | Region (use `auto` for R2) |
-| `ARTIFACTS_DIR` | — | Optional: shared dir when worker+observer share volume |
+| `ARTIFACTS_DIR` | — | Shared dir when worker and observer share a volume |
 
 ---
 
@@ -56,7 +56,7 @@ Complete reference for environment variables and configuration. Copy `env.exampl
 | `DEFAULT_BACKEND` | `veo` | Default backend: `veo`, `svd`, `animatediff`, `stub` |
 | `VEO_FALLBACK_BACKEND` | `svd` | Fallback when Veo credit exhausted |
 | `VEO_USE_FAST` | `false` | Use Veo fast model |
-| `USE_DIFFUSION` | `false` | Enable local SDXL for SVD/AnimateDiff fallback (required for credit-exhausted fallback) |
+| `USE_DIFFUSION` | `false` | Enable local SDXL for SVD/AnimateDiff fallback when Veo credit exhausted |
 
 ---
 
@@ -129,4 +129,4 @@ Complete reference for environment variables and configuration. Copy `env.exampl
 |----------|---------|-------------|
 | `LOG_LEVEL` | `INFO` | Log level |
 | `DECISION_LOOP_LOG_PATH` | `decision_loop.log` | Path for decision loop logs |
-| `FFMPEG_PATH` | — | Optional: path to ffmpeg binary |
+| `FFMPEG_PATH` | — | Path to ffmpeg binary when not in PATH |

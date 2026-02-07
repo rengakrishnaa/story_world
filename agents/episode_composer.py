@@ -166,7 +166,7 @@ class EpisodeComposer:
                 # Check if it's an R2 cloudflare storage URL
                 if "r2.cloudflarestorage.com" in video_url:
                     # Extract key: everything after bucket name in the path
-                    # URL: https://xxx.r2.cloudflarestorage.com/storyworld-artifacts/episodes/...
+                    # R2 URL format: host/bucket/key
                     if self.s3_bucket and self.s3_bucket in video_url:
                         key = video_url.split(f"{self.s3_bucket}/")[-1]
                     else:

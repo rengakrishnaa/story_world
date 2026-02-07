@@ -10,7 +10,7 @@ When scaling: StoryWorld on Render (free tier) + Netlify (free).
 
 ### Option A: Blueprint (recommended)
 
-1. Push `render.yaml` to your repo.
+1. Push `render.yaml` to the repo.
 2. Go to [Render Dashboard](https://dashboard.render.com/) → **New +** → **Blueprint**.
 3. Connect GitHub, select repo.
 4. Render detects `render.yaml`. Click **Apply**.
@@ -51,7 +51,7 @@ When scaling: StoryWorld on Render (free tier) + Netlify (free).
 
 `netlify.toml` is pre-configured for `https://storyworld-api.onrender.com`.
 
-If your Render URL is different (e.g. `storyworld-api-xxxx.onrender.com`), update all proxy `to` URLs in `netlify.toml`.
+If the Render URL differs, we update the proxy `to` URLs in `netlify.toml`.
 
 1. [Netlify](https://app.netlify.com/) → **Add new site** → **Import from Git**.
 2. Connect GitHub, select repo.
@@ -69,7 +69,7 @@ Netlify → Site settings → Domain management → Add custom domain.
 
 | Check | How |
 |-------|-----|
-| API health | `curl https://YOUR_RENDER_URL/phase-status` |
+| API health | `curl https://storyworld-api.onrender.com/phase-status` |
 | Frontend | Open Netlify URL |
 | Create sim | Frontend → New Run → fill goal → Initialize |
 | Bridge | GitHub Actions runs every 3 min; jobs flow Redis → RunPod → results |
@@ -84,7 +84,7 @@ Netlify → Site settings → Domain management → Add custom domain.
 |----------|----------|-------|
 | `REDIS_URL` | Yes | Upstash Redis URL |
 | `S3_ENDPOINT` | Yes | R2 endpoint |
-| `S3_BUCKET` | Yes | e.g. storyworld-artifacts |
+| `S3_BUCKET` | Yes | Bucket name |
 | `S3_ACCESS_KEY` | Yes | R2 token |
 | `S3_SECRET_KEY` | Yes | R2 token |
 | `GEMINI_API_KEY` | Yes | For observer/planner |

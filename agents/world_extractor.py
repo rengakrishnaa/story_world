@@ -4,7 +4,7 @@ import json
 import base64
 from pathlib import Path
 
-# Import from your models - adjust path as needed
+# Import from models
 try:
     from models.world import WorldGraph, Character, Location
 except ImportError:
@@ -206,7 +206,7 @@ if __name__ == "__main__":
     
     extractor = WorldExtractor(api_key)
     
-    # Example paths - adjust to your actual image files
+    # Example paths
     char_images = [r"C:\Users\KRISH\Desktop\LEARN\Vidme\story_world\uploads\img_1.webp"]
     loc_images = [r"C:\Users\KRISH\Desktop\LEARN\Vidme\story_world\uploads\location.jpg"]
     

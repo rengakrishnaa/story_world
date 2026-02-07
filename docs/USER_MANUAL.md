@@ -11,10 +11,10 @@ This manual explains how to use StoryWorld to run simulations, interpret results
 - Web browser (Chrome, Firefox, Safari, Edge)
 - StoryWorld server running (see [Deployment Guide](DEPLOYMENT_GUIDE.md))
 
-### Running Your First Simulation
+### Running a Simulation
 
 1. **Open the dashboard**
-   - Navigate to `http://localhost:8000` (or your deployed URL)
+   - Navigate to `http://localhost:8000` (or the deployed URL)
    - Click **New Run** or **Simulations**
 
 2. **Enter a simulation goal**

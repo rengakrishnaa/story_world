@@ -19,7 +19,7 @@ When scaling: Vercel hosts the main API with zero config for FastAPI.
 ### Step 1: Import Project
 
 1. Go to [vercel.com/new](https://vercel.com/new)
-2. **Import** your GitHub repository
+2. **Import** the GitHub repository
 3. Select the `story_world` repo
 4. Click **Deploy** (Vercel auto-detects FastAPI)
 
@@ -60,7 +60,7 @@ Each request processes up to 3 pending GPU results from Redis before responding.
 
 ---
 
-## 4. Get Your URL
+## 4. URL
 
 After deploy, Vercel gives you a URL like:
 ```
@@ -73,7 +73,7 @@ Use this as the API base for Netlify proxy (update `netlify.toml`).
 
 ## 5. Connect Netlify Frontend
 
-In `netlify.toml`, replace `YOUR_RENDER_URL` with your Vercel URL (no trailing slash):
+We update `netlify.toml` with the Vercel URL:
 
 ```toml
 to = "https://story-world-xxx.vercel.app/episodes"

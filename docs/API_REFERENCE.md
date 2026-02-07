@@ -2,7 +2,7 @@
 
 Complete API endpoint documentation for the StoryWorld FastAPI server.
 
-**Base URL:** `http://localhost:8000` (or your deployed URL)
+**Base URL:** `http://localhost:8000` (or the deployed URL)
 
 ---
 

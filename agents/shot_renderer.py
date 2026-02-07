@@ -29,7 +29,7 @@ from moviepy.editor import ImageSequenceClip
 
 load_dotenv()
 
-# Redis (your existing)
+# Redis (same store we use for job queue)
 REDIS_URL = os.getenv("REDIS_URL", "redis://localhost:6379")
 r = redis.from_url(REDIS_URL)
 
@@ -223,7 +223,7 @@ class ProductionShotRenderer:
     def render_beat_keyframe(self, world, beat: Dict) -> Dict[str, Optional[str]]:
         """YOUR original NanoBanana → Gemini → placeholder pipeline."""
         try:
-            # NanoBanana first (your API key)
+            # NanoBanana first
             if os.getenv("NANOBANANA_API_KEY"):
                 prompt = self.generate_detailed_shot_prompt(world, beat)
                 img = self.generate_nanobanana_image(prompt["nanobananaprompt"])

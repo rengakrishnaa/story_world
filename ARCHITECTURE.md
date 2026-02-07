@@ -1,6 +1,6 @@
 # StoryWorld Distributed Architecture
 
-## Your Production Setup
+## Production Setup
 
 ### Infrastructure Components
 
@@ -77,7 +77,7 @@
 
 ### Cloudflare R2 vs AWS S3
 
-Your setup uses **Cloudflare R2** which is S3-compatible but has some differences:
+We use **Cloudflare R2** which is S3-compatible but has some differences:
 
 - **Endpoint**: Custom R2 endpoint (not `s3.amazonaws.com`)
 - **Region**: Set to `auto` for R2
@@ -86,7 +86,7 @@ Your setup uses **Cloudflare R2** which is S3-compatible but has some difference
 
 ### Environment Variables
 
-Critical settings in your `.env`:
+Critical settings in `.env`:
 
 ```bash
 # Redis (Upstash)

@@ -41,7 +41,7 @@ planner = ProductionNarrativePlanner(
 ```bash
 # In .env file
 USE_MOCK_PLANNER=false  # ✅ Uses real Gemini API
-GEMINI_API_KEY=your_actual_key
+GEMINI_API_KEY=<key>
 ```
 
 **Behavior:**
@@ -151,14 +151,14 @@ def _create_gradient_frame(width, height, color1, color2):
 
 ## Verification Steps
 
-### ✅ Step 1: Check .env Configuration
+### Step 1: .env Configuration
 ```bash
-# Your current .env
-USE_MOCK_PLANNER=false  # ✅ Correct for production
-GEMINI_API_KEY=your_gemini_api_key_here  # ⚠️ Replace with real key
+# .env
+USE_MOCK_PLANNER=false
+GEMINI_API_KEY=<gemini-api-key>
 ```
 
-### ✅ Step 2: Test Real Prompt
+### Step 2: Test Real Prompt
 ```bash
 POST /episodes
 {
@@ -174,9 +174,9 @@ POST /episodes/{id}/plan
 - ✅ Episode plan about dragons and castles
 - ✅ NO Saitama content
 
-### ✅ Step 3: Test Mock Mode (Optional)
+### Step 3: Test Mock Mode
 ```bash
-# Set in .env
+# In .env
 USE_MOCK_PLANNER=true
 
 POST /episodes/{id}/plan
@@ -220,7 +220,7 @@ if not self.use_real_api:
 ```bash
 # Planner
 USE_MOCK_PLANNER=false
-GEMINI_API_KEY=your_real_gemini_key
+GEMINI_API_KEY=<key>
 
 # Environment
 ENV=production
@@ -258,12 +258,12 @@ DEFAULT_BACKEND=animatediff
 2. Fallback gradient frames - Only used when APIs fail
 3. Test fixtures - Not used in production
 
-### ✅ Your Configuration
+### Configuration
 ```bash
 USE_MOCK_PLANNER=false  # ✅ Will use real Gemini API
 ```
 
-**Result:** Your videos will match your prompts, not hardcoded Saitama content!
+**Result:** Videos match the prompts, not hardcoded Saitama content.
 
 ---
 

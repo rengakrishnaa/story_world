@@ -34,22 +34,22 @@ When prompted:
 
 ---
 
-## 3. Set Secrets (Required)
+## 3. Secrets
 
 ```bash
-fly secrets set REDIS_URL="rediss://default:YOUR_PASSWORD@YOUR_UPSTASH_HOST:6379"
-fly secrets set GEMINI_API_KEY="your-gemini-api-key"
-fly secrets set S3_ENDPOINT="https://xxx.r2.cloudflarestorage.com"
-fly secrets set S3_BUCKET="your-bucket"
-fly secrets set S3_ACCESS_KEY="your-r2-access-key"
-fly secrets set S3_SECRET_KEY="your-r2-secret-key"
+fly secrets set REDIS_URL="rediss://..."
+fly secrets set GEMINI_API_KEY="..."
+fly secrets set S3_ENDPOINT="https://..."
+fly secrets set S3_BUCKET="..."
+fly secrets set S3_ACCESS_KEY="..."
+fly secrets set S3_SECRET_KEY="..."
 fly secrets set JOB_QUEUE="storyworld:gpu:jobs"
 fly secrets set RESULT_QUEUE="storyworld:gpu:results"
 ```
 
-Optional: `USE_MOCK_PLANNER=true`, `USE_OBSERVER_IN_PRODUCTION=true`
+We also set `USE_MOCK_PLANNER` and `USE_OBSERVER_IN_PRODUCTION` when needed.
 
-**Note:** `DATABASE_URL` is set in `fly.toml` to `sqlite:////tmp/storyworld.db`. Override with a secret only if using Postgres.
+`DATABASE_URL` is set in `fly.toml` to `sqlite:////tmp/storyworld.db`. We override it with a secret when using Postgres.
 
 ---
 

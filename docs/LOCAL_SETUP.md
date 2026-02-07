@@ -8,7 +8,7 @@ StoryWorld runs locally with GPU jobs handled by RunPod Serverless. No deploymen
 
 | Component | Where | What |
 |-----------|-------|------|
-| **Main API** | Your machine | `uvicorn main:app` |
+| **Main API** | Local | `uvicorn main:app` |
 | **GPU Worker** | RunPod Serverless | Already configured |
 | **Bridge** | GitHub Actions | Redis ↔ RunPod (every 3 min) |
 | **Redis** | Upstash | Job and result queues |
@@ -25,13 +25,9 @@ StoryWorld runs locally with GPU jobs handled by RunPod Serverless. No deploymen
 
 ## 1. Environment
 
-```bash
-cp env.example .env
-```
+I copy `env.example` to `.env` and fill in:
 
-Edit `.env`:
-
-| Variable | Required | Description |
+| Variable | Description |
 |----------|----------|-------------|
 | `REDIS_URL` | Yes | Upstash Redis URL |
 | `GEMINI_API_KEY` | Yes | For observer and planner |
@@ -65,13 +61,7 @@ Open http://localhost:8000
 
 ## 4. Bridge (GitHub Actions)
 
-The bridge runs every 3 minutes. Ensure these GitHub secrets are set:
-
-- `REDIS_URL`
-- `RUNPOD_API_KEY`
-- `RUNPOD_ENDPOINT_ID`
-
-See [bridge-cron.yml](../.github/workflows/bridge-cron.yml).
+The bridge runs every 3 minutes. We set these GitHub secrets: `REDIS_URL`, `RUNPOD_API_KEY`, `RUNPOD_ENDPOINT_ID`. See [bridge-cron.yml](../.github/workflows/bridge-cron.yml).
 
 ---
 
@@ -83,9 +73,7 @@ One-time setup: [SETUP_SERVERLESS.md](SETUP_SERVERLESS.md)
 
 ## Verification
 
-1. `curl http://localhost:8000/health` → `{"status":"ok"}`
-2. Create a simulation in the UI
-3. Bridge runs every 3 min; jobs flow to RunPod; results return via Redis; ResultConsumer updates DB
+We run `curl http://localhost:8000/health` to confirm it returns `{"status":"ok"}`. Then we create a simulation in the UI. The bridge runs every 3 min; jobs flow to RunPod; results come back via Redis; ResultConsumer updates the DB.
 
 ---
 
