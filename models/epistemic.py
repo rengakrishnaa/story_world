@@ -41,12 +41,32 @@ class ConfidenceLevel(str, Enum):
 
 def compute_confidence_level(confidence: float) -> ConfidenceLevel:
     """Convert numeric confidence to bounded level."""
-    if confidence <= 0.33:
+    c = max(0.0, min(1.0, float(confidence)))
+    if c <= 0.33:
         return ConfidenceLevel.BOUNDED_LOW
-    elif confidence <= 0.66:
+    elif c <= 0.66:
         return ConfidenceLevel.BOUNDED_MEDIUM
     else:
         return ConfidenceLevel.BOUNDED_HIGH
+
+
+def calibrated_confidence(
+    base: float,
+    evidence_count: int = 0,
+    missing_count: int = 0,
+    resolution_penalty: float = 0.0,
+) -> float:
+    """
+    Calibrate confidence with evidence quality and completeness.
+    Returns 0.0-1.0.
+    """
+    c = max(0.0, min(1.0, float(base)))
+    if evidence_count > 0 and missing_count > 0:
+        coverage = evidence_count / (evidence_count + missing_count)
+        c = c * (0.7 + 0.3 * coverage)
+    if resolution_penalty > 0:
+        c = c * (1.0 - min(0.3, resolution_penalty))
+    return max(0.0, min(1.0, c))
 
 
 @dataclass

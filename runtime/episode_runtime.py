@@ -295,7 +295,7 @@ class EpisodeRuntime:
         self.sql.mark_beat_state(beat_id, BeatState.ACCEPTED)
         self._recompute_episode_state()
 
-    def mark_beat_failure(self, beat_id, error, metrics, observer_verdict: str = None):
+    def mark_beat_failure(self, beat_id, error, metrics, observer_verdict: str = None, observation=None):
         self.sql.record_attempt(
             episode_id=self.episode_id,
             beat_id=beat_id,
@@ -308,7 +308,7 @@ class EpisodeRuntime:
         decision = self.retry_policy.decide(
             beat={"id": beat_id},
             attempts=beat_attempts,
-            observation=None,
+            observation=observation,
             error=error,
             observer_verdict=observer_verdict,
         )

@@ -63,7 +63,13 @@ def get_simulation_policies() -> dict:
     """Policies for /simulate endpoint (stricter for production simulation)."""
     return {
         "retry": {
-            "max_attempts": _env_int("SIM_RETRY_MAX_ATTEMPTS", 3),
+            "max_attempts": _env_int("SIM_RETRY_MAX_ATTEMPTS", 4),
+            "limits": {
+                "identity": _env_int("RETRY_LIMIT_IDENTITY", 3),
+                "intent": _env_int("RETRY_LIMIT_INTENT", 3),
+                "uncertain": _env_int("RETRY_LIMIT_UNCERTAIN", 3),
+                "infrastructure": _env_int("RETRY_LIMIT_INFRASTRUCTURE", 3),
+            },
         },
         "quality": {
             "min_confidence": _env_float("SIM_QUALITY_MIN_CONFIDENCE", 0.8),
@@ -78,7 +84,12 @@ def get_episode_policies() -> dict:
     """Policies for /episodes endpoint."""
     return {
         "retry": {
-            "max_attempts": _env_int("EP_RETRY_MAX_ATTEMPTS", 2),
+            "max_attempts": _env_int("EP_RETRY_MAX_ATTEMPTS", 4),
+            "limits": {
+                "identity": _env_int("RETRY_LIMIT_IDENTITY", 3),
+                "intent": _env_int("RETRY_LIMIT_INTENT", 3),
+                "uncertain": _env_int("RETRY_LIMIT_UNCERTAIN", 3),
+            },
         },
         "quality": {
             "min_confidence": _env_float("EP_QUALITY_MIN_CONFIDENCE", 0.7),

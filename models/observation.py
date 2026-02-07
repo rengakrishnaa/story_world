@@ -493,6 +493,9 @@ class TaskContext:
     # Physics observability: explicit questions for dynamics beats
     physics_questions: List[str] = field(default_factory=list)
 
+    # Domain hint for domain-specific observer prompts (vehicle, statics, fluid, general)
+    domain_hint: Optional[str] = None
+
     def to_dict(self) -> Dict[str, Any]:
         return {
             "task_type": self.task_type,

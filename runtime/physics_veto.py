@@ -174,4 +174,53 @@ def evaluate_physics_veto(intent: str) -> Tuple[bool, List[str], str]:
 
     if hard_constraints:
         return True, all_constraints, reason_str
+
+    # Optional LLM semantic check when regex finds nothing
+    if _use_llm_veto():
+        llm_block, llm_constraints, llm_reason = _llm_physics_veto(intent)
+        if llm_block:
+            all_constraints = list(dict.fromkeys(all_constraints + llm_constraints))
+            return True, all_constraints, llm_reason or reason_str
+
     return False, all_constraints, reason_str
+
+
+def _use_llm_veto() -> bool:
+    import os
+    return os.getenv("USE_LLM_PHYSICS_VETO", "").lower() in ("true", "1", "yes")
+
+
+def _llm_physics_veto(intent: str) -> Tuple[bool, List[str], str]:
+    """
+    LLM-based semantic contradiction check. Called only when regex finds no HARD veto.
+    Returns (should_block, constraints, reason).
+    """
+    try:
+        import os
+        from google import genai
+        api_key = os.getenv("GEMINI_API_KEY")
+        if not api_key:
+            return False, [], ""
+        client = genai.Client(api_key=api_key)
+        prompt = f"""Does this simulation goal contain a logical or physical CONTRADICTION that is impossible under any interpretation?
+Goal: "{intent}"
+
+Consider ONLY: conservation laws, causality, explicit self-contradictions (e.g. "floats without support", "accelerates with no force").
+Do NOT veto: physically difficult, unlikely, or edge-case scenarios. The observer will verify those.
+
+Reply with JSON only: {{"impossible": true/false, "reason": "brief reason if impossible"}}"""
+        resp = client.models.generate_content(
+            model="gemini-2.0-flash",
+            contents=prompt,
+        )
+        text = (getattr(resp, "text", None) or "").strip()
+        if "{" in text:
+            import json
+            start = text.index("{")
+            end = text.rindex("}") + 1
+            obj = json.loads(text[start:end])
+            if obj.get("impossible"):
+                return True, ["llm_semantic_veto"], obj.get("reason", "LLM detected logical contradiction")
+    except Exception:
+        pass
+    return False, [], ""

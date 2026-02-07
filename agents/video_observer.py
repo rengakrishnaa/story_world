@@ -37,6 +37,23 @@ from models.observation import (
 
 logger = logging.getLogger(__name__)
 
+# Domain-specific prompt sections for observer (vehicle, statics, fluid, general)
+DOMAIN_PROMPTS = {
+    "vehicle": """
+DOMAIN: VEHICLE DYNAMICS. Prioritize: speed_profile, turn_radius, yaw_rate, slip_angle, roll_angle.
+Check tire-road contact, banking angle effects, braking distance. Report traction_loss, understeer, oversteer if observed.
+""",
+    "statics": """
+DOMAIN: STRUCTURAL STATICS. Prioritize: load paths, deflection, buckling, stress concentration.
+Check equilibrium, support reactions, bending moment continuity. Report visible_bending, stress_limit_approached, load_bearing_violation if observed.
+""",
+    "fluid": """
+DOMAIN: FLUID DYNAMICS. Prioritize: flow direction, turbulence, pressure effects, surface tension.
+Check continuity, Bernoulli effects, viscosity. Report cavitation, separation, shear if observed.
+""",
+    "general": "",
+}
+
 # Canonical soft physics constraints (not epistemic). Observer should emit these when video shows degradation.
 SOFT_PHYSICS_CONSTRAINTS = frozenset({
     "stress_limit_approached", "visible_bending", "tolerance_margin_low",
@@ -218,6 +235,7 @@ stress_limit_approached, visible_bending, tolerance_margin_low, likely_failure.
 Use "insufficient_evidence" or "observation_occluded" ONLY when video is unclear, occluded, or camera does not expose the dynamics.
 
 {physics_questions_section}
+{domain_section}
 
 Return ONLY valid JSON in this exact format:
 {{
@@ -347,6 +365,9 @@ Analyze the video frames provided and return ONLY the JSON, no explanation."""
         else:
             physics_questions_section = ""
 
+        domain_hint = getattr(context, "domain_hint", None) or ""
+        domain_section = DOMAIN_PROMPTS.get(domain_hint.lower() if domain_hint else "", DOMAIN_PROMPTS.get("general", ""))
+
         # Build prompt with context
         prompt = self.OBSERVATION_PROMPT.format(
             expected_characters=", ".join(context.expected_characters) or "any",
@@ -354,6 +375,7 @@ Analyze the video frames provided and return ONLY the JSON, no explanation."""
             expected_location=context.expected_location or "any location",
             previous_state=json.dumps(context.previous_world_state) if context.previous_world_state else "none",
             physics_questions_section=physics_questions_section,
+            domain_section=domain_section,
         )
         
         # Prepare content: google-genai expects parts with "text" or "inline_data"

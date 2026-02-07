@@ -381,6 +381,7 @@ class ResultConsumer:
                         error=f"Epistemic rejection: {verdict}",
                         metrics=metrics,
                         observer_verdict=verdict,
+                        observation=observation,
                     )
                     self.world_graph_store.record_beat_observation(
                         episode_id=episode_id,
@@ -438,6 +439,7 @@ class ResultConsumer:
                         error=f"Observer veto: {verdict}",
                         metrics=metrics,
                         observer_verdict=verdict,
+                        observation=observation,
                     )
                     runtime.mark_episode_impossible(reason=f"Observer veto: {verdict}")
                     self.world_graph_store.record_beat_observation(
@@ -460,6 +462,7 @@ class ResultConsumer:
                         error=f"Observer verdict: {verdict}",
                         metrics=metrics,
                         observer_verdict=verdict,
+                        observation=observation,
                     )
                     self.world_graph_store.record_beat_observation(
                         episode_id=episode_id,
