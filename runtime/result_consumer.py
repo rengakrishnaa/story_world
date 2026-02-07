@@ -39,14 +39,15 @@ class ResultConsumer:
         loop_count = 0
         while self._running:
             try:
-                result = await asyncio.to_thread(self.redis.pop_gpu_result, timeout=2)
+                poll_timeout = float(os.getenv("RESULT_POLL_TIMEOUT_SEC", "0.5"))
+                result = await asyncio.to_thread(self.redis.pop_gpu_result, timeout=poll_timeout)
                 
                 if not result:
                     loop_count += 1
-                    # Log every 50 iterations (roughly every 10 seconds) to show it's alive
-                    if loop_count % 50 == 0:
+                    # Log every 100 iterations to show it's alive (faster poll = more iterations)
+                    if loop_count % 100 == 0:
                         print(f"[ResultConsumer] Polling queue '{queue_name}' (no results yet)")
-                    await asyncio.sleep(0.1) 
+                    await asyncio.sleep(0.05) 
                     continue
                 
                 loop_count = 0  # Reset counter when we get a result
@@ -269,10 +270,49 @@ class ResultConsumer:
                 video_uri, episode_id, beat_id,
                 runtime.intent or "",
                 beat_description=beat_desc,
+                runtime=runtime,
             )
             print(f"[ResultConsumer] Observer returned for beat {beat_id}, observation={'present' if observation else 'None'}")
             if observation:
                 verdict = (observation.verdict or "valid").lower()
+                # Observer calibration: record verdict for error-rate measurement
+                try:
+                    from runtime.observer_calibration import get_calibration
+                    get_calibration().record(
+                        beat_id=beat_id,
+                        episode_id=episode_id,
+                        verdict=verdict,
+                        confidence=observation.confidence,
+                        intent=runtime.intent or "",
+                    )
+                except Exception:
+                    pass
+                # Constraint memory: persist discovered constraints
+                constraints_inferred = getattr(observation, "constraints_inferred", None) or []
+                if constraints_inferred:
+                    try:
+                        from runtime.constraint_memory import record_constraints
+                        from models.intent_classification import get_intent_override_from_policies
+                        override = get_intent_override_from_policies(runtime.policies)
+                        domain = (override or {}).get("problem_domain") or "generic"
+                        record_constraints(
+                            episode_id=episode_id,
+                            intent=runtime.intent or "",
+                            constraints=constraints_inferred,
+                            domain=domain,
+                        )
+                    except Exception:
+                        pass
+                # World state tracker: ingest for causal consistency
+                try:
+                    from runtime.world_state_tracker import WorldStateTracker
+                    if not hasattr(self, "_world_trackers"):
+                        self._world_trackers = {}
+                    if episode_id not in self._world_trackers:
+                        self._world_trackers[episode_id] = WorldStateTracker(episode_id=episode_id)
+                    self._world_trackers[episode_id].ingest_observation(beat_id, observation)
+                except Exception:
+                    pass
                 metrics = {**(result.get("runtime") or {})}
                 metrics.update(
                     {
@@ -677,7 +717,7 @@ class ResultConsumer:
             except Exception:
                 pass
 
-    def _run_observer_sync(self, video_uri: str, episode_id: str, beat_id: str, intent: str, beat_description: str = ""):
+    def _run_observer_sync(self, video_uri: str, episode_id: str, beat_id: str, intent: str, beat_description: str = "", runtime=None):
         """
         Synchronous observer call (runs in thread or inline).
         
@@ -700,12 +740,31 @@ class ResultConsumer:
             )
             observer = VideoObserverAgent(config=config)
             physics_questions = get_observer_physics_questions(beat_description, intent)
+            override = (runtime.policies or {}).get("intent_override") or {} if runtime else {}
+            domain = override.get("problem_domain") or "generic"
+            domain_hint = domain.replace("_dynamics", "").replace("_", " ") if domain else ""
+            if domain == "vehicle_dynamics":
+                domain_hint = "vehicle"
+            elif domain in ("statics", "structural"):
+                domain_hint = "statics"
+            elif domain == "fluid":
+                domain_hint = "fluid"
+            else:
+                domain_hint = domain_hint or "general"
+            prior_constraints = []
+            try:
+                from runtime.constraint_memory import get_prior_constraints
+                prior_constraints = get_prior_constraints(intent, domain=domain, limit=10)
+            except Exception:
+                pass
             context = TaskContext(
                 beat_id=beat_id,
                 episode_id=episode_id,
                 task_type="simulation",
                 expected_action=intent,
                 physics_questions=physics_questions,
+                domain_hint=domain_hint,
+                prior_constraints=prior_constraints,
             )
             result = observer.observe(video_uri, context)
             print(f"[ResultConsumer] Observer completed for beat {beat_id}, verdict={getattr(result, 'verdict', 'unknown')}")

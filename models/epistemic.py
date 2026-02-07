@@ -22,6 +22,7 @@ class EvidenceSource(str, Enum):
     OBSERVER = "observer"  # From video observation
     RENDERER = "renderer"  # From renderer metadata
     INFERRED = "inferred"  # Computed from other evidence (must declare uncertainty)
+    VISUAL = "visual"  # From video/visual observation (alias for observer)
     UNKNOWN = "unknown"
 
 

@@ -236,6 +236,7 @@ Use "insufficient_evidence" or "observation_occluded" ONLY when video is unclear
 
 {physics_questions_section}
 {domain_section}
+{prior_constraints_section}
 
 Return ONLY valid JSON in this exact format:
 {{
@@ -368,6 +369,14 @@ Analyze the video frames provided and return ONLY the JSON, no explanation."""
         domain_hint = getattr(context, "domain_hint", None) or ""
         domain_section = DOMAIN_PROMPTS.get(domain_hint.lower() if domain_hint else "", DOMAIN_PROMPTS.get("general", ""))
 
+        prior = getattr(context, "prior_constraints", None) or []
+        prior_constraints_section = ""
+        if prior:
+            prior_constraints_section = (
+                "\nKNOWN CONSTRAINTS (from past simulations, consider as priors):\n"
+                + "\n".join(f"- {p}" for p in prior[:10])
+            )
+
         # Build prompt with context
         prompt = self.OBSERVATION_PROMPT.format(
             expected_characters=", ".join(context.expected_characters) or "any",
@@ -376,6 +385,7 @@ Analyze the video frames provided and return ONLY the JSON, no explanation."""
             previous_state=json.dumps(context.previous_world_state) if context.previous_world_state else "none",
             physics_questions_section=physics_questions_section,
             domain_section=domain_section,
+            prior_constraints_section=prior_constraints_section,
         )
         
         # Prepare content: google-genai expects parts with "text" or "inline_data"

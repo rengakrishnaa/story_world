@@ -145,6 +145,18 @@ class WorldGraphStore:
                 );
 
                 INSERT OR IGNORE INTO world_graph_schema (version) VALUES (1);
+
+                -- Constraint memory (reuse discovered constraints as priors)
+                CREATE TABLE IF NOT EXISTS constraint_memory (
+                    constraint_id TEXT PRIMARY KEY,
+                    name TEXT NOT NULL,
+                    domain TEXT DEFAULT 'generic',
+                    intent_pattern TEXT,
+                    episode_id TEXT,
+                    human_confirmed INTEGER,
+                    created_at TEXT NOT NULL
+                );
+                CREATE INDEX IF NOT EXISTS idx_cm_domain ON constraint_memory(domain);
             """)
             self.conn.commit()
             logger.info("[world_graph_store] schema initialized")

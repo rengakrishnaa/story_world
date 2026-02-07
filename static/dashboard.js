@@ -5,6 +5,20 @@
  */
 const API_BASE = "";
 
+function escapeHtml(s) {
+    if (s == null) return "";
+    const div = document.createElement("div");
+    div.textContent = String(s);
+    return div.innerHTML;
+}
+
+function escapeHtml(s) {
+    if (s == null) return "";
+    const div = document.createElement("div");
+    div.textContent = String(s);
+    return div.innerHTML;
+}
+
 function formatTimeAgo(iso) {
     if (!iso) return "-";
     const d = new Date(iso);
@@ -90,7 +104,7 @@ async function loadDetail() {
             
             // When terminal, fetch result for outcome, constraints_discovered
             const status = (data.state || data.status || "").toLowerCase();
-            const isTerminal = ["completed", "failed", "goal_impossible", "partially_completed", "dead_state", "goal_abandoned"].includes(status);
+            const isTerminal = ["completed", "failed", "goal_impossible", "partially_completed", "dead_state", "goal_abandoned", "epistemically_blocked", "epistemically_incomplete"].includes(status);
             if (isTerminal) {
                 try {
                     const resultRes = await fetch(`/episodes/${id}/result?include_video=false`);
@@ -100,6 +114,7 @@ async function loadDetail() {
                         data.constraints_discovered = result.constraints_discovered || [];
                         data.confidence = result.confidence ?? data.confidence;
                         data.total_cost_usd = result.total_cost_usd ?? data.budget_spent_usd;
+                        data.verdict_explanation = result.state_delta?.verdict_explanation || null;
                     }
                 } catch (_) {}
             }
@@ -144,6 +159,24 @@ function updateDetailUI(data) {
     if (sn) sn.textContent = data.state_nodes != null ? data.state_nodes : "-";
     if (tr) tr.textContent = data.transitions != null ? data.transitions : "-";
     
+    // Verdict explanation panel (explainability)
+    const explPanel = document.getElementById("verdict-explanation");
+    const explContent = document.getElementById("verdict-explanation-content");
+    if (explPanel && explContent) {
+        if (data.verdict_explanation) {
+            const v = data.verdict_explanation;
+            explPanel.style.display = "block";
+            explContent.innerHTML = `
+                <div class="explanation-summary" style="font-weight:500; margin-bottom:8px;">${escapeHtml(v.summary || `Verdict: ${v.verdict}`)}</div>
+                ${(v.causal_chain || []).length ? `<ul style="margin:0; padding-left:18px; color:var(--text-secondary);">${(v.causal_chain || []).map(c => `<li>${escapeHtml(c)}</li>`).join("")}</ul>` : ""}
+                ${(v.missing_evidence || []).length ? `<div style="margin-top:8px; font-size:12px; color:var(--accent, #f59e0b);">Missing evidence: ${escapeHtml((v.missing_evidence || []).join(", "))}</div>` : ""}
+                ${(v.constraints_inferred || []).length ? `<div style="margin-top:8px; font-size:12px; color:var(--text-muted);">Constraints inferred: ${escapeHtml((v.constraints_inferred || []).join(", "))}</div>` : ""}
+            `;
+        } else {
+            explPanel.style.display = "none";
+        }
+    }
+
     // State-first display: outcome, constraints, progress. Beats minimized (no cinematic bloat).
     const displayData = {
         state: data.state,
@@ -151,6 +184,7 @@ function updateDetailUI(data) {
         confidence: data.confidence,
         cost: data.total_cost_usd ?? data.budget_spent_usd,
         constraints_discovered: data.constraints_discovered,
+        verdict_explanation: data.verdict_explanation,
         progress: data.progress,
         state_nodes: data.state_nodes,
         transitions: data.transitions,

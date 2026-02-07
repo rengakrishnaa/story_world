@@ -496,6 +496,9 @@ class TaskContext:
     # Domain hint for domain-specific observer prompts (vehicle, statics, fluid, general)
     domain_hint: Optional[str] = None
 
+    # Prior constraints from constraint memory (reuse across simulations)
+    prior_constraints: List[str] = field(default_factory=list)
+
     def to_dict(self) -> Dict[str, Any]:
         return {
             "task_type": self.task_type,

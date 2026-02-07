@@ -41,6 +41,45 @@ async def health():
     """Minimal health check - no deps."""
     return {"status": "ok", "service": "storyworld"}
 
+
+@app.get("/observer/calibration")
+def get_observer_calibration():
+    """Observer calibration metrics: verdict distribution, error rate (when human-labeled)."""
+    try:
+        from runtime.observer_calibration import get_calibration
+        cal = get_calibration()
+        return {
+            "verdict_distribution": cal.get_verdict_distribution(),
+            "error_rate": cal.get_error_rate(),
+            "recent": cal.get_recent(20),
+        }
+    except Exception as e:
+        return {"error": str(e)}
+
+
+@app.post("/observer/calibration/label")
+def label_verdict(beat_id: str, human_label: str):
+    """Add human label (correct/incorrect) for verdict calibration."""
+    if human_label not in ("correct", "incorrect"):
+        return {"error": "human_label must be 'correct' or 'incorrect'"}
+    try:
+        from runtime.observer_calibration import get_calibration
+        ok = get_calibration().add_human_label(beat_id, human_label)
+        return {"ok": ok, "beat_id": beat_id}
+    except Exception as e:
+        return {"error": str(e)}
+
+
+@app.get("/constraints/priors")
+def get_constraint_priors(domain: str = "generic", limit: int = 20):
+    """Prior constraints from constraint memory for a domain."""
+    try:
+        from runtime.constraint_memory import get_prior_constraints
+        priors = get_prior_constraints("", domain=domain, limit=limit)
+        return {"domain": domain, "priors": priors}
+    except Exception as e:
+        return {"error": str(e)}
+
 @app.get("/")
 async def read_index():
     from fastapi.responses import FileResponse
@@ -146,6 +185,30 @@ def run_simulation(
         policies=policies,
         sql=sql,
     )
+
+    # Cheap path: closed-form goals (no video needed) - resolve via LLM only
+    cheap_path = os.getenv("CHEAP_PATH_CLOSED_FORM", "true").lower() in ("true", "1", "yes")
+    if cheap_path:
+        try:
+            from models.intent_classification import classify_intent, get_intent_override_from_policies
+            override = get_intent_override_from_policies(policies)
+            ov_requires = override.get("requires_visual_verification") if override else None
+            cls_result = classify_intent(goal, override_requires_visual=ov_requires)
+            if cls_result and not cls_result.requires_visual_verification and cls_result.confidence >= 0.8:
+                from runtime.closed_form_resolver import resolve_closed_form
+                cf = resolve_closed_form(goal)
+                if cf:
+                    return {
+                        "simulation_id": runtime.episode_id,
+                        "status": "closed_form",
+                        "feasible": cf.feasible,
+                        "confidence": cf.confidence,
+                        "explanation": cf.explanation,
+                        "constraints_discovered": cf.constraints_inferred,
+                        "initial_state": runtime.state,
+                    }
+        except Exception:
+            pass
 
     # NLP impossibility gate: only blocks HARD logical contradictions (e.g. "stone floats unsupported").
     # Physically implausible goals must reach the observer. Do not block pre-simulation.
@@ -988,6 +1051,40 @@ def get_episode_result(episode_id: str, include_video: bool = False):
             state_delta["observer_status"] = observer_status
         if confidence_penalty_reason is not None:
             state_delta["confidence_penalty_reason"] = confidence_penalty_reason
+        # Verdict explainability: human-readable causal chain from last transition
+        try:
+            for t in reversed(transitions or []):
+                obs_json = getattr(t, "observation_json", None)
+                if obs_json:
+                    obs_data = json_module.loads(obs_json) if isinstance(obs_json, str) else obs_json
+                    chain = []
+                    if obs_data.get("causal_explanation"):
+                        chain.append(obs_data["causal_explanation"])
+                    if obs_data.get("physics_violation"):
+                        chain.append(f"Physics violation: {obs_data['physics_violation']}")
+                    if obs_data.get("state_contradiction"):
+                        chain.append(f"State contradiction: {obs_data['state_contradiction']}")
+                    missing = obs_data.get("missing_evidence") or []
+                    if missing:
+                        chain.append(f"Missing evidence: {', '.join(missing[:8])}{'...' if len(missing) > 8 else ''}")
+                    ep_state = obs_data.get("epistemic_state") or ""
+                    verdict = obs_data.get("verdict", "unknown")
+                    conf_obs = obs_data.get("confidence", 0.5)
+                    if ep_state and "epistemic" in ep_state.lower():
+                        summary = f"Epistemically blocked: {chain[0] if chain else 'insufficient evidence to evaluate constraints'}"
+                    else:
+                        summary = chain[0] if chain else f"Verdict: {verdict} (confidence {conf_obs:.2f})"
+                    state_delta["verdict_explanation"] = {
+                        "verdict": verdict,
+                        "confidence": conf_obs,
+                        "summary": summary,
+                        "causal_chain": chain,
+                        "constraints_inferred": obs_data.get("constraints_inferred") or [],
+                        "missing_evidence": missing,
+                    }
+                    break
+        except Exception:
+            pass
         # Solver-only success: infer constraints satisfied from intent
         if state == "COMPLETED" and observer_status == "unavailable":
             intent_lower = (runtime.intent or "").lower()
