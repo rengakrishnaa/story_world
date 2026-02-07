@@ -1,5 +1,6 @@
 # StoryWorld Frontend on Netlify
-# Backend API: Render (https://storyworld-api.onrender.com)
+# FOR FUTURE DEPLOYMENT — Current setup: run uvicorn locally, no Netlify needed
+# When deployed: Backend API at Render/Fly; Netlify proxies to it
 
 [build]
   publish = "."

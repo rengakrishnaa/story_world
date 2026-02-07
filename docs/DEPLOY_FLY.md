@@ -1,6 +1,8 @@
 # Deploy Main API on Fly.io
 
-Fly.io hosts the FastAPI app with **Python 3.10**. Free tier available.
+**For future deployment.** Current setup runs locally: [LOCAL_SETUP.md](LOCAL_SETUP.md)
+
+When scaling: Fly.io hosts the FastAPI app with Python 3.10.
 
 ---
 

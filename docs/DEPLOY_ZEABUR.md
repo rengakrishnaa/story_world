@@ -1,6 +1,8 @@
 # Deploy Main API on Zeabur
 
-Zeabur hosts the FastAPI app with **Python 3.10**, no card required.
+**For future deployment.** Current setup runs locally: [LOCAL_SETUP.md](LOCAL_SETUP.md)
+
+When scaling: Zeabur hosts the FastAPI app with Python 3.10.
 
 ---
 

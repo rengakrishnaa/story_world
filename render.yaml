@@ -1,4 +1,5 @@
-# StoryWorld Main Server on Render (Free Tier)
+# StoryWorld Main Server on Render
+# FOR FUTURE DEPLOYMENT — Current setup runs locally (see docs/LOCAL_SETUP.md)
 # Blueprint: New + > Blueprint > connect repo > Apply
 # Add secrets in Dashboard > storyworld-api > Environment
 

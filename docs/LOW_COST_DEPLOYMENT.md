@@ -1,6 +1,8 @@
 # StoryWorld Low-Cost / Free Deployment Guide
 
-Deploy StoryWorld with minimal or zero ongoing cost. GPU runs only when a simulation is requested (serverless).
+**For future deployment.** Current setup runs locally: [LOCAL_SETUP.md](LOCAL_SETUP.md)
+
+When we scale: Deploy StoryWorld with minimal cost. GPU runs only when a simulation is requested (serverless).
 
 ---
 

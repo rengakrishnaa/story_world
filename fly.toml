@@ -1,4 +1,5 @@
 # StoryWorld – Fly.io
+# FOR FUTURE DEPLOYMENT — Current setup runs locally (see docs/LOCAL_SETUP.md)
 # Deploy: fly launch (first time) or fly deploy
 
 app = "story-world"

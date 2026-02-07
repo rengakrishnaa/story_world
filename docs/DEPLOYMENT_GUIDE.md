@@ -1,86 +1,43 @@
 # StoryWorld Deployment Guide
 
-## Overview
+**For future use.** Current setup is local: [LOCAL_SETUP.md](LOCAL_SETUP.md)
 
-StoryWorld requires:
-1. **Main Server** — FastAPI, SQLite, ResultConsumer
-2. **Redis** — Upstash or compatible (job + result queues)
-3. **GPU Worker** — RunPod or similar (renders video, uploads to R2)
-4. **Cloudflare R2** — Video storage (or S3-compatible)
+When we upgrade and get users, deploy the main API to Render, Fly, etc. GPU stays on RunPod Serverless.
 
 ---
 
-## Main Server Setup
+## Current vs Deployed
 
-### 1. Environment
-
-```bash
-# Copy env.example to .env
-cp env.example .env
-
-# Required:
-REDIS_URL=rediss://default:YOUR_PASSWORD@your-upstash-host:6379
-DATABASE_URL=sqlite:///./local.db
-GEMINI_API_KEY=your_gemini_api_key
-
-# R2 (for observer to access videos; worker uploads)
-S3_ENDPOINT=https://xxx.r2.cloudflarestorage.com
-S3_BUCKET=storyworld-artifacts
-S3_ACCESS_KEY=...
-S3_SECRET_KEY=...
-S3_REGION=auto
-```
-
-### 2. Install Dependencies
-
-```bash
-pip install -r requirements.base.txt
-```
-
-### 3. Start Server
-
-```bash
-uvicorn main:app --host 0.0.0.0 --port 8000
-```
+| Component | Current | Future (Deployed) |
+|-----------|---------|-------------------|
+| Main API | Local (uvicorn) | Render / Fly / Replit |
+| GPU Worker | RunPod Serverless | RunPod Serverless |
+| Bridge | GitHub Actions | GitHub Actions |
+| Frontend | Served by main API | Netlify + proxy to API |
 
 ---
 
-## GPU Worker Setup
+## Deployment Options (Future)
 
-### 1. Environment
+| Platform | Config File | Doc |
+|----------|-------------|-----|
+| Render | `render.yaml` | [DEPLOY_RENDER_NETLIFY.md](DEPLOY_RENDER_NETLIFY.md) |
+| Fly.io | `fly.toml` | [DEPLOY_FLY.md](DEPLOY_FLY.md) |
+| Replit | `.replit` | [DEPLOY_REPLIT.md](DEPLOY_REPLIT.md) |
+| Zeabur | `Dockerfile.zeabur`, `zbpack.json` | [DEPLOY_ZEABUR.md](DEPLOY_ZEABUR.md) |
+| Vercel | `vercel.json` | [DEPLOY_VERCEL.md](DEPLOY_VERCEL.md) |
 
-Worker needs same `.env` with:
-- `REDIS_URL`, `JOB_QUEUE`, `RESULT_QUEUE`
-- `S3_ENDPOINT`, `S3_BUCKET`, `S3_ACCESS_KEY`, `S3_SECRET_KEY`
-- `DEFAULT_BACKEND=veo` (or svd)
-- `VEO_FALLBACK_BACKEND=svd`
-- `USE_DIFFUSION=true` (for credit-exhausted fallback)
+---
 
-### 2. Install Dependencies
+## Main Server (When Deploying)
 
-```bash
-pip install -r requirements.gpu.txt
-```
-
-### 3. Verify GPU
-
-```bash
-nvidia-smi
-```
-
-### 4. Start Worker
-
-```bash
-python worker.py
-```
-
-Worker polls `storyworld:gpu:jobs`, renders via selected backend, uploads to R2, pushes to `storyworld:gpu:results`.
+- **Build**: `pip install -r requirements-replit.txt`
+- **Start**: `uvicorn main:app --host 0.0.0.0 --port $PORT`
+- **Env vars**: REDIS_URL, GEMINI_API_KEY, S3_*, JOB_QUEUE, RESULT_QUEUE, DATABASE_URL
 
 ---
 
 ## Queue Names
-
-**Critical:** Main server and worker must use the same queue names.
 
 | Variable | Default |
 |----------|---------|
@@ -91,24 +48,6 @@ Worker polls `storyworld:gpu:jobs`, renders via selected backend, uploads to R2,
 
 ## Clearing Old Jobs
 
-If jobs have wrong backend (e.g., stub), clear the queue before new simulations:
-
 ```bash
 python clear_job_queue.py
 ```
-
----
-
-## Docker
-
-- **Dockerfile.cpu** — Main server
-- **Dockerfile.gpu** — GPU worker
-
----
-
-## Verification
-
-1. Main server: `curl http://localhost:8000/diagnostics`
-2. Redis: `python debug_queue_status.py`
-3. Run simulation: `POST /simulate?world_id=default&goal=...`
-4. Check worker logs for `backend=veo` or `backend=svd`

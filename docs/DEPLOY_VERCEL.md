@@ -1,6 +1,8 @@
 # Deploy Main Server on Vercel
 
-Vercel hosts the main API with **zero config** for FastAPI. No credit card required.
+**For future deployment.** Current setup runs locally: [LOCAL_SETUP.md](LOCAL_SETUP.md)
+
+When scaling: Vercel hosts the main API with zero config for FastAPI.
 
 ---
 

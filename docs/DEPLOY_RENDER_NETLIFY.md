@@ -1,6 +1,8 @@
 # Deploy Main App (Render) + Frontend (Netlify)
 
-StoryWorld on Render (free) + Netlify (free). **Final setup.**
+**For future deployment.** Current setup runs locally: [LOCAL_SETUP.md](LOCAL_SETUP.md)
+
+When scaling: StoryWorld on Render (free tier) + Netlify (free).
 
 ---
 

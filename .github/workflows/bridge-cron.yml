@@ -1,3 +1,4 @@
+   # Bridge: Redis ↔ RunPod Serverless. Runs every 3 min. Required for local + RunPod setup.
    name: Bridge Cron
    on:
      schedule:

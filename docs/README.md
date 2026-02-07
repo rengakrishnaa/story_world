@@ -6,28 +6,47 @@ Welcome to the StoryWorld documentation. This guide helps you understand, use, a
 
 ## Documentation Index
 
-| Document | Audience | Description |
-|----------|----------|-------------|
-| **[Product Overview](PRODUCT_DOCUMENTATION.md)** | Everyone | Product vision, what StoryWorld is and is not, value proposition |
-| **[User Manual](USER_MANUAL.md)** | End users, operators | How to run simulations, interpret results, use the UI |
-| **[API Reference](API_REFERENCE.md)** | Developers, integrators | Complete API endpoint documentation |
-| **[Architecture](ARCHITECTURE.md)** | Engineers | System design, components, data flow |
-| **[Configuration Reference](CONFIGURATION_REFERENCE.md)** | DevOps, developers | Environment variables, deployment config |
-| **[Deployment Guide](DEPLOYMENT_GUIDE.md)** | DevOps | Production setup, main server, GPU worker |
-| **[Low-Cost Deployment](LOW_COST_DEPLOYMENT.md)** | DevOps | Netlify + Render + RunPod Serverless, minimal cost setup |
-| **[Setup Serverless](SETUP_SERVERLESS.md)** | DevOps | Step-by-step Dockerfile.serverless + RunPod setup |
-| **[Deploy Render + Netlify](DEPLOY_RENDER_NETLIFY.md)** | DevOps | Main app (Render) + frontend (Netlify) deployment |
-| **[Deploy Vercel](DEPLOY_VERCEL.md)** | DevOps | Main app on Vercel (no card) + Netlify frontend |
-| **[Deploy Replit](DEPLOY_REPLIT.md)** | DevOps | Main app on Replit (Python 3.10, no card) + Netlify frontend |
-| **[Deploy Zeabur](DEPLOY_ZEABUR.md)** | DevOps | Main app on Zeabur (Python 3.10, no card) + Netlify frontend |
-| **[Changelog & Roadmap](CHANGELOG_AND_ROADMAP.md)** | Everyone | Completed features, known issues, future plans |
-| **[Troubleshooting](TROUBLESHOOTING.md)** | Support, operators | Common issues and solutions |
+### Current Setup (Local)
+
+| Document | Description |
+|----------|-------------|
+| **[Local Setup](LOCAL_SETUP.md)** | How to run StoryWorld — uvicorn + RunPod Serverless |
+| **[RunPod Serverless](SETUP_SERVERLESS.md)** | GPU worker setup on RunPod |
+
+### Reference
+
+| Document | Description |
+|----------|-------------|
+| **[Product Overview](PRODUCT_DOCUMENTATION.md)** | Product vision, value proposition |
+| **[User Manual](USER_MANUAL.md)** | Run simulations, interpret results, use the UI |
+| **[API Reference](API_REFERENCE.md)** | API endpoint documentation |
+| **[Architecture](ARCHITECTURE.md)** | System design, data flow |
+| **[Configuration Reference](CONFIGURATION_REFERENCE.md)** | Environment variables |
+
+### Future Deployment (When Scaling)
+
+| Document | Description |
+|----------|-------------|
+| **[Deployment Guide](DEPLOYMENT_GUIDE.md)** | Overview of deployment options |
+| **[Deploy Render + Netlify](DEPLOY_RENDER_NETLIFY.md)** | Render + Netlify |
+| **[Deploy Fly](DEPLOY_FLY.md)** | Fly.io |
+| **[Deploy Replit](DEPLOY_REPLIT.md)** | Replit |
+| **[Deploy Zeabur](DEPLOY_ZEABUR.md)** | Zeabur |
+| **[Deploy Vercel](DEPLOY_VERCEL.md)** | Vercel |
+| **[Low-Cost Deployment](LOW_COST_DEPLOYMENT.md)** | Minimal cost setup |
+
+### Other
+
+| Document | Description |
+|----------|-------------|
+| **[Changelog & Roadmap](CHANGELOG_AND_ROADMAP.md)** | Completed features, future plans |
+| **[Troubleshooting](TROUBLESHOOTING.md)** | Common issues and solutions |
 
 ---
 
 ## Quick Links
 
-- **Get Started:** [User Manual → Quick Start](USER_MANUAL.md#quick-start)
+- **Run StoryWorld:** [Local Setup](LOCAL_SETUP.md)
 - **Run a Simulation:** [User Manual → Running a Simulation](USER_MANUAL.md#running-a-simulation)
 - **API Basics:** [API Reference → Primary Endpoints](API_REFERENCE.md#primary-endpoints)
 - **Configuration:** [Configuration Reference](CONFIGURATION_REFERENCE.md)

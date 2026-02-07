@@ -1,37 +1,42 @@
 # StoryWorld Architecture
 
-## System Overview
+## Current Architecture (No Deployment)
 
-StoryWorld is a **computational video infrastructure** that compiles simulation goals into validated physical outcomes. Video is the execution medium; state, truth, and constraints are the product.
+- **Main API** runs locally (uvicorn)
+- **GPU Worker** runs on RunPod Serverless
+- **Bridge** (GitHub Actions cron) connects Redis ↔ RunPod
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────────┐
-│                              FRONTEND (static/)                              │
-│  index.html │ new.html │ simulation.html │ dashboard.js │ style.css          │
-└─────────────────────────────────────────────────────────────────────────────┘
-                                      │ HTTP
-┌─────────────────────────────────────────────────────────────────────────────┐
-│                         FASTAPI (main.py)                                    │
-│  /simulate │ /episodes │ /world-state │ /episodes/{id}/result │ /diagnostics │
-└─────┬───────────────────┬───────────────────────┬───────────────────────────┘
-      │                   │                       │
-      ▼                   ▼                       ▼
-┌──────────────┐  ┌──────────────┐  ┌──────────────────┐
-│ SQLStore     │  │ RedisStore   │  │ WorldGraphStore  │
-│ (episodes,   │  │ (job queue,  │  │ (nodes,          │
-│  beats,      │  │  result      │  │  transitions)    │
-│  attempts)   │  │  queue)      │  │                  │
-└──────────────┘  └──────┬───────┘  └──────────────────┘
-                         │
-          ┌──────────────┴──────────────┐
-          │ Redis Queues                │
-          │ storyworld:gpu:jobs         │
-          │ storyworld:gpu:results      │
-          └──────────────┬──────────────┘
-                         │
-┌────────────────────────▼────────────────────────────────────────────────────┐
-│ GPU WORKER (worker.py) — RunPod                                              │
-│  blpop jobs → render (veo/svd/animatediff/stub) → upload R2 → rpush results  │
+│  LOCAL: uvicorn main:app                                                     │
+│  ┌───────────────────────────────────────────────────────────────────────┐  │
+│  │ FRONTEND (static/) + FASTAPI (main.py)                                 │  │
+│  │ /simulate │ /episodes │ /world-state │ ResultConsumer                  │  │
+│  └─────┬─────────────┬─────────────┬─────────────────────────────────────┘  │
+│        │             │             │                                         │
+│        ▼             ▼             ▼                                         │
+│  ┌──────────┐ ┌──────────┐ ┌──────────────────┐                             │
+│  │ SQLStore │ │ Redis    │ │ WorldGraphStore  │                             │
+│  │ (local   │ │ (Upstash)│ │ (local SQLite)   │                             │
+│  │  db)     │ │          │ │                  │                             │
+│  └──────────┘ └────┬─────┘ └──────────────────┘                             │
+└─────────────────────│────────────────────────────────────────────────────────┘
+                      │
+         ┌────────────┴────────────┐
+         │ Redis Queues            │
+         │ storyworld:gpu:jobs     │
+         │ storyworld:gpu:results  │
+         └────────────┬────────────┘
+                      │
+    ┌─────────────────┴─────────────────┐
+    │ GitHub Actions (every 3 min)       │
+    │ bridge_serverless.py               │
+    │ Redis blpop → RunPod HTTP → rpush  │
+    └─────────────────┬─────────────────┘
+                      │
+┌─────────────────────▼───────────────────────────────────────────────────────┐
+│ RunPod Serverless (worker_serverless.py)                                     │
+│ Receive job → render (veo/svd/animatediff) → upload R2 → callback results    │
 └─────────────────────────────────────────────────────────────────────────────┘
 ```
 
@@ -46,9 +51,10 @@ StoryWorld is a **computational video infrastructure** that compiles simulation 
 - **ResultConsumer** — Background loop: consume GPU results, run observer, update DB
 - **Persistence:** SQLStore (SQLite), RedisStore, WorldGraphStore
 
-### GPU Worker
+### GPU Worker (RunPod Serverless)
 
-- **worker.py** — Polls Redis for jobs, renders via backends, uploads to R2, pushes results
+- **worker_serverless.py** — Receives jobs via RunPod HTTP, renders via backends, uploads to R2
+- **Bridge** (bridge_serverless.py, GitHub Actions) — Polls Redis, invokes RunPod, pushes results back
 - **Backends:** Veo, SVD, AnimateDiff, Stub
 - **Fallback:** Veo credit exhausted → SVD (configurable)
 
@@ -69,22 +75,24 @@ StoryWorld is a **computational video infrastructure** that compiles simulation 
 ## Data Flow
 
 1. **User** → POST /simulate → EpisodeRuntime.create(), plan(), schedule(), submit_pending_beats()
-2. **Redis** → GPU worker blpop → render → upload R2 → rpush result
-3. **ResultConsumer** → blpop result → observer.observe(video_uri) → epistemic_evaluator
-4. **Epistemic evaluator** → ACCEPTED / EPISTEMICALLY_INCOMPLETE / REJECTED
-5. **ResultConsumer** → mark_beat_success/failure, world_graph_store.record_beat_observation()
-6. **UI** → polls /episodes, /world-state, /result
+2. **Main API** → rpush job to Redis (storyworld:gpu:jobs)
+3. **Bridge** (GitHub Actions, every 3 min) → blpop Redis → invoke RunPod Serverless
+4. **RunPod Worker** → render → upload R2 → callback to bridge → bridge rpush result to Redis
+5. **ResultConsumer** (local) → blpop result → observer.observe(video_uri) → epistemic_evaluator
+6. **ResultConsumer** → mark_beat_success/failure, world_graph_store.record_beat_observation()
+7. **UI** → polls /episodes, /world-state, /result
 
 ---
 
 ## Infrastructure
 
-| Component | Purpose |
-|-----------|---------|
-| **Upstash Redis** | Job queue (storyworld:gpu:jobs), result queue (storyworld:gpu:results) |
-| **Cloudflare R2** | Video artifact storage (S3-compatible) |
-| **SQLite** | Episodes, beats, attempts, artifacts |
-| **RunPod** | GPU worker (Veo, SVD, AnimateDiff) |
+| Component | Where | Purpose |
+|-----------|-------|---------|
+| **Main API** | Local | FastAPI, ResultConsumer, SQLite, WorldGraphStore |
+| **Upstash Redis** | Cloud | Job queue (storyworld:gpu:jobs), result queue (storyworld:gpu:results) |
+| **Cloudflare R2** | Cloud | Video artifact storage (S3-compatible) |
+| **GitHub Actions** | Cloud | Bridge: Redis ↔ RunPod |
+| **RunPod Serverless** | Cloud | GPU worker (Veo, SVD, AnimateDiff) |
 
 ---
 
