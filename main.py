@@ -1091,6 +1091,54 @@ def get_episode_result(episode_id: str, include_video: bool = False):
             if "stack" in intent_lower and "tipping" in intent_lower:
                 state_delta["constraints_satisfied"] = ["no_tipping"]
 
+        # Exploratory mode: aggregate suggested_alternatives and attempts_made when failure/uncertain
+        suggested_alternatives = []
+        attempts_made = []
+        risk_profile = (runtime.policies or {}).get("risk_profile") or "medium"
+        is_exploratory = str(risk_profile).lower() == "high"
+        show_exploratory_meta = is_exploratory and outcome in (
+            EpisodeOutcome.GOAL_IMPOSSIBLE,
+            EpisodeOutcome.GOAL_ABANDONED,
+            EpisodeOutcome.DEAD_STATE,
+            EpisodeOutcome.UNCERTAIN_TERMINATION,
+            EpisodeOutcome.EPISTEMICALLY_INCOMPLETE,
+        )
+        if show_exploratory_meta and transitions:
+            seen_hints = set()
+            for t in transitions:
+                obs_json = getattr(t, "observation_json", None)
+                if not obs_json:
+                    continue
+                try:
+                    obs = json_module.loads(obs_json) if isinstance(obs_json, str) else obs_json
+                except Exception:
+                    continue
+                action = obs.get("action") or {}
+                if isinstance(action, dict) and action.get("suggested_next_action"):
+                    alt = str(action["suggested_next_action"]).strip()
+                    if alt and alt not in suggested_alternatives:
+                        suggested_alternatives.append(alt)
+                att = obs.get("observability_attempt")
+                hint = obs.get("render_hint") or ""
+                if att is not None:
+                    key = (att, hint)
+                    if key not in seen_hints:
+                        seen_hints.add(key)
+                        attempts_made.append({
+                            "observability_attempt": int(att),
+                            "render_hint": hint or None,
+                        })
+        attempts_made.sort(key=lambda x: x["observability_attempt"])
+        if show_exploratory_meta and not suggested_alternatives and attempts_made:
+            for a in attempts_made:
+                h = a.get("render_hint")
+                if h and h not in suggested_alternatives:
+                    suggested_alternatives.append(f"Try: {h}")
+        if show_exploratory_meta and not suggested_alternatives and constraints_for_display:
+            suggested_alternatives.append(
+                "Adjust prompt to clarify motion or use a different camera angle to expose the intended physics."
+            )
+
         result = EpisodeResult(
             episode_id=episode_id,
             outcome=outcome,
@@ -1101,6 +1149,8 @@ def get_episode_result(episode_id: str, include_video: bool = False):
             beats_completed=beats_completed,  # execution scaffolding; success = observer-validated transitions
             beats_failed=beats_failed,
             constraints_discovered=constraints_for_display,
+            suggested_alternatives=suggested_alternatives,
+            attempts_made=attempts_made,
         )
         
         # Add video as optional debug artifact (from compose or world graph transitions)

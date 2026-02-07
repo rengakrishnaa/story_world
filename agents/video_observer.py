@@ -306,6 +306,8 @@ Return ONLY valid JSON in this exact format:
     "confidence": 0.0-1.0
 }}
 
+When verdict is uncertain or impossible, include in "action": "suggested_next_action": "one short suggestion (e.g. Try side view to show tire-ground contact). Omit if verdict is valid."
+
 CONTEXT:
 - Expected characters: {expected_characters}
 - Expected action: {expected_action}
@@ -621,6 +623,7 @@ Analyze the video frames provided and return ONLY the JSON, no explanation."""
                 participants=action_data.get("participants", []),
                 narrative_beat_achieved=action_data.get("narrative_beat_achieved", False),
                 narrative_implications=action_data.get("narrative_implications", []),
+                suggested_next_action=action_data.get("suggested_next_action"),
             )
         
         # Parse quality

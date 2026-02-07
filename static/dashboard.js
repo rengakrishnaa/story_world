@@ -115,6 +115,8 @@ async function loadDetail() {
                         data.confidence = result.confidence ?? data.confidence;
                         data.total_cost_usd = result.total_cost_usd ?? data.budget_spent_usd;
                         data.verdict_explanation = result.state_delta?.verdict_explanation || null;
+                        data.suggested_alternatives = result.suggested_alternatives || [];
+                        data.attempts_made = result.attempts_made || [];
                     }
                 } catch (_) {}
             }
@@ -177,6 +179,26 @@ function updateDetailUI(data) {
         }
     }
 
+    // Exploratory suggestions panel
+    const expPanel = document.getElementById("exploratory-suggestions");
+    const altContent = document.getElementById("suggested-alternatives-content");
+    const attemptsContent = document.getElementById("attempts-made-content");
+    if (expPanel && altContent && attemptsContent) {
+        const alts = data.suggested_alternatives || [];
+        const attempts = data.attempts_made || [];
+        if (alts.length > 0 || attempts.length > 0) {
+            expPanel.style.display = "block";
+            altContent.innerHTML = alts.length > 0
+                ? `<ul style="margin:0; padding-left:18px; color:var(--text-secondary);">${alts.map(a => `<li>${escapeHtml(a)}</li>`).join("")}</ul>`
+                : "";
+            attemptsContent.innerHTML = attempts.length > 0
+                ? `<div style="font-size:12px; color:var(--text-muted);">Framings tried: ${attempts.map(a => `#${a.observability_attempt} ${escapeHtml(a.render_hint || "(default)")}`).join(" · ")}</div>`
+                : "";
+        } else {
+            expPanel.style.display = "none";
+        }
+    }
+
     // State-first display: outcome, constraints, progress. Beats minimized (no cinematic bloat).
     const displayData = {
         state: data.state,
@@ -185,6 +207,8 @@ function updateDetailUI(data) {
         cost: data.total_cost_usd ?? data.budget_spent_usd,
         constraints_discovered: data.constraints_discovered,
         verdict_explanation: data.verdict_explanation,
+        suggested_alternatives: data.suggested_alternatives,
+        attempts_made: data.attempts_made,
         progress: data.progress,
         state_nodes: data.state_nodes,
         transitions: data.transitions,

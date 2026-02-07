@@ -324,6 +324,18 @@ class ResultConsumer:
                 obs_dict = observation.to_dict()
                 duration = float((result.get("runtime") or {}).get("latency_sec", 0.0))
                 quality = getattr(observation.quality, "overall_quality", 0.75) or 0.75
+                # Exploratory: record observability attempt and hint for attempts_made
+                try:
+                    beat = runtime.sql.get_beat(beat_id)
+                    spec = (beat or {}).get("spec") or {}
+                    observability_attempt = int(spec.get("observability_attempt", 0))
+                    desc = spec.get("description") or ""
+                    from runtime.physics_observability import get_render_hints
+                    render_hint = get_render_hints(desc, runtime.intent or "", observability_attempt)
+                    obs_dict["observability_attempt"] = observability_attempt
+                    obs_dict["render_hint"] = (render_hint or "").strip() or None
+                except Exception:
+                    pass
                 
                 # ========================================================================
                 # EPISTEMIC CHECK: Layer 2 & 3 - Evidence & Constraint Evaluation

@@ -213,6 +213,10 @@ class EpisodeResult:
     # Discovered constraints (from observer verdicts)
     constraints_discovered: List[str] = field(default_factory=list)
     
+    # Exploratory mode: alternatives and what we tried
+    suggested_alternatives: List[str] = field(default_factory=list)
+    attempts_made: List[Dict[str, Any]] = field(default_factory=list)
+    
     # Debug artifacts (OPTIONAL - video is not primary)
     debug: Dict[str, Any] = field(default_factory=dict)
     
@@ -242,6 +246,8 @@ class EpisodeResult:
             "cost": self.total_cost_usd,
             "branches_created": self.branches_created,
             "constraints_discovered": self.constraints_discovered,
+            "suggested_alternatives": self.suggested_alternatives,
+            "attempts_made": self.attempts_made,
             
             # Termination
             "termination_reason": (
