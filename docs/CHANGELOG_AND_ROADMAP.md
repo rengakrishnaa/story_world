@@ -59,6 +59,16 @@
 | **No cinematic specs** | No cinematic_spec, style_profile in beats |
 | **Observer-driven retry** | Re-render for insufficient_evidence (observability cap) |
 
+### Exploratory Mode (Risk Profile High)
+
+| Feature | Description |
+|---------|-------------|
+| **Exploratory retries** | On uncertain verdict, retry with different camera/framing (side view, overhead, etc.) instead of halting |
+| **Observability augmentation** | Each retry uses a different render hint from `get_render_hints()`; stops when cap reached |
+| **suggested_alternatives** | When exploratory run fails, result includes actionable suggestions—from observer or derived from framings tried |
+| **attempts_made** | List of `{observability_attempt, render_hint}` so you see what we tried |
+| **UI panel** | Simulation detail shows "Exploratory: Possible Ways Forward" when these are present |
+
 ---
 
 ## Known Issues / Limitations
@@ -80,7 +90,7 @@
 | Item | Description |
 |------|-------------|
 | **Multi-beat temporal coherence** | Improve keyframe selection for SDXL/AnimateDiff to show distinct action phases |
-| **Enhanced observability re-render** | Smarter camera/scale choices when observer returns insufficient_evidence |
+| **Enhanced observability re-render** | Smarter camera/scale choices when observer returns insufficient_evidence (partially done via exploratory mode) |
 | **Observer evidence extraction** | Improve observer prompts to extract acceleration_vector, center_of_mass, etc. for structural intents |
 | **Metrics dashboard** | Aggregated confidence, cost, success rate over time |
 | **Batch simulation API** | Submit multiple goals; return batch results |

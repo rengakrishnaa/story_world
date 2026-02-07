@@ -55,7 +55,9 @@ This manual explains how to use StoryWorld to run simulations, interpret results
 | Parameter | Description | Default |
 |-----------|-------------|---------|
 | **Budget** | Max cost in USD for the simulation | From policy |
-| **Risk profile** | Affects quality thresholds (low/medium/high) | medium |
+| **Risk profile** | Low = conservative (stop fast, fewer retries). Medium = balanced. High = exploratory—retries with different camera angles on uncertain verdicts and returns suggested next steps when it still fails. | medium |
+
+Pick exploratory when you're iterating on a goal. Instead of a hard stop you get ideas for what to try next.
 
 ---
 
@@ -92,6 +94,8 @@ The state delta contains:
 | `progress` | Beats attempted, completed, aborted |
 | `state_nodes` | Number of nodes in WorldStateGraph |
 | `transitions` | Number of validated transitions |
+| `suggested_alternatives` | (Exploratory only) Suggestions for what to try next—from observer or from framings we tried |
+| `attempts_made` | (Exploratory only) List of framings we tried (e.g. side view, overhead) |
 
 ### Constraints Discovered
 
@@ -117,6 +121,8 @@ The state delta contains:
 - **World State Graph (Visual):** Nodes and transitions
 - **Confidence Score:** Numeric display
 - **Compute Cost:** USD
+- **Verdict Explanation:** Why the observer reached its conclusion
+- **Exploratory: Possible Ways Forward:** (When applicable) Suggestions and framings we tried—shows up for exploratory runs that end in failure
 - **State Delta (JSON):** Full result payload
 - **Ephemeral Debug Artifacts:** Video URLs (if available; presigned, expire ~1h)
 

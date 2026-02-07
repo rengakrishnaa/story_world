@@ -89,7 +89,15 @@
 - **Mock:** Returns uncertain when both fail
 - **Verdicts:** `valid` | `uncertain` | `impossible` | `contradicts` | `blocks`
 
-### 5. Intent Classification
+### 5. Exploratory Mode (Risk Profile = High)
+
+When you set `risk_profile=high`, simulations behave differently on uncertain verdicts. Instead of stopping immediately, we retry with alternate camera framings (side view, overhead, etc.) so each render exposes motion or physics differently. If we still can't verify the outcome, the result includes:
+- **suggested_alternatives**: What to try next—either from the observer or inferred from the framings we used.
+- **attempts_made**: Which framings we tried (e.g. "Side view, tire-ground contact visible" then "Overhead or diagonal angle showing lateral slip").
+
+Pick it when you're iterating on a goal and want hints instead of a dead end.
+
+### 6. Intent Classification
 
 - **LLM-based** (Gemini → Ollama → rule-based)
 - Determines: `requires_visual_verification`, `problem_domain`, `observer_impact`

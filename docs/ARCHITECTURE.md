@@ -79,7 +79,7 @@
 3. **Bridge** (GitHub Actions, every 3 min) → blpop Redis → invoke RunPod Serverless
 4. **RunPod Worker** → render → upload R2 → callback to bridge → bridge rpush result to Redis
 5. **ResultConsumer** (local) → blpop result → observer.observe(video_uri) → epistemic_evaluator
-6. **ResultConsumer** → mark_beat_success/failure, world_graph_store.record_beat_observation()
+6. **ResultConsumer** → mark_beat_success/failure, world_graph_store.record_beat_observation(). When risk_profile=high and verdict is uncertain, retries with augmented observability (different camera/framing) and records attempts for `suggested_alternatives` / `attempts_made`.
 7. **UI** → polls /episodes, /world-state, /result
 
 ---

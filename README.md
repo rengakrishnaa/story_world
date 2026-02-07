@@ -53,9 +53,9 @@ Open http://localhost:8000. The bridge (GitHub Actions) and RunPod Serverless ha
 
 ## What StoryWorld Does
 
-- **Input:** Simulation goal (physics-focused, e.g., stacking boxes, vehicle dynamics)
-- **Process:** Plan → Render video (Veo/SVD/AnimateDiff) → Observe with vision AI → Validate physics
-- **Output:** Outcome (goal_achieved, goal_impossible, etc.), confidence, constraints_discovered, WorldStateGraph
+- **Input:** Simulation goal (physics-focused, e.g., stacking boxes, vehicle dynamics). Optional risk profile: conservative, balanced, or exploratory.
+- **Process:** Plan → Render video (Veo/SVD/AnimateDiff) → Observe with vision AI → Validate physics. Exploratory mode retries with different camera angles when the observer is uncertain.
+- **Output:** Outcome (goal_achieved, goal_impossible, etc.), confidence, constraints_discovered, WorldStateGraph. On exploratory failures, also suggested next steps and what we tried.
 
 Video is ephemeral; state and constraints are the product.
 

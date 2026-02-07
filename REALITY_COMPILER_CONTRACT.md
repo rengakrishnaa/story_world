@@ -91,15 +91,19 @@ When enabled via environment variable:
 
 ```json
 {
-  "outcome": "goal_achieved|goal_impossible|goal_abandoned|dead_state|in_progress",
+  "outcome": "goal_achieved|goal_impossible|goal_abandoned|dead_state|uncertain_termination|epistemically_incomplete|in_progress",
   "state_delta": { ... },
   "confidence": 0.0–1.0,
   "total_cost_usd": 0.0,
   "constraints_discovered": [ "constraint_1", "constraint_2" ],
   "metrics": { "beats_attempted": 3, "beats_completed": 3 },
+  "suggested_alternatives": [],
+  "attempts_made": [],
   "debug": null
 }
 ```
+
+`suggested_alternatives` and `attempts_made` are populated when `risk_profile=high` (exploratory) and the episode ends in failure or uncertainty. They describe what we tried and what might work next.
 
 Video URLs are optional. API consumers must not need video to understand results.
 

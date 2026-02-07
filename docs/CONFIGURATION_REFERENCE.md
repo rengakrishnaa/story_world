@@ -96,6 +96,7 @@ We use `env.example` as a template. I copy it to `.env`, fill in Redis, R2, and 
 
 | Variable | Default | Description |
 |----------|---------|-------------|
+| `risk_profile` | `medium` | Query param on /simulate: `low` (conservative), `medium` (balanced), `high` (exploratory). Exploratory retries with different framings and returns `suggested_alternatives` when it fails. |
 | `SIM_RETRY_MAX_ATTEMPTS` | `3` | Max retries for simulation |
 | `SIM_QUALITY_MIN_CONFIDENCE` | `0.8` | Min confidence threshold |
 | `SIM_COST_MAX_USD` | `10.0` | Max cost per simulation |

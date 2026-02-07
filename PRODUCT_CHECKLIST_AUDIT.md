@@ -9,7 +9,7 @@
 
 **Status: YES (with caveat)**
 
-- The result API returns `outcome`, `confidence`, `total_cost_usd`, `state_delta`, `constraints_discovered`, `metrics` (beats_attempted, beats_completed).
+- The result API returns `outcome`, `confidence`, `total_cost_usd`, `state_delta`, `constraints_discovered`, `metrics` (beats_attempted, beats_completed). When exploratory + failure: `suggested_alternatives`, `attempts_made`.
 - A consumer can understand success/failure, cost, and progress without watching video.
 - **Caveat:** `state_delta` and `constraints_discovered` are empty in the current production flow because the observer is not wired in (see #3 and #5).
 

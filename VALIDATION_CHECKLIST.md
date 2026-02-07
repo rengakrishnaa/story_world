@@ -11,7 +11,7 @@
 | Input framed as Simulation Goal, not "generate video" | ✅ Form label, placeholder |
 | Goal describes what should happen, not how it looks | ✅ Hint: avoid scene, cinematic, shot |
 | Budget explicit and enforced | ✅ Form + /simulate?budget= |
-| Risk/entropy affects exploration | ✅ Form + policies.risk_profile |
+| Risk/entropy affects exploration | ✅ Form + policies.risk_profile; exploratory (high) retries with different framings, returns suggested_alternatives on failure |
 | Red flags: "scene", "cinematic", "shot", "make it look good" | ✅ Server logs warning; client hint |
 
 ---

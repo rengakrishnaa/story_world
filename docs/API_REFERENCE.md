@@ -19,7 +19,7 @@ Complete API endpoint documentation for the StoryWorld FastAPI server.
 | `world_id` | string | Yes | World identifier (e.g., `default`) |
 | `goal` | string | Yes | Simulation goal (physics-focused description) |
 | `budget` | float | No | Max cost in USD |
-| `risk_profile` | string | No | `low`, `medium`, or `high` |
+| `risk_profile` | string | No | `low` (conservative), `medium` (balanced), or `high` (exploratory). Exploratory retries with different framings on uncertain verdicts and returns `suggested_alternatives` when it still fails. |
 | `requires_visual_verification` | boolean | No | API override for intent classifier |
 | `problem_domain` | string | No | API override: `vehicle_dynamics`, `statics`, `structural`, `fluid`, `generic` |
 
@@ -109,9 +109,13 @@ POST /simulate?world_id=default&goal=A+robotic+arm+stacks+three+boxes&budget=5&r
   "total_cost_usd": 0.05,
   "constraints_discovered": ["insufficient_observational_evidence"],
   "metrics": {"beats_attempted": 1, "beats_completed": 1},
+  "suggested_alternatives": [],
+  "attempts_made": [],
   "debug": {}
 }
 ```
+
+`suggested_alternatives` and `attempts_made` are populated when `risk_profile=high` and the episode ends in failure or uncertainty. They list what we tried (different camera angles, etc.) and suggestions for what to try next.
 
 ---
 

@@ -16,10 +16,11 @@
 | Observer is authority | Only the VideoObserver may assert facts from video; planners propose |
 
 **Product output:**
-- Outcome: `goal_achieved` | `goal_impossible` | `goal_abandoned` | `dead_state`
+- Outcome: `goal_achieved` | `goal_impossible` | `goal_abandoned` | `dead_state` | `uncertain_termination` | `epistemically_incomplete`
 - WorldStateGraph (validated state transitions)
 - Confidence (0.0–1.0) — see §3.3
 - Discovered constraints
+- `suggested_alternatives` / `attempts_made` (when exploratory + failure) — what we tried, what might work next
 
 ---
 
@@ -139,7 +140,7 @@ Do not default to constants. Confidence is derived from observer verdicts and me
 | File | Role |
 |------|------|
 | `index.html` | Dashboard; list of simulations |
-| `new.html` | New simulation form (goal, budget, risk profile) |
+| `new.html` | New simulation form (goal, budget, risk profile). Risk profile: low/medium/high—exploratory (high) retries with different framings and surfaces suggestions on failure. |
 | `simulation.html` | Simulation detail; WorldStateGraph; State Delta JSON |
 | `dashboard.js` | `loadDashboard()`, `loadDetail()`, `submitSimulation()`, `renderGraph()`, polling |
 | `style.css` | Infrastructure console styling |
@@ -225,10 +226,12 @@ Response: { simulation_id, status, initial_state }
 **GET /episodes/{id}/result**
 ```
 Response: {
-  outcome: "goal_achieved" | "goal_impossible" | "goal_abandoned" | "dead_state" | "in_progress",
+  outcome: "goal_achieved" | "goal_impossible" | "goal_abandoned" | "dead_state" | "uncertain_termination" | "epistemically_incomplete" | "in_progress",
   confidence: float,
   total_cost_usd: float,
   constraints_discovered: string[],
+  suggested_alternatives: string[],   // populated when exploratory + failure
+  attempts_made: [{observability_attempt, render_hint}],
   state_delta: object,
   beats_attempted: int,
   beats_completed: int

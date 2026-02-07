@@ -113,6 +113,17 @@ Strict outcomes ensure simulation validity:
 - `GOAL_IMPOSSIBLE`: Laws of physics/world violated (Observer Veto).
 - `DEAD_STATE`: No valid actions remain to reach goal.
 - `GOAL_ABANDONED`: Budget exhausted or manual termination.
+- `UNCERTAIN_TERMINATION`: Observer couldn't decide; epistemic halt.
+- `EPISTEMICALLY_INCOMPLETE`: Missing evidence; constraints unevaluable.
+
+### Risk Profile
+Simulations accept a risk profile that tunes how strict we are:
+- **Conservative (low)**: Fewer retries, higher confidence bar. Stop fast on uncertain verdicts.
+- **Balanced (medium)**: Default. Normal retry limits.
+- **Exploratory (high)**: On "uncertain" we retry with different camera angles instead of halting—side view, overhead, etc. When we run out of options, the result lists what we tried and suggests what to try next.
+
+### Result Extras (Exploratory Failures)
+When exploratory runs hit a wall: `suggested_alternatives` (ideas from the observer or from the framings we tried) and `attempts_made` (what we rendered—side view, overhead, etc.). Lets you see the exploration path.
 
 ### Observation Verdict
 The Observer's judgment on a state transition:
