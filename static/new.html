@@ -36,11 +36,11 @@
                         <input id="budget" name="budget" type="number" value="5" step="1" min="1" max="100" placeholder="5">
                     </div>
                     <div class="form-group" style="margin-bottom:0;">
-                        <label>Risk Profile (Exploration)</label>
-                        <select id="risk_profile" name="risk_profile">
-                            <option value="low">Conservative (Low Variance)</option>
+                        <label title="Conservative: stricter quality (0.9), fewer retries (2). Balanced: default. Exploratory: looser quality (0.6), more retries (6).">Risk Profile</label>
+                        <select id="risk_profile" name="risk_profile" title="Conservative: fewer retries, higher confidence required. Exploratory: more retries, lower confidence accepted.">
+                            <option value="low">Conservative (fewer retries, stricter)</option>
                             <option value="medium" selected>Balanced</option>
-                            <option value="high">Exploratory (High Variance)</option>
+                            <option value="high">Exploratory (more retries, looser)</option>
                         </select>
                     </div>
                 </div>

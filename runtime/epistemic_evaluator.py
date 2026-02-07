@@ -30,6 +30,7 @@ def evaluate_epistemic_state(
     *,
     observer_unavailable: bool = False,
     intent_override: Optional[dict] = None,
+    risk_profile: Optional[str] = None,
 ) -> Tuple[EpistemicState, Optional[EpistemicSummary]]:
     """
     Evaluate epistemic state based on evidence availability and constraints.
@@ -71,8 +72,12 @@ def evaluate_epistemic_state(
         )
         return EpistemicState.EPISTEMICALLY_INCOMPLETE, summary
     
-    # Get constraints relevant to this intent
-    constraints = get_constraints_for_intent(intent, override_problem_domain=over.get("problem_domain"))
+    # Get constraints relevant to this intent (domain + risk_profile affect strictness)
+    constraints = get_constraints_for_intent(
+        intent,
+        override_problem_domain=over.get("problem_domain"),
+        risk_profile=risk_profile,
+    )
     evaluator = ConstraintEvaluator(constraints=constraints)
     
     # Check if we can proceed

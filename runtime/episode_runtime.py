@@ -9,6 +9,7 @@ from runtime.persistence.sql_store import SQLStore
 from runtime.policies.retry_policy import RetryPolicy
 from runtime.policies.quality_policy import QualityPolicy
 from runtime.policies.cost_policy import CostPolicy
+from runtime.policies.risk_adjuster import apply_risk_profile
 import os
 from datetime import datetime
 
@@ -22,9 +23,11 @@ class EpisodeRuntime:
 
         self.sql = sql
 
-        self.retry_policy = RetryPolicy(self.policies.get("retry", {}))
-        self.quality_policy = QualityPolicy(self.policies.get("quality", {}))
-        self.cost_policy = CostPolicy(self.policies.get("cost", {}))
+        # Apply risk_profile (conservative/balanced/exploratory) to policies
+        adjusted = apply_risk_profile(dict(self.policies))
+        self.retry_policy = RetryPolicy(adjusted.get("retry", {}))
+        self.quality_policy = QualityPolicy(adjusted.get("quality", {}))
+        self.cost_policy = CostPolicy(adjusted.get("cost", {}))
 
         self.state = EpisodeState.CREATED
 

@@ -139,29 +139,37 @@ def get_constraints_for_intent(
     intent: str,
     *,
     override_problem_domain: Optional[str] = None,
+    risk_profile: Optional[str] = None,
 ) -> list[Constraint]:
     """
     Get relevant constraints based on episode intent.
     Driven by LLM-classified problem_domain, not keywords.
+
+    Domain-specific rules:
+    - Vehicle: full dynamics constraints (speed_profile, turn_radius, etc.)
+    - Statics/Structural: minimal constraints (observer verdict is primary signal)
+    - Generic: statics-only; exploratory risk uses minimal set to avoid epistemic halt
     """
     domain = get_problem_domain(intent, override=override_problem_domain)
+    risk = (risk_profile or "medium").lower()
     constraints = []
 
     if domain == PROBLEM_DOMAIN_VEHICLE:
         constraints.extend(get_vehicle_dynamics_constraints())
         constraints.append(get_kinematic_resolution_constraint())
-    elif domain == PROBLEM_DOMAIN_STATICS:
-        constraints.extend(get_statics_constraints())
-    elif domain == PROBLEM_DOMAIN_STRUCTURAL:
-        constraints.extend(get_statics_constraints())
+        constraints.extend(get_general_physics_constraints())
+    elif domain in (PROBLEM_DOMAIN_STATICS, PROBLEM_DOMAIN_STRUCTURAL):
+        # Statics/stacking: observer verdict is primary; no numeric dynamics evidence needed.
+        # Mass/center_of_mass rarely extractable from video; verdict suffices.
+        pass
     elif domain == PROBLEM_DOMAIN_FLUID:
         constraints.append(get_kinematic_resolution_constraint())
+        constraints.extend(get_general_physics_constraints())
     else:
-        # generic: include both, evaluator uses evidence availability
-        constraints.extend(get_statics_constraints())
-        constraints.append(get_kinematic_resolution_constraint())
-
-    constraints.extend(get_general_physics_constraints())
+        # Generic (often stacking/placement): rely on observer verdict, no strict evidence gates
+        if risk == "low":
+            constraints.extend(get_statics_constraints())
+        # Conservative: require mass/CoM for generic. Balanced/Exploratory: verdict-only.
 
     # Deduplicate by constraint name
     seen = set()

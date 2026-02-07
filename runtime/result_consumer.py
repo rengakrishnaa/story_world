@@ -346,6 +346,7 @@ class ResultConsumer:
                     confidence=observation.confidence,
                     observer_unavailable=observer_unavailable,
                     intent_override=intent_override,
+                    risk_profile=(runtime.policies or {}).get("risk_profile"),
                 )
                 
                 # If epistemically incomplete, halt progression (NO re-render, NO best-effort)
@@ -384,8 +385,51 @@ class ResultConsumer:
                     print(f"[ResultConsumer] Processed EPISTEMIC_HALT for {episode_id}/{beat_id}")
                     return
                 
-                # If uncertain termination, halt progression
+                # If uncertain termination: exploratory mode retries; conservative/balanced halt
                 if epistemic_state == EpistemicState.UNCERTAIN_TERMINATION:
+                    risk = ((runtime.policies or {}).get("risk_profile") or "medium").lower()
+                    if risk == "high":
+                        # Exploratory: treat as retryable failure; augment prompt so retry tries different framing
+                        print(
+                            f"[ResultConsumer] UNCERTAIN (exploratory retry path) for {beat_id}: "
+                            f"Observer verdict uncertain despite available evidence"
+                        )
+                        runtime.mark_beat_failure(
+                            beat_id=beat_id,
+                            error="Observer verdict uncertain",
+                            metrics=metrics,
+                            observer_verdict="uncertain",
+                            observation=observation,
+                        )
+                        # Augment beat for observability so next render uses different camera/angle
+                        augmented = runtime.augment_beat_for_observability(beat_id)
+                        if augmented:
+                            print(f"[ResultConsumer] Augmented beat {beat_id} for observability (alternate framing)")
+                        else:
+                            # No more alternate framings; abort instead of retrying same prompt
+                            print(f"[ResultConsumer] Observability cap reached for {beat_id}; aborting to avoid identical retries")
+                            runtime.abort_beat_observability_cap(beat_id)
+                        self.world_graph_store.record_beat_observation(
+                            episode_id=episode_id,
+                            beat_id=beat_id,
+                            video_uri=video_uri,
+                            observation={
+                                **obs_dict,
+                                "epistemic_state": "UNCERTAIN_TERMINATION",
+                                "epistemic_summary": epistemic_summary.to_dict() if epistemic_summary else None,
+                            },
+                            action_description=(runtime.intent or "")[:200],
+                            video_duration_sec=duration,
+                            quality_score=quality,
+                            transition_status=TransitionStatus.BLOCKED,
+                            action_outcome=ActionOutcome.UNKNOWN,
+                        )
+                        try:
+                            runtime.submit_pending_beats(self.redis)
+                        except Exception:
+                            pass
+                        return
+                    # Conservative/balanced: halt
                     print(
                         f"[ResultConsumer] UNCERTAIN TERMINATION for {beat_id}: "
                         f"{epistemic_summary.justification[0] if epistemic_summary and epistemic_summary.justification else 'Uncertain verdict'}"
