@@ -12,13 +12,6 @@ function escapeHtml(s) {
     return div.innerHTML;
 }
 
-function escapeHtml(s) {
-    if (s == null) return "";
-    const div = document.createElement("div");
-    div.textContent = String(s);
-    return div.innerHTML;
-}
-
 function formatTimeAgo(iso) {
     if (!iso) return "-";
     const d = new Date(iso);

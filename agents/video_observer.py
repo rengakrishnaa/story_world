@@ -207,7 +207,7 @@ class GeminiObserver:
     This is the bootstrap observer before internalization.
     """
     
-    OBSERVATION_PROMPT = """You are a video analysis AI for a physics/causal simulation.
+    OBSERVATION_PROMPT = """You are a video analysis system for a physics/causal simulation.
 Analyze this video and extract structured observations. Focus on what is OBSERVABLE and physically verifiable.
 
 CRITICAL PHYSICS RULES (MUST ENFORCE):

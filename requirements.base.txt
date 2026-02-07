@@ -18,7 +18,7 @@ sqlalchemy
 redis
 boto3
 
-# AI utilities
+# Vision / LLM
 google-genai
 
 # Git deps (CPU-safe)

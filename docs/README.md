@@ -21,6 +21,7 @@ Welcome to the StoryWorld documentation. This guide helps you understand, use, a
 | **[User Manual](USER_MANUAL.md)** | Run simulations, interpret results, use the UI |
 | **[API Reference](API_REFERENCE.md)** | API endpoint documentation |
 | **[Architecture](ARCHITECTURE.md)** | System design, data flow |
+| **[Technical Documentation](TECHNICAL_DOCUMENTATION.md)** | System overview, capabilities, data models |
 | **[Configuration Reference](CONFIGURATION_REFERENCE.md)** | Environment variables |
 
 ### Future Deployment (When Scaling)
@@ -58,7 +59,7 @@ Welcome to the StoryWorld documentation. This guide helps you understand, use, a
 StoryWorld is a **computational video infrastructure** that compiles simulation goals into validated physical outcomes. It is not a content generator or media platform—it is a **reality compiler**:
 
 - **Input:** A simulation goal (e.g., *"A robotic arm stacks three boxes without tipping"*)
-- **Process:** Plan → Render video → Observe with vision AI → Validate physics
+- **Process:** Plan → Render video → Observe with vision model → Validate physics
 - **Output:** Outcome (goal_achieved, goal_impossible, etc.), confidence, discovered constraints, world state graph
 
 Video is the **execution medium**, not the product. State, truth, and discovered constraints are the product.

@@ -43,6 +43,7 @@ Open http://localhost:8000. The bridge (GitHub Actions) and RunPod Serverless ha
 | [User Manual](docs/USER_MANUAL.md) | How to run simulations, interpret results, use the UI |
 | [API Reference](docs/API_REFERENCE.md) | Complete API endpoint documentation |
 | [Architecture](docs/ARCHITECTURE.md) | System design, components, data flow |
+| [Technical Documentation](docs/TECHNICAL_DOCUMENTATION.md) | System overview, capabilities, data models |
 | [Configuration Reference](docs/CONFIGURATION_REFERENCE.md) | Environment variables |
 | [RunPod Serverless Setup](docs/SETUP_SERVERLESS.md) | GPU worker on RunPod Serverless |
 | [Deployment Guide](docs/DEPLOYMENT_GUIDE.md) | Future deployment (Render, Fly, etc.) |
@@ -54,7 +55,7 @@ Open http://localhost:8000. The bridge (GitHub Actions) and RunPod Serverless ha
 ## What StoryWorld Does
 
 - **Input:** Simulation goal (physics-focused, e.g., stacking boxes, vehicle dynamics). Optional risk profile: conservative, balanced, or exploratory.
-- **Process:** Plan → Render video (Veo/SVD/AnimateDiff) → Observe with vision AI → Validate physics. Exploratory mode retries with different camera angles when the observer is uncertain.
+- **Process:** Plan → Render video (Veo/SVD/AnimateDiff) → Observe with vision model → Validate physics. Exploratory mode retries with different camera angles when the observer is uncertain.
 - **Output:** Outcome (goal_achieved, goal_impossible, etc.), confidence, constraints_discovered, WorldStateGraph. On exploratory failures, also suggested next steps and what we tried.
 
 Video is ephemeral; state and constraints are the product.
