@@ -37,7 +37,6 @@ from models.observation import (
 
 logger = logging.getLogger(__name__)
 
-# Domain-specific prompt sections for observer (vehicle, statics, fluid, general)
 DOMAIN_PROMPTS = {
     "vehicle": """
 DOMAIN: VEHICLE DYNAMICS. Prioritize: speed_profile, turn_radius, yaw_rate, slip_angle, roll_angle.
@@ -54,7 +53,6 @@ Check continuity, Bernoulli effects, viscosity. Report cavitation, separation, s
     "general": "",
 }
 
-# Canonical soft physics constraints (not epistemic). Observer should emit these when video shows degradation.
 SOFT_PHYSICS_CONSTRAINTS = frozenset({
     "stress_limit_approached", "visible_bending", "tolerance_margin_low",
     "likely_failure", "structural_bending", "load_limit_approached",
@@ -65,7 +63,6 @@ def _normalize_physics_constraints(raw: List[str]) -> List[str]:
     """Map free-form observer output to canonical physics identifiers."""
     result = []
     raw_lower = " ".join(str(c).lower() for c in raw)
-    # Map physics keywords to canonical identifiers (so is_epistemic_only recognizes them)
     if any(k in raw_lower for k in ("bending", "flex", "deformation", "strain")):
         result.append("visible_bending")
     if any(k in raw_lower for k in ("stress", "tolerance", "margin", "limit")):

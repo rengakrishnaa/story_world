@@ -46,11 +46,8 @@ def evaluate_epistemic_state(
     needs_visual = requires_visual_verification(intent, override=over.get("requires_visual_verification"))
     impact = get_observer_impact(intent, override_requires_visual=over.get("requires_visual_verification"))
     
-    # No evidence ledger: observer failed or returned mock without ledger
     if not evidence_ledger:
         if not needs_visual:
-            # Closed-form physics: solver has sufficient symbolic+numeric evidence.
-            # Observer failure = confidence_only, do NOT block.
             summary = EpistemicSummary(
                 final_state=EpistemicState.ACCEPTED,
                 confidence=compute_confidence_level(0.75),
@@ -61,7 +58,6 @@ def evaluate_epistemic_state(
                 confidence_penalty_reason="observer_infrastructure_failure",
             )
             return EpistemicState.ACCEPTED, summary
-        # Perceptual intent: observer required, cannot proceed
         summary = EpistemicSummary(
             final_state=EpistemicState.EPISTEMICALLY_INCOMPLETE,
             confidence=compute_confidence_level(confidence),
@@ -72,7 +68,6 @@ def evaluate_epistemic_state(
         )
         return EpistemicState.EPISTEMICALLY_INCOMPLETE, summary
     
-    # Get constraints relevant to this intent (domain + risk_profile affect strictness)
     constraints = get_constraints_for_intent(
         intent,
         override_problem_domain=over.get("problem_domain"),
@@ -80,16 +75,10 @@ def evaluate_epistemic_state(
     )
     evaluator = ConstraintEvaluator(constraints=constraints)
     
-    # Check if we can proceed
     can_proceed, missing_evidence = evaluator.can_proceed(evidence_ledger)
     
-    # If constraints are blocked by missing evidence:
-    # - Closed-form intent: observer optional, accept solver-only success (goal_achieved, reduced confidence)
-    # - Perceptual intent: epistemically incomplete (block)
     if not can_proceed:
         if not needs_visual and impact != "blocking":
-            # Closed-form physics: solver has mass/geometry/friction from intent; observer couldn't extract full evidence.
-            # Treat as solver-only success per INVARIANT: "Closed-form physics: observer optional"
             summary = EpistemicSummary(
                 final_state=EpistemicState.ACCEPTED,
                 confidence=compute_confidence_level(0.75),
@@ -114,8 +103,6 @@ def evaluate_epistemic_state(
         )
         return EpistemicState.EPISTEMICALLY_INCOMPLETE, summary
     
-    # All constraints are evaluable - check verdict
-    # If verdict is "impossible" or "contradicts", REJECTED
     if verdict in ("impossible", "contradicts", "blocks"):
         summary = EpistemicSummary(
             final_state=EpistemicState.REJECTED,
@@ -125,7 +112,6 @@ def evaluate_epistemic_state(
         )
         return EpistemicState.REJECTED, summary
     
-    # If verdict is "uncertain" and evidence is missing, epistemically incomplete (solver block)
     if verdict == "uncertain" and missing_evidence:
         summary = EpistemicSummary(
             final_state=EpistemicState.EPISTEMICALLY_INCOMPLETE,
@@ -138,7 +124,6 @@ def evaluate_epistemic_state(
         )
         return EpistemicState.EPISTEMICALLY_INCOMPLETE, summary
     
-    # If verdict is "uncertain" but all evidence present, uncertain termination
     if verdict == "uncertain":
         summary = EpistemicSummary(
             final_state=EpistemicState.UNCERTAIN_TERMINATION,

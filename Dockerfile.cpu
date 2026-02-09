@@ -1,7 +1,3 @@
-# ================================
-# StoryWorld – Control Plane (CPU)
-# ================================
-
 FROM python:3.10-slim
 
 ENV PYTHONDONTWRITEBYTECODE=1
@@ -25,7 +21,7 @@ COPY requirements.base.txt .
 RUN pip install --upgrade pip \
     && pip install --no-cache-dir -r requirements.base.txt
 
-# ✅ copy EVERYTHING at repo root
+#  copy EVERYTHING at repo root
 COPY agents ./agents
 COPY runtime ./runtime
 COPY models ./models

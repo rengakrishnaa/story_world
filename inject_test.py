@@ -10,4 +10,4 @@ with open("test_render.json", "r") as f:
 
 r.lpush("render_queue:demo", json.dumps(job))
 
-print("✅ Test job injected into Redis")
+print(" Test job injected into Redis")

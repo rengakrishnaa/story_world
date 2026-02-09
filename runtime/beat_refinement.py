@@ -8,7 +8,6 @@ Example: Beat 1 result "visible_bending" -> Beat 2 prompt becomes
 
 from typing import Dict, List, Any
 
-# Physics constraints that warrant beat refinement (not epistemic)
 REFINEMENT_CONSTRAINTS = frozenset({
     "stress_limit_approached", "visible_bending", "tolerance_margin_low",
     "likely_failure", "structural_bending", "load_limit_approached",

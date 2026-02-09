@@ -21,20 +21,19 @@ from config import (
     DECISION_LOOP_LOG_PATH,
 )
 
-# ⚠️ DO NOT initialize heavy objects at import time
+# DO NOT initialize heavy objects at import time
 sql = None
 redis_store = None
-world_graph_store = None  # Phase 1: World State Graph persistence
+world_graph_store = None
 
 from fastapi.staticfiles import StaticFiles
 
 app = FastAPI(title="StoryWorld Runtime")
 
-# Phase 8: Infrastructure UI
 try:
     app.mount("/static", StaticFiles(directory="static"), name="static")
 except Exception:
-    pass  # static/ may not exist in minimal deploy
+    pass
 
 @app.get("/health")
 async def health():
@@ -95,15 +94,11 @@ async def read_simulation():
     from fastapi.responses import FileResponse
     return FileResponse('static/simulation.html')
 
-# =====================================================
-# LIFESPAN (runs once, safely)
-# =====================================================
 
 @app.on_event("startup")
 async def startup_event():
     global sql, redis_store, world_graph_store
     try:
-        print(">>> startup reached")
         from runtime.persistence.sql_store import SQLStore
         from runtime.persistence.redis_store import RedisStore
         from runtime.persistence.world_graph_store import WorldGraphStore
@@ -112,9 +107,9 @@ async def startup_event():
         redis_store = RedisStore(url=os.getenv("REDIS_URL"), lazy=True)
         try:
             redis_store.redis.ping()
-            print(">>> startup: Redis connection verified")
+            pass
         except Exception as e:
-            print(f">>> startup: Redis connection failed: {e}")
+            print(f"Redis connection failed: {e}")
 
         world_graph_store = WorldGraphStore()
 
@@ -126,13 +121,10 @@ async def startup_event():
         print(">>> startup: infrastructure wired")
     except Exception as e:
         import traceback
-        print(f">>> startup FAILED: {e}")
+        print(f"Startup failed: {e}")
         traceback.print_exc()
         sql = redis_store = world_graph_store = None
 
-# =====================================================
-# API
-# =====================================================
 
 
 _CREATIVE_RED_FLAGS = frozenset(
@@ -866,8 +858,7 @@ def get_episode_result(episode_id: str, include_video: bool = False):
         state = (runtime.state or "").upper()
         beats = sql.get_beats(episode_id) if sql else []
         
-        # INVARIANT: No EXECUTING when constraints cannot be evaluated.
-        # If any beat is epistemically incomplete, episode is EPISTEMICALLY_BLOCKED.
+        # If any beat is epistemically incomplete, episode is EPISTEMICALLY_BLOCKED
         if state == "EXECUTING":
             if any(
                 (b.get("state") or "").upper() in ("EPISTEMICALLY_INCOMPLETE", "UNCERTAIN_TERMINATION")
@@ -887,7 +878,6 @@ def get_episode_result(episode_id: str, include_video: bool = False):
             # Epistemic halt: missing evidence, constraints unevaluable. Not a failure.
             outcome = EpisodeOutcome.EPISTEMICALLY_INCOMPLETE
         elif state == "PARTIALLY_COMPLETED":
-            # Some beats failed - default to DEAD_STATE unless constraints imply impossibility
             outcome = EpisodeOutcome.DEAD_STATE
         else:
             outcome = EpisodeOutcome.IN_PROGRESS
@@ -901,14 +891,12 @@ def get_episode_result(episode_id: str, include_video: bool = False):
         except Exception:
             pass
 
-        # Ensure progress in state_delta for UI/E2E (beats_completed/failed set below)
         if "progress" not in state_delta:
             state_delta = dict(state_delta)
         
         # Calculate cost from beats
         total_cost = len(beats) * COST_PER_BEAT_USD
         
-        # beats_completed/beats_attempted/beats_failed: execution scaffolding metrics, NOT success criteria.
         beats_completed = sum(
             1 for b in beats
             if (b.get("state") or "").upper() in ("ACCEPTED", "DONE", "COMPLETED")
@@ -917,8 +905,6 @@ def get_episode_result(episode_id: str, include_video: bool = False):
             1 for b in beats
             if (b.get("state") or "").upper() == "ABORTED"
         )
-        # Confidence: conclusion certainty. No conclusion (epistemic halt) → 0.1.
-        # Do not use confidence to mean "system certainty".
         conf = 0.0 if not outcome.is_success else 0.5
         if state == "EPISTEMICALLY_BLOCKED":
             conf = 0.1  # No conclusion made → bounded_low
@@ -962,7 +948,6 @@ def get_episode_result(episode_id: str, include_video: bool = False):
                 for m in obs.get("missing_evidence", []) or []:
                     if m and m not in missing_evidence:
                         missing_evidence.append(m)
-                # Epistemic summary
                 es = obs.get("epistemic_summary") or {}
                 for m in es.get("missing_evidence", []) or []:
                     if m and m not in missing_evidence:
@@ -975,24 +960,19 @@ def get_episode_result(episode_id: str, include_video: bool = False):
                     confidence_penalty_reason = penalty
         except Exception:
             pass
-        # Epistemic halt: solver block = insufficient_physical_evidence (not observer_unavailable)
         if state == "EPISTEMICALLY_BLOCKED" and "insufficient_physical_evidence" not in constraints_discovered:
             constraints_discovered = ["insufficient_physical_evidence"] + constraints_discovered
 
-        # INVARIANT (hard correctness): goal_achieved is invalid if WorldStateGraph.transitions == 0.
-        # A goal may not be marked goal_achieved unless at least one observer-validated state
-        # transition exists. Beats completed are execution scaffolding, not semantic success.
+        # goal_achieved requires at least one observer-validated transition
         if outcome == EpisodeOutcome.GOAL_ACHIEVED and not transitions:
             outcome = EpisodeOutcome.GOAL_ABANDONED
             conf = 0.0
 
-        # CRITICAL: DEAD_STATE requires at least one physics constraint.
-        # video_unavailable/insufficient_evidence must NEVER be terminal by themselves.
+        # DEAD_STATE requires at least one physics constraint
         from models.episode_outcome import is_epistemic_only
         if outcome == EpisodeOutcome.DEAD_STATE and is_epistemic_only(constraints_discovered):
             outcome = EpisodeOutcome.UNCERTAIN_TERMINATION
 
-        # PARTIALLY_COMPLETED: elevate to GOAL_IMPOSSIBLE when constraints indicate physics failure
         if state == "PARTIALLY_COMPLETED" and outcome == EpisodeOutcome.DEAD_STATE:
             intent_lower = (runtime.intent or "").lower()
             physics_terms = ("structural", "load", "gravity", "energy", "stability", "impossible")
@@ -1000,7 +980,6 @@ def get_episode_result(episode_id: str, include_video: bool = False):
                 t in " ".join(constraints_discovered).lower()
                 for t in physics_terms
             )
-            # Robot stacking on narrow base (Test D): partial success then stability failure
             stack_narrow = ("stack" in intent_lower and "box" in intent_lower and
                            "narrow" in intent_lower and ("base" in intent_lower or "surface" in intent_lower))
             veto_triggered = False
@@ -1021,7 +1000,6 @@ def get_episode_result(episode_id: str, include_video: bool = False):
                     elif stack_narrow:
                         constraints_discovered = constraints_discovered or ["stability_limit", "load_distribution"]
 
-        # Terminal outcomes should not report zero confidence if any attempts were made.
         if outcome.is_terminal and conf == 0.0 and len(beats) > 0:
             conf = 0.2
 
@@ -1051,7 +1029,6 @@ def get_episode_result(episode_id: str, include_video: bool = False):
             state_delta["observer_status"] = observer_status
         if confidence_penalty_reason is not None:
             state_delta["confidence_penalty_reason"] = confidence_penalty_reason
-        # Verdict explainability: human-readable causal chain from last transition
         try:
             for t in reversed(transitions or []):
                 obs_json = getattr(t, "observation_json", None)
@@ -1085,13 +1062,11 @@ def get_episode_result(episode_id: str, include_video: bool = False):
                     break
         except Exception:
             pass
-        # Solver-only success: infer constraints satisfied from intent
         if state == "COMPLETED" and observer_status == "unavailable":
             intent_lower = (runtime.intent or "").lower()
             if "stack" in intent_lower and "tipping" in intent_lower:
                 state_delta["constraints_satisfied"] = ["no_tipping"]
 
-        # Exploratory mode: aggregate suggested_alternatives and attempts_made when failure/uncertain
         suggested_alternatives = []
         attempts_made = []
         risk_profile = (runtime.policies or {}).get("risk_profile") or "medium"

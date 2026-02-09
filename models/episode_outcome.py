@@ -19,9 +19,7 @@ from datetime import datetime
 from enum import Enum
 import json
 
-# Constraints that indicate missing evidence, not physics. Never conclude physics from these.
-# Naming: insufficient_physical_evidence = solver block (missing turn radius, mass, etc.)
-#         observer_unavailable = confidence penalty (observer infra failed, solver-only)
+# Constraints that indicate missing evidence, not physics
 EPISTEMIC_CONSTRAINTS = frozenset({
     "video_unavailable", "insufficient_evidence", "insufficient_physical_evidence",
     "observer_unavailable", "missing_video", "observer_exception",
@@ -42,9 +40,6 @@ def has_physics_constraint(constraints: List[str]) -> bool:
     return not is_epistemic_only(constraints)
 
 
-# ============================================================================
-# Episode Outcome (First-Class Failure States)
-# ============================================================================
 
 class EpisodeOutcome(Enum):
     """
@@ -97,9 +92,6 @@ class EpisodeOutcome(Enum):
         }
 
 
-# ============================================================================
-# Observer Verdict (Constraint Authority)
-# ============================================================================
 
 class ObserverVerdict(Enum):
     """
@@ -108,17 +100,14 @@ class ObserverVerdict(Enum):
     Video-Native Principle: Observer can declare actions impossible
     and force episode termination.
     """
-    # Normal outcomes
     VALID = "valid"              # Action succeeded as intended
     DEGRADED = "degraded"        # Action partially succeeded
     FAILED = "failed"            # Action failed but recoverable
     
-    # Blocking outcomes (NEW - critical for video-native compliance)
     IMPOSSIBLE = "impossible"    # Action is physically impossible
     CONTRADICTS = "contradicts"  # Action contradicts established state
     BLOCKS_INTENT = "blocks"     # Action makes macro goal unreachable
     
-    # Epistemic outcomes (Phase 7)
     UNCERTAIN = "uncertain"      # Information insufficient/conflicting
     
     @property
@@ -141,9 +130,6 @@ class ObserverVerdict(Enum):
         }
 
 
-# ============================================================================
-# Termination Reason
-# ============================================================================
 
 @dataclass
 class TerminationReason:
@@ -180,9 +166,6 @@ class TerminationReason:
         }
 
 
-# ============================================================================
-# State-Centric Episode Result
-# ============================================================================
 
 @dataclass
 class EpisodeResult:
@@ -275,9 +258,6 @@ class EpisodeResult:
         return self
 
 
-# ============================================================================
-# Constraint Violation
-# ============================================================================
 
 @dataclass
 class ConstraintViolation:
@@ -310,9 +290,6 @@ class ConstraintViolation:
         }
 
 
-# ============================================================================
-# Convenience Functions
-# ============================================================================
 
 def create_success_result(
     episode_id: str,

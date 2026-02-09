@@ -44,13 +44,12 @@ class ResultConsumer:
                 
                 if not result:
                     loop_count += 1
-                    # Log every 100 iterations to show it's alive (faster poll = more iterations)
                     if loop_count % 100 == 0:
                         print(f"[ResultConsumer] Polling queue '{queue_name}' (no results yet)")
                     await asyncio.sleep(0.05) 
                     continue
                 
-                loop_count = 0  # Reset counter when we get a result
+                loop_count = 0
                 job_id = result.get("job_id")
                 meta = result.get("meta", {})
                 episode_id = meta.get("episode_id")
@@ -61,7 +60,6 @@ class ResultConsumer:
                     continue
 
                 print(f"[ResultConsumer] job={job_id} episode={episode_id} beat={beat_id} status={result.get('status')}")
-                # Run observer in thread pool with timeout to prevent blocking
                 try:
                     await asyncio.wait_for(
                         asyncio.to_thread(self._process_result, result),
@@ -69,7 +67,6 @@ class ResultConsumer:
                     )
                 except asyncio.TimeoutError:
                     print(f"[ResultConsumer] Observer timeout for beat {beat_id}, marking as uncertain")
-                    # Mark beat as failed due to timeout
                     try:
                         runtime = EpisodeRuntime.load(episode_id, self.sql)
                         runtime.mark_beat_failure(
@@ -172,13 +169,11 @@ class ResultConsumer:
             )
             return
 
-        # Deterministic veto should run even if video download fails.
         veto, veto_constraints, veto_reason = evaluate_physics_veto(runtime.intent or "")
 
         artifacts = result.get("artifacts") or {}
         video_local = artifacts.get("video_local_path")
         video_uri = video_local if (video_local and os.path.isfile(video_local)) else artifacts.get("video")
-        # If deterministic veto triggers, reject immediately (video is not required).
         if veto:
             metrics = {**(result.get("runtime") or {})}
             metrics.update({"confidence": 1.0, "verdict": "impossible", "veto": "deterministic"})
@@ -287,7 +282,6 @@ class ResultConsumer:
                     )
                 except Exception:
                     pass
-                # Constraint memory: persist discovered constraints
                 constraints_inferred = getattr(observation, "constraints_inferred", None) or []
                 if constraints_inferred:
                     try:
@@ -303,7 +297,6 @@ class ResultConsumer:
                         )
                     except Exception:
                         pass
-                # World state tracker: ingest for causal consistency
                 try:
                     from runtime.world_state_tracker import WorldStateTracker
                     if not hasattr(self, "_world_trackers"):
@@ -337,10 +330,7 @@ class ResultConsumer:
                 except Exception:
                     pass
                 
-                # ========================================================================
-                # EPISTEMIC CHECK: Layer 2 & 3 - Evidence & Constraint Evaluation
-                # MUST RUN BEFORE verdict-based handling to prevent best-effort acceptance
-                # ========================================================================
+                # Epistemic check: evidence and constraint evaluation
                 from runtime.epistemic_evaluator import evaluate_epistemic_state
                 from models.epistemic import EpistemicState
                 
@@ -401,7 +391,6 @@ class ResultConsumer:
                 if epistemic_state == EpistemicState.UNCERTAIN_TERMINATION:
                     risk = ((runtime.policies or {}).get("risk_profile") or "medium").lower()
                     if risk == "high":
-                        # Exploratory: treat as retryable failure; augment prompt so retry tries different framing
                         print(
                             f"[ResultConsumer] UNCERTAIN (exploratory retry path) for {beat_id}: "
                             f"Observer verdict uncertain despite available evidence"
@@ -413,12 +402,10 @@ class ResultConsumer:
                             observer_verdict="uncertain",
                             observation=observation,
                         )
-                        # Augment beat for observability so next render uses different camera/angle
                         augmented = runtime.augment_beat_for_observability(beat_id)
                         if augmented:
                             print(f"[ResultConsumer] Augmented beat {beat_id} for observability (alternate framing)")
                         else:
-                            # No more alternate framings; abort instead of retrying same prompt
                             print(f"[ResultConsumer] Observability cap reached for {beat_id}; aborting to avoid identical retries")
                             runtime.abort_beat_observability_cap(beat_id)
                         self.world_graph_store.record_beat_observation(
@@ -496,8 +483,7 @@ class ResultConsumer:
                     )
                     return
                 
-                # Solver-only success: closed-form intent, observer unavailable or insufficient evidence.
-                # Observer is witness; infrastructure failure or evidence gap must NOT block closed-form.
+                # Solver-only success: closed-form intent when observer unavailable
                 obs_status = getattr(epistemic_summary, "observer_status", None)
                 if epistemic_state == EpistemicState.ACCEPTED and epistemic_summary and obs_status in ("unavailable", "insufficient_observational_evidence"):
                     solver_confidence = 0.75
@@ -571,7 +557,6 @@ class ResultConsumer:
                         transition_status=TransitionStatus.REJECTED,
                         action_outcome=ActionOutcome.FAILED,
                     )
-                    # Progressive constraint tightening: even failed beats can inform next (physics learned)
                     constraints = obs_dict.get("constraints_inferred") or []
                     if constraints:
                         try:
@@ -580,7 +565,6 @@ class ResultConsumer:
                                 print(f"[ResultConsumer] Refined {n} pending beats from failed observation")
                         except Exception as ex:
                             print(f"[ResultConsumer] Beat refinement failed: {ex}")
-                    # Re-render with different camera/scale on insufficient_evidence, not abort
                     try:
                         from runtime.physics_observability import should_augment_for_observability
                         if should_augment_for_observability(constraints):
@@ -603,7 +587,6 @@ class ResultConsumer:
                         pass
                     return
 
-                # ACCEPTED: All evidence available, constraints satisfied (epistemic check already passed above)
                 runtime.mark_beat_success(
                     beat_id=beat_id,
                     artifacts=result.get("artifacts", {}),
@@ -626,7 +609,6 @@ class ResultConsumer:
                     transition_status=TransitionStatus.COMPLETED,
                     action_outcome=outcome,
                 )
-                # Progressive constraint tightening: refine next beats with learned physics
                 constraints = obs_dict.get("constraints_inferred") or []
                 if constraints:
                     try:
@@ -724,14 +706,12 @@ class ResultConsumer:
         except Exception as e:
             print(f"[ResultConsumer] Observer failed for {episode_id}/{beat_id}: {e}")
             traceback.print_exc()
-            # Fail-safe: never leave beats stuck; treat as UNCERTAIN so retry policy can act.
             runtime.mark_beat_failure(
                 beat_id=beat_id,
                 error=f"Observer exception: {e}",
                 metrics={**(result.get("runtime") or {}), "verdict": "uncertain", "confidence": 0.0},
                 observer_verdict="uncertain",
             )
-            # Record to world graph for audit trail even when observer fails
             if self.world_graph_store:
                 try:
                     self.world_graph_store.record_beat_observation(
