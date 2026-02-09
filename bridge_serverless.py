@@ -69,7 +69,8 @@ def run_once():
         import runpod
         runpod.api_key = RUNPOD_API_KEY
         endpoint = runpod.Endpoint(RUNPOD_ENDPOINT_ID)
-        result = endpoint.run_sync(input=job, timeout=300)
+        # Payload as first arg; handler expects event["input"] = full job
+        result = endpoint.run_sync({"input": job}, timeout=300)
     except Exception as e:
         print(f"[bridge] RunPod error: {e}")
         result = {
