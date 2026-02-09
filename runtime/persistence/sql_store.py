@@ -4,7 +4,6 @@ import os
 from datetime import datetime
 from typing import Dict, List, Set
 import sqlite3
-import psycopg2
 from dotenv import load_dotenv
 
 
@@ -593,6 +592,13 @@ class SQLStore:
             self._init_sqlite_schema()
 
         elif self.database_url.startswith("postgres"):
+            try:
+                import psycopg2
+            except ImportError:
+                raise RuntimeError(
+                    "DATABASE_URL uses postgres but psycopg2 is not installed. "
+                    "Install psycopg2-binary or set DATABASE_URL=sqlite:///..."
+                )
             self._conn = psycopg2.connect(self.database_url)
             self.backend = "postgres"
             print("[sql] using postgres")

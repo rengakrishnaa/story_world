@@ -27,8 +27,18 @@ redis_store = None
 world_graph_store = None
 
 from fastapi.staticfiles import StaticFiles
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI(title="StoryWorld Runtime")
+
+# Add CORS middleware to allow frontend (Vercel) to communicate with API
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # In production, replace with your specific Vercel URL
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 try:
     app.mount("/static", StaticFiles(directory="static"), name="static")
