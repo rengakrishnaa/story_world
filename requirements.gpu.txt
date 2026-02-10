@@ -3,7 +3,7 @@ redis>=5.0.1
 boto3
 python-dotenv
 requests
-
+google-genai>=0.3.0
 # -------- Numeric / image --------
 numpy==1.26.4
 pillow

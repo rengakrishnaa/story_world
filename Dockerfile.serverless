@@ -9,6 +9,7 @@ ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
 ENV NVIDIA_VISIBLE_DEVICES=all
 ENV NVIDIA_DRIVER_CAPABILITIES=compute,utility
+ENV HF_HOME=/worker/.cache/huggingface
 
 RUN apt-get update && apt-get install -y \
     python3 \
@@ -24,6 +25,16 @@ WORKDIR /worker
 
 COPY requirements.gpu.txt .
 RUN pip3 install --no-cache-dir -r requirements.gpu.txt runpod
+
+# Pre-bake SDXL model (used by SVD backend when Gemini quota exhausted)
+# Avoids runtime download that can be killed mid-transfer
+RUN python3 -c "\
+from diffusers import StableDiffusionXLPipeline; \
+import torch; \
+print('[build] Pre-downloading SDXL (stabilityai/stable-diffusion-xl-base-1.0)...'); \
+StableDiffusionXLPipeline.from_pretrained('stabilityai/stable-diffusion-xl-base-1.0', torch_dtype=torch.float16); \
+print('[build] SDXL cached successfully'); \
+"
 
 COPY agents ./agents
 COPY models ./models

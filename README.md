@@ -38,6 +38,7 @@ Open http://localhost:8000. The bridge (GitHub Actions) and RunPod Serverless ha
 
 | Document | Description |
 |----------|-------------|
+| **[Testing Instructions](TESTING_INSTRUCTIONS.md)** | **How to run StoryWorld locally + why the live link may not show results** |
 | [Local Setup](docs/LOCAL_SETUP.md) | How to run StoryWorld (current architecture) |
 | [Product Documentation](docs/PRODUCT_DOCUMENTATION.md) | Product vision, what StoryWorld is and is not |
 | [User Manual](docs/USER_MANUAL.md) | How to run simulations, interpret results, use the UI |

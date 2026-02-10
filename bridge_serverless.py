@@ -39,7 +39,7 @@ if not RUNPOD_API_KEY or not RUNPOD_ENDPOINT_ID:
 redis_client = redis.Redis.from_url(
     REDIS_URL,
     decode_responses=True,
-    socket_timeout=300,  # RunPod can take 60-180s per job
+    socket_timeout=600,  # Long jobs (SVD cold start + inference)
     socket_connect_timeout=10,
     retry_on_timeout=True,
     ssl_cert_reqs=ssl.CERT_REQUIRED,
@@ -70,7 +70,7 @@ def run_once():
         runpod.api_key = RUNPOD_API_KEY
         endpoint = runpod.Endpoint(RUNPOD_ENDPOINT_ID)
         # Payload as first arg; handler expects event["input"] = full job
-        result = endpoint.run_sync({"input": job}, timeout=300)
+        result = endpoint.run_sync({"input": job}, timeout=900)
     except Exception as e:
         print(f"[bridge] RunPod error: {e}")
         result = {
